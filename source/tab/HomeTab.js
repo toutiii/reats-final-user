@@ -2,6 +2,7 @@ import React from "react";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import all_constants from "../constants";
 import SimpleView from "../views/SimpleView";
+import NewDishesFlatList from "../flatlist/NewDishesFlatList";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -22,17 +23,17 @@ export default function HomeTab () {
         >
             <Tab.Screen
                 name="New"
-                component={SimpleView}
+                component={NewDishesFlatList}
                 options={{ title: all_constants.home.tab.new.title }}
             />
             <Tab.Screen
                 name="Best"
-                component={SimpleView}
+                component={NewDishesFlatList}
                 options={{ title: all_constants.home.tab.best.title }}
                 />
             <Tab.Screen
                 name="Famous"
-                component={SimpleView}
+                component={NewDishesFlatList}
                 options={{ title: all_constants.home.tab.famous.title }}
             />
         </Tab.Navigator>
