@@ -1,5 +1,5 @@
 import React from "react";
-import {FlatList, Text, TouchableHighlight, View} from "react-native";
+import {FlatList, RefreshControl, TouchableHighlight, View} from "react-native";
 import styles_dish from '../styles/styles-dish'
 import all_constants from "../constants";
 import HorizontalLine from "../components/HorizontalLine";
@@ -8,6 +8,15 @@ import {getNewDishesData} from "../api/fetch-home-data";
 
 
 export default function NewDishesFlatList({...props}) {
+
+    const [refreshing, setRefreshing] = React.useState(false);
+    const [listData, setListData] = React.useState([]);
+
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+        setListData(await getNewDishesData());
+        setRefreshing(false);
+    }, [refreshing]);
 
     const dishItem = ({item}) => {
         return (
@@ -33,14 +42,24 @@ export default function NewDishesFlatList({...props}) {
         );
     }
 
+    React.useEffect(() => {
+        async function fetchMyAPI() {
+            setListData(await getNewDishesData());
+        }
+        fetchMyAPI()
+    }, [])
+
     return (
         <View style={{flex: 1}}>
             <FlatList
-                data={getNewDishesData()}
+                data={listData}
                 renderItem={dishItem}
                 keyExtractor={item => item.id}
                 onEndReached={getNewDishesData}
                 onEndReachedThreshold={0.8}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
             />
         </View>
     )
