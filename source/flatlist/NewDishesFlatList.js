@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import {FlatList, RefreshControl, TouchableHighlight, View} from "react-native";
 import styles_dish from '../styles/styles-dish'
 import all_constants from "../constants";
@@ -7,18 +7,23 @@ import Dish from "../components/Dish";
 import {getNewDishesData} from "../api/fetch-home-data";
 
 
-export default function NewDishesFlatList({...props}) {
+export default class NewDishesFlatList extends Component {
 
-    const [refreshing, setRefreshing] = React.useState(false);
-    const [listData, setListData] = React.useState([]);
+    constructor(props) {
+        super(props);
+        this.state = {
+            refreshing: false,
+            listdata: []
+        }
+    }
 
-    const onRefresh = React.useCallback(async () => {
-        setRefreshing(true);
-        setListData(await getNewDishesData());
-        setRefreshing(false);
-    }, [refreshing]);
+    onRefresh = (async () => {
+        this.setState({refreshing: true});
+        this.fetchData()
+        this.setState({refreshing: false});
+    });
 
-    const dishItem = ({item}) => {
+    dishItem = ({item}) => {
         return (
             <View style={styles_dish.dish_button_container}>
                 <TouchableHighlight
@@ -42,25 +47,30 @@ export default function NewDishesFlatList({...props}) {
         );
     }
 
-    React.useEffect(() => {
-        async function fetchMyAPI() {
-            setListData(await getNewDishesData());
-        }
-        fetchMyAPI()
-    }, [])
+    componentDidMount() {
+        this.fetchData();
+    }
 
-    return (
-        <View style={{flex: 1}}>
-            <FlatList
-                data={listData}
-                renderItem={dishItem}
-                keyExtractor={item => item.id}
-                onEndReached={getNewDishesData}
-                onEndReachedThreshold={0.8}
-                refreshControl={
-                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                }
-            />
-        </View>
-    )
+    fetchData(){
+        let newData = getNewDishesData();
+        newData.then((results) => {
+            this.setState({listdata: this.state.listdata.concat(results)})
+        })
+    }
+    render() {
+        return (
+            <View style={{flex: 1}}>
+                <FlatList
+                    data={this.state.listdata}
+                    renderItem={this.dishItem}
+                    keyExtractor={item => item.id}
+                    onEndReached={getNewDishesData}
+                    onEndReachedThreshold={0.8}
+                    refreshControl={
+                        <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
+                    }
+                />
+            </View>
+        )
+    }
 }
