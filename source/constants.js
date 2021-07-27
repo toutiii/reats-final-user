@@ -18,4 +18,5 @@ export default all_constants = {
     colors: {
         inputBorderColor: '#ffd700',
     },
+    flatlist_slider_width: 300
 }
