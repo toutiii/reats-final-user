@@ -2,7 +2,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import SimpleView from "../views/SimpleView";
-import HomeTab from "./HomeTab";
 
 const Tab = createBottomTabNavigator();
 

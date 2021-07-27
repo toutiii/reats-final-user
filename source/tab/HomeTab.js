@@ -1,7 +1,6 @@
 import React from "react";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import all_constants from "../constants";
-import SimpleView from "../views/SimpleView";
 import NewDishesFlatList from "../flatlist/NewDishesFlatList";
 
 const Tab = createMaterialTopTabNavigator();

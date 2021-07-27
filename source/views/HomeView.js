@@ -1,11 +1,8 @@
 import React, {Component} from "react";
 import {View} from "react-native";
 import all_constants from "../constants";
-import HorizontalLine from "../components/HorizontalLine";
-import Dish from "../components/Dish";
 import {getNewDishesData} from "../api/fetch-home-data";
 import {FlatListSlider} from "react-native-flatlist-slider";
-import DishItem from "../components/DishItem";
 import Preview from "../components/Preview";
 
 
