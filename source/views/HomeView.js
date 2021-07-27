@@ -9,7 +9,7 @@ import DishItem from "../components/DishItem";
 import Preview from "../components/Preview";
 
 
-export default class NewDishesFlatList extends Component {
+export default class HomeView extends Component {
 
     constructor(props) {
         super(props);
