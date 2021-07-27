@@ -22,31 +22,6 @@ export default class NewDishesFlatList extends Component {
         this.fetchData()
         this.setState({refreshing: false});
     });
-
-    dishItem = ({item}) => {
-        return (
-            <View style={styles_dish.dish_button_container}>
-                <TouchableHighlight
-                    onPress={() => {console.log('PRESSED!')}}
-                    style={{flex: 1}}
-                    underlayColor={all_constants.colors.inputBorderColor}
-                >
-                    <Dish
-                        key={item.id}
-                        dish_photo={item.photo}
-                        dish_name={item.dish_name}
-                        dish_category={item.dish_category}
-                        dish_rating={item.dish_rating}
-                        dish_price={item.dish_price + all_constants.currency_symbol}
-                        dish_description={item.dish_description}
-                        onPress={item.onPress}
-                    />
-                </TouchableHighlight>
-                <HorizontalLine/>
-            </View>
-        );
-    }
-
     componentDidMount() {
         this.fetchData();
     }
