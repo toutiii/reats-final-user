@@ -17,11 +17,6 @@ export default class NewDishesFlatList extends Component {
         }
     }
 
-    onRefresh = (async () => {
-        this.setState({refreshing: true});
-        this.fetchData()
-        this.setState({refreshing: false});
-    });
     componentDidMount() {
         this.fetchData();
     }
