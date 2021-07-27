@@ -2,6 +2,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import SimpleView from "../views/SimpleView";
+import HomeView from "../views/HomeView";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,7 +40,7 @@ export default function MainTabNavigator(){
                 inactiveTintColor: 'gray',
             }}
         >
-            <Tab.Screen name="Home" component={HomeTab} />
+            <Tab.Screen name="Home" component={HomeView} />
             <Tab.Screen name="Orders" component={SimpleView}/>
             <Tab.Screen name="Pending" component={SimpleView} />
             <Tab.Screen name="Archives" component={SimpleView} />
