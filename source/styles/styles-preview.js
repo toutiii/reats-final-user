@@ -11,7 +11,6 @@ export default styles_preview = StyleSheet.create({
     },
     videoPreview: {
         width: all_constants.flatlist_slider_width,
-        borderRadius: 8,
     },
     desc: {
         fontSize: 14,
