@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Text, View} from "react-native";
+import {ScrollView, Text, View} from "react-native";
 import all_constants from "../constants";
 import {getNewDishesData} from "../api/fetch-home-data";
 import {FlatListSlider} from "react-native-flatlist-slider";
@@ -29,7 +29,7 @@ export default class HomeView extends Component {
 
     render() {
         return (
-            <View style={{flex: 1, marginTop: '15%'}}>
+            <ScrollView style={{flex: 1, marginTop: '10%'}}>
                 <View style={{flex: 1}}>
                     <Text style={{marginLeft: '5%', fontSize: 22}}> {all_constants.home.news_feed_title.new} </Text>
                     {
@@ -84,7 +84,7 @@ export default class HomeView extends Component {
                         />
                     }
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
