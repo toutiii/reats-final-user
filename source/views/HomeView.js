@@ -31,7 +31,9 @@ export default class HomeView extends Component {
         return (
             <ScrollView style={{flex: 1, marginTop: '10%'}}>
                 <View style={{flex: 1}}>
-                    <Text style={{marginLeft: '3%', fontSize: 22}}> {all_constants.home.news_feed_title.new} </Text>
+                    <Text style={{marginLeft: '3%', fontSize: 22}}>
+                        {all_constants.home.news_feed_title.new}
+                    </Text>
                     {
                         this.state.listdata.length > 0 &&
                         <FlatListSlider
@@ -49,7 +51,9 @@ export default class HomeView extends Component {
                     }
                 </View>
                 <View style={{flex: 1, marginTop: '3%'}}>
-                    <Text style={{marginLeft: '3%', fontSize: 22}}> {all_constants.home.news_feed_title.top_rated} </Text>
+                    <Text style={{marginLeft: '3%', fontSize: 22}}>
+                        {all_constants.home.news_feed_title.top_rated}
+                    </Text>
                     {
                         this.state.listdata.length > 0 &&
                         <FlatListSlider
@@ -67,7 +71,9 @@ export default class HomeView extends Component {
                     }
                 </View>
                 <View style={{flex: 1, marginTop: '5%'}}>
-                    <Text style={{marginLeft: '3%', fontSize: 22}}> {all_constants.home.news_feed_title.famous} </Text>
+                    <Text style={{marginLeft: '3%', fontSize: 22}}>
+                        {all_constants.home.news_feed_title.famous}
+                    </Text>
                     {
                         this.state.listdata.length > 0 &&
                         <FlatListSlider
