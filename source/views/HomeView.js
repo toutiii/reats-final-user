@@ -42,7 +42,7 @@ export default class HomeView extends Component {
                             component={<Preview/>}
                             indicatorActiveWidth={20}
                             imageKey={'photo'}
-                            contentContainerStyle={{paddingHorizontal: 16, marginTop: '5%'}}
+                            contentContainerStyle={{marginTop: '5%'}}
                             width={all_constants.flatlist_slider_width}
                             autoscroll={true}
                             loop={false}
@@ -62,7 +62,7 @@ export default class HomeView extends Component {
                             component={<Preview/>}
                             indicatorActiveWidth={20}
                             imageKey={'photo'}
-                            contentContainerStyle={{paddingHorizontal: 1, marginTop: '5%'}}
+                            contentContainerStyle={{marginTop: '5%'}}
                             width={all_constants.flatlist_slider_width}
                             autoscroll={true}
                             loop={false}
@@ -82,7 +82,7 @@ export default class HomeView extends Component {
                             component={<Preview/>}
                             indicatorActiveWidth={20}
                             imageKey={'photo'}
-                            contentContainerStyle={{paddingHorizontal: 16, marginTop: '5%'}}
+                            contentContainerStyle={{marginTop: '5%'}}
                             width={all_constants.flatlist_slider_width}
                             autoscroll={true}
                             loop={false}
