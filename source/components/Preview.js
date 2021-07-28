@@ -10,7 +10,7 @@ export default function Preview ({item, imageKey, active,}) {
         >
             <View>
                 <Image
-                    style={[styles_preview.videoPreview, active ? {height: 200} : {height: 80}]}
+                    style={[styles_preview.videoPreview, active ? {height: 200, width: 350} : {height: 80}]}
                     source={{uri: item[imageKey]}}
                 />
             </View>
