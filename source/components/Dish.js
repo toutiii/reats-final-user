@@ -6,7 +6,7 @@ import React from "react";
 
 export default function Dish ({...props}) {
     return(
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, width: 350}}>
             {
                 props.dish_photo &&
                 <View style={{flex: 2,}}>
