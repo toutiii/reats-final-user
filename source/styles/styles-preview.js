@@ -18,6 +18,5 @@ export default styles_preview = StyleSheet.create({
         fontSize: 14,
         letterSpacing: 0,
         lineHeight: 24,
-        marginTop: 18,
     },
 });
