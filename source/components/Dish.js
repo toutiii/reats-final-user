@@ -7,12 +7,15 @@ import React from "react";
 export default function Dish ({...props}) {
     return(
         <View style={{flex: 1}}>
-            <View style={{flex: 2,}}>
-                <Image
+            {
+                props.dish_photo &&
+                <View style={{flex: 2,}}>
+                    <Image
                     source={{uri: props.dish_photo}}
                     style={styles_dish.images}
-                />
-            </View>
+                    />
+                </View>
+            }
             <View style={{flex: 1,}}>
                 <View style={{flex: 1}}>
                     <View style={styles_dish.dish_price}>
