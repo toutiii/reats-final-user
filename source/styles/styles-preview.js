@@ -6,7 +6,6 @@ let styles_preview;
 export default styles_preview = StyleSheet.create({
     videoContainer: {
         width: all_constants.flatlist_slider_width,
-        paddingVertical: 28,
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 20,
