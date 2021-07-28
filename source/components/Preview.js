@@ -8,7 +8,7 @@ export default function Preview ({item, imageKey, active,}) {
             style={styles_preview.videoContainer}
             onPress={() => console.log('PRESSED')}
         >
-            <View style={[styles_preview.imageContainer, styles_preview.shadow]}>
+            <View>
                 <Image
                     style={[styles_preview.videoPreview, active ? {height: 200} : {height: 80}]}
                     source={{uri: item[imageKey]}}
