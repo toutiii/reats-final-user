@@ -1,7 +1,6 @@
 import React from "react";
-import {Image, Text, TouchableOpacity, View} from "react-native";
+import {Image, TouchableOpacity, View} from "react-native";
 import styles_preview from "../styles/styles-preview"
-import styles_dish from "../styles/styles-dish";
 import all_constants from "../constants";
 import Dish from "./Dish";
 
