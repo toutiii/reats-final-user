@@ -8,7 +8,6 @@ export default styles_preview = StyleSheet.create({
         width: all_constants.flatlist_slider_width,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 20,
     },
     videoPreview: {
         width: all_constants.flatlist_slider_width,
