@@ -1,3 +1,5 @@
+import {Dimensions} from "react-native";
+
 let all_constants;
 export default all_constants = {
     home:{
@@ -12,5 +14,5 @@ export default all_constants = {
     colors: {
         inputBorderColor: '#ffd700',
     },
-    flatlist_slider_width: 300
+    flatlist_slider_width: Dimensions.get('screen').width
 }
