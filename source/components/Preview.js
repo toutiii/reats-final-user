@@ -1,5 +1,5 @@
 import React from "react";
-import {Image, TouchableHighlight, TouchableOpacity, View} from "react-native";
+import {Image, TouchableHighlight, View} from "react-native";
 import styles_preview from "../styles/styles-preview"
 import all_constants from "../constants";
 import Dish from "./Dish";
