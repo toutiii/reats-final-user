@@ -54,7 +54,7 @@ export default class HomeView extends Component {
                         this.state.listdata.length > 0 &&
                         <FlatListSlider
                             data={this.state.listdata}
-                            timer={4000}
+                            timer={6000}
                             component={<Preview/>}
                             indicatorActiveWidth={20}
                             imageKey={'photo'}
@@ -72,7 +72,7 @@ export default class HomeView extends Component {
                         this.state.listdata.length > 0 &&
                         <FlatListSlider
                             data={this.state.listdata}
-                            timer={3000}
+                            timer={7000}
                             component={<Preview/>}
                             indicatorActiveWidth={20}
                             imageKey={'photo'}
