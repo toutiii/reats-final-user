@@ -1,5 +1,5 @@
 import React from "react";
-import {Platform, StyleSheet} from "react-native";
+import {StyleSheet} from "react-native";
 import all_constants from "../constants";
 
 let styles_preview;
