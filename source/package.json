@@ -21,6 +21,7 @@
     "react-native-flatlist-slider": "^1.0.5",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-pager-view": "5.0.12",
+    "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.0.0",
     "react-native-tab-view": "^3.0.1",
     "react-native-vector-icons": "^8.1.0",
