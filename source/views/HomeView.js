@@ -1,11 +1,12 @@
 import React, {Component} from "react";
-import {ActivityIndicator, Animated, ScrollView, Text, View} from "react-native";
+import {ActivityIndicator, Animated, LogBox, ScrollView, Text, View} from "react-native";
 import all_constants from "../constants";
 import {getNewDishesData} from "../api/fetch-home-data";
 import {FlatListSlider} from "react-native-flatlist-slider";
 import Preview from "../components/Preview";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+LogBox.ignoreLogs(['Setting a timer']);
 
 export default class HomeView extends Component {
 
