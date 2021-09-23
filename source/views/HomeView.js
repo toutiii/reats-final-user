@@ -20,6 +20,10 @@ export default class HomeView extends Component {
     }
 
     componentDidMount() {
+        this.fetchData();
+    }
+
+    fetchData() {
         this.setState({isFetching: true});
         let newData = getNewDishesData();
         newData.then(results => {
