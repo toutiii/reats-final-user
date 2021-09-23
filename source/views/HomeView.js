@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default class HomeView extends Component {
 
+    intervalID;
     constructor(props) {
         super(props);
         this.state = {
@@ -21,6 +22,11 @@ export default class HomeView extends Component {
 
     componentDidMount() {
         this.fetchData();
+        this.intervalID = setInterval(this.fetchData.bind(this), 1000000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.intervalID);
     }
 
     fetchData() {
