@@ -34,44 +34,60 @@ export default class HomeView extends Component {
         return (
             <SafeAreaView style={{flex: 1}}>
                 <ScrollView style={{flex: 1, marginTop: '10%'}}>
-                    <View style={{flex: 1}}>
-                        <Text style={{marginLeft: '3%', fontSize: 22}}>
-                            {all_constants.home.news_feed_title.new}
-                        </Text>
-                        {
-                            this.state.listdata.length > 0 &&
-                            <FlatListSlider
-                                data={this.state.listdata}
-                                timer={7000}
-                                component={<Preview/>}
-                                indicatorActiveWidth={20}
-                                imageKey={'photo'}
-                                contentContainerStyle={{marginTop: '5%'}}
-                                width={all_constants.flatlist_slider_width}
-                                autoscroll={true}
-                                loop={false}
-                                animation={true}
-                            />
-                        }
-                    </View>
+                    <Text style={{marginLeft: '3%', fontSize: 22}}>
+                        {all_constants.home.news_feed_title.new}
+                    </Text>
+                    {
+                        this.state.isFetching?
+                            <View style={{flex: 1}}>
+                                <ActivityIndicator size="large" color="tomato" />
+                            </View>
+                        :
+                            <View style={{flex: 1}}>
+                                {
+                                    this.state.listdata.length > 0 &&
+                                    <FlatListSlider
+                                        data={this.state.listdata}
+                                        timer={7000}
+                                        component={<Preview/>}
+                                        indicatorActiveWidth={20}
+                                        imageKey={'photo'}
+                                        contentContainerStyle={{marginTop: '5%'}}
+                                        width={all_constants.flatlist_slider_width}
+                                        autoscroll={true}
+                                        loop={false}
+                                        animation={true}
+                                    />
+                                }
+                            </View>
+                    }
                     <View style={{flex: 1, marginTop: '3%'}}>
                         <Text style={{marginLeft: '3%', fontSize: 22}}>
                             {all_constants.home.news_feed_title.top_rated}
                         </Text>
                         {
-                            this.state.listdata.length > 0 &&
-                            <FlatListSlider
-                                data={this.state.listdata}
-                                timer={8000}
-                                component={<Preview/>}
-                                indicatorActiveWidth={20}
-                                imageKey={'photo'}
-                                contentContainerStyle={{marginTop: '5%'}}
-                                width={all_constants.flatlist_slider_width}
-                                autoscroll={true}
-                                loop={false}
-                                animation={true}
-                            />
+                            this.state.isFetching?
+                                <View style={{flex: 1}}>
+                                    <ActivityIndicator size="large" color="tomato" />
+                                </View>
+                                :
+                                <View style={{flex: 1}}>
+                                    {
+                                        this.state.listdata.length > 0 &&
+                                        <FlatListSlider
+                                            data={this.state.listdata}
+                                            timer={7000}
+                                            component={<Preview/>}
+                                            indicatorActiveWidth={20}
+                                            imageKey={'photo'}
+                                            contentContainerStyle={{marginTop: '5%'}}
+                                            width={all_constants.flatlist_slider_width}
+                                            autoscroll={true}
+                                            loop={false}
+                                            animation={true}
+                                        />
+                                    }
+                                </View>
                         }
                     </View>
                     <View style={{flex: 1, marginTop: '5%'}}>
@@ -79,19 +95,28 @@ export default class HomeView extends Component {
                             {all_constants.home.news_feed_title.famous}
                         </Text>
                         {
-                            this.state.listdata.length > 0 &&
-                            <FlatListSlider
-                                data={this.state.listdata}
-                                timer={9000}
-                                component={<Preview/>}
-                                indicatorActiveWidth={20}
-                                imageKey={'photo'}
-                                contentContainerStyle={{marginTop: '5%'}}
-                                width={all_constants.flatlist_slider_width}
-                                autoscroll={true}
-                                loop={false}
-                                animation={true}
-                            />
+                            this.state.isFetching?
+                                <View style={{flex: 1}}>
+                                    <ActivityIndicator size="large" color="tomato" />
+                                </View>
+                                :
+                                <View style={{flex: 1}}>
+                                    {
+                                        this.state.listdata.length > 0 &&
+                                        <FlatListSlider
+                                            data={this.state.listdata}
+                                            timer={7000}
+                                            component={<Preview/>}
+                                            indicatorActiveWidth={20}
+                                            imageKey={'photo'}
+                                            contentContainerStyle={{marginTop: '5%'}}
+                                            width={all_constants.flatlist_slider_width}
+                                            autoscroll={true}
+                                            loop={false}
+                                            animation={true}
+                                        />
+                                    }
+                                </View>
                         }
                     </View>
                 </ScrollView>
