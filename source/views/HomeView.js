@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {ScrollView, Text, View} from "react-native";
+import {ActivityIndicator, Animated, ScrollView, Text, View} from "react-native";
 import all_constants from "../constants";
 import {getNewDishesData} from "../api/fetch-home-data";
 import {FlatListSlider} from "react-native-flatlist-slider";
@@ -13,7 +13,8 @@ export default class HomeView extends Component {
         super(props);
         this.state = {
             refreshing: false,
-            listdata: []
+            listdata: [],
+            opacity: new Animated.Value(1)
         }
     }
 
