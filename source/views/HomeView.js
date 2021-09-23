@@ -17,7 +17,6 @@ export default class HomeView extends Component {
             refreshing: false,
             listdata: [],
             isFetching: false,
-            opacity: new Animated.Value(1)
         }
     }
 
