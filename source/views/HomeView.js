@@ -20,13 +20,13 @@ export default class HomeView extends Component {
     }
 
     componentDidMount() {
-        this.fetchData();
-    }
-
-    fetchData(){
+        this.setState({isFetching: true});
         let newData = getNewDishesData();
-        newData.then((results) => {
-            this.setState({listdata: this.state.listdata.concat(results)})
+        newData.then(results => {
+            this.setState({
+                listdata: results,
+                isFetching: false
+            })
         })
     }
 
