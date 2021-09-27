@@ -9,6 +9,9 @@ export default all_constants = {
             famous: 'Les plus commandés'
         }
     },
+    search:{
+      placeholder: 'Poulet Yassa'
+    },
     currency_symbol: '€',
     rating_star: 'https://starpng.com/public/uploads/preview/yellow-star-transparent-background-png-101577029288c5hv8odvjm.png',
     colors: {
