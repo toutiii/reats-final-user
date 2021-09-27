@@ -41,7 +41,7 @@ export default function MainTabNavigator(){
             }}
         >
             <Tab.Screen name="Home" component={HomeView} />
-            <Tab.Screen name="Orders" component={SimpleView}/>
+            <Tab.Screen name="Search" component={SimpleView}/>
             <Tab.Screen name="Pending" component={SimpleView} />
             <Tab.Screen name="Archives" component={SimpleView} />
             <Tab.Screen name="Settings" component={SimpleView} />
