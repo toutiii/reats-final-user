@@ -42,7 +42,7 @@ export default class HomeView extends Component {
 
     render() {
         return (
-            <SafeAreaView style={{flex: 1}}>
+            <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
                 <ScrollView style={{flex: 1, marginTop: '10%'}}>
                     <Text style={{marginLeft: '3%', fontSize: 22}}>
                         {all_constants.home.news_feed_title.new}
