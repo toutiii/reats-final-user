@@ -16,7 +16,7 @@ export default function MainTabNavigator(){
                     let iconName;
                     if (route.name === 'Home') {
                         iconName = 'home-outline'
-                    }else if (route.name === 'Orders') {
+                    }else if (route.name === 'Search') {
                         iconName = 'restaurant-outline';
                     }else if (route.name === 'Archives') {
                         iconName = 'archive-outline';
