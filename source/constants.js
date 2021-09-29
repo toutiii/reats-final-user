@@ -23,5 +23,9 @@ export default all_constants = {
     colors: {
         inputBorderColor: '#ffd700',
     },
-    flatlist_slider_width: Dimensions.get('screen').width
+    flatlist_slider_width: Dimensions.get('screen').width,
+    screen: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+    },
 }
