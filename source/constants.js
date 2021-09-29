@@ -11,7 +11,7 @@ export default all_constants = {
     },
     search:{
         placeholder: 'Poulet Yassa',
-        no_dishes_found: 'Aucun item trouvé.',
+        no_dishes_found: 'Aucun résultat.',
         button:{
             label:{
                 search: "J'ai faim"
