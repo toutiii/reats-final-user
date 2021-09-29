@@ -10,9 +10,8 @@ export default styles_dish = StyleSheet.create({
     dish_button_container: {
         flex: 1,
         aspectRatio: 16/9,
-        paddingTop: '3%',
-        paddingLeft: '2%',
-        paddingRight: '2%',
+        alignItems: 'center',
+        paddingTop: '1%'
     },
     images: {
         flex: 1,
