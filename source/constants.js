@@ -10,7 +10,13 @@ export default all_constants = {
         }
     },
     search:{
-      placeholder: 'Poulet Yassa'
+        placeholder: 'Poulet Yassa',
+        no_dishes_found: 'Aucun item trouvé.',
+        button:{
+            label:{
+                search: "J'ai faim"
+            }
+        }
     },
     currency_symbol: '€',
     rating_star: 'https://starpng.com/public/uploads/preview/yellow-star-transparent-background-png-101577029288c5hv8odvjm.png',
