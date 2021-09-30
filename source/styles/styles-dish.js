@@ -11,7 +11,8 @@ export default styles_dish = StyleSheet.create({
         flex: 1,
         aspectRatio: 16/9,
         alignItems: 'center',
-        paddingTop: '1%'
+        marginTop: '15%',
+        width: '100%'
     },
     images: {
         flex: 1,
