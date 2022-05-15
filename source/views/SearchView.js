@@ -118,7 +118,6 @@ export default function SearchView () {
                                     return(
                                         <View key={dishObject.id} style={styles_dish.dish_button_container}>
                                             <Dish
-                                                key={dishObject.id}
                                                 dish_photo={dishObject.photo}
                                                 dish_name={dishObject.dish_name}
                                                 dish_category={dishObject.dish_category}
