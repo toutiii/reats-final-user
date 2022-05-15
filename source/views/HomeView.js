@@ -66,7 +66,7 @@ export default class HomeView extends Component {
                                         width={all_constants.flatlist_slider_width}
                                         autoscroll={true}
                                         loop={false}
-                                        animation={true}
+                                        animation={false}
                                     />
                                 }
                             </View>
@@ -94,7 +94,7 @@ export default class HomeView extends Component {
                                             width={all_constants.flatlist_slider_width}
                                             autoscroll={true}
                                             loop={false}
-                                            animation={true}
+                                            animation={false}
                                         />
                                     }
                                 </View>
@@ -123,7 +123,7 @@ export default class HomeView extends Component {
                                             width={all_constants.flatlist_slider_width}
                                             autoscroll={true}
                                             loop={false}
-                                            animation={true}
+                                            animation={false}
                                         />
                                     }
                                 </View>
