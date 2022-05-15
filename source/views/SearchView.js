@@ -38,7 +38,14 @@ export default function SearchView () {
         outputRange: [1, 0],
         extrapolate: 'clamp',
     });
-    var loaderComponent = array.map(item => <LoaderComponent />)
+    var loaderComponent = array.map(
+        (item, index) => {
+            return (
+                <View key={index}>
+                    <LoaderComponent />
+                </View>)
+        }
+    )
 
     const fetchData = () => {
         setMakeRequest(true);
