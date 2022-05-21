@@ -105,7 +105,7 @@ export default function SearchView () {
                     showsVerticalScrollIndicator={false}
                     style={{
                         backgroundColor: 'white',
-                        paddingTop: 35
+                        paddingTop: '10%'
                     }}
                     contentContainerStyle={{
                         display: 'flex',
