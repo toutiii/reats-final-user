@@ -8,6 +8,8 @@ import {getNewDishesData} from "../api/fetch-home-data";
 import styles_dish from "../styles/styles-dish";
 import Dish from "../components/Dish";
 import HorizontalLine from "../components/HorizontalLine";
+import CustomAlert from "../components/CustomAlert";
+
 
 
 export default function SearchView () {
@@ -17,6 +19,7 @@ export default function SearchView () {
     const [data, setData] = useState([]);
     const [makeRequest, setMakeRequest] = useState(false);
     const [meal_wanted, setMealWanted] = useState('')
+    const [showAlert, setStateShowAlert] = useState(false);
     const clampedScroll = Animated.diffClamp(
         Animated.add(
             scrollYValue.interpolate({
@@ -49,13 +52,18 @@ export default function SearchView () {
     )
 
     const fetchData = () => {
-        setMakeRequest(true);
-        setIsSearching(true);
-        let newData = getNewDishesData();
-        newData.then(results => {
-            setData(results);
-            setIsSearching(false);
-        })
+        if (meal_wanted === '') {
+            setStateShowAlert(true)
+        }
+        else {
+            setMakeRequest(true);
+            setIsSearching(true);
+            let newData = getNewDishesData();
+            newData.then(results => {
+                setData(results);
+                setIsSearching(false);
+            })
+        }
     }
 
     return (
@@ -133,6 +141,19 @@ export default function SearchView () {
                         </View>
                     )}
                 </Animated.ScrollView>
+                {
+                    showAlert && (
+                        <CustomAlert
+                            show={showAlert}
+                            title={all_constants.search.custom_alert.empty_search_value.title}
+                            message={all_constants.search.custom_alert.empty_search_value.message}
+                            confirmButtonColor='red'
+                            onConfirmPressed={() => {
+                                setStateShowAlert(false);
+                            }}
+                        />
+                    )
+                }
             </SafeAreaView>
         </Animated.View>
     );
