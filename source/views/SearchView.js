@@ -48,7 +48,7 @@ export default function SearchView () {
         <Animated.View>
             <StatusBar barStyle="light-content" />
             <SafeAreaView>
-                <Animated.View>
+                <View>
                     <TextInput
                         placeholder={all_constants.search.placeholder}
                         style={styles_search_view.formField}
@@ -68,7 +68,7 @@ export default function SearchView () {
                             onPress={fetchData}
                         />
                     </View>
-                </Animated.View>
+                </View>
                 <Animated.ScrollView
                     showsVerticalScrollIndicator={false}
                     style={{
