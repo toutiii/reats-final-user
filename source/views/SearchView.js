@@ -47,7 +47,7 @@ export default function SearchView () {
     return (
         <Animated.View>
             <StatusBar barStyle="light-content" />
-            <SafeAreaView>
+            <SafeAreaView style={{backgroundColor: 'white'}}>
                 <View style={{marginTop: '5%'}}>
                     <TextInput
                         placeholder={all_constants.search.placeholder}
@@ -71,9 +71,6 @@ export default function SearchView () {
                 </View>
                 <Animated.ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={{
-                        backgroundColor: 'white',
-                    }}
                     contentContainerStyle={{
                         display: 'flex',
                         flexDirection: 'row',
