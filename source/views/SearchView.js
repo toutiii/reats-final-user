@@ -16,6 +16,7 @@ export default function SearchView () {
     const [isSearching, setIsSearching] = useState(false);
     const [data, setData] = useState([]);
     const [makeRequest, setMakeRequest] = useState(false);
+    const [meal_wanted, setMealWanted] = useState('')
     const clampedScroll = Animated.diffClamp(
         Animated.add(
             scrollYValue.interpolate({
@@ -76,6 +77,7 @@ export default function SearchView () {
                         placeholder={all_constants.search.placeholder}
                         style={styles_search_view.formField}
                         placeholderTextColor={'#888888'}
+                        onChangeText={(value) => setMealWanted(value)}
                     />
                     <View style={{top:10}}>
                         <CustomButton
