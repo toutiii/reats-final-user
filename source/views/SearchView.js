@@ -81,7 +81,7 @@ export default function SearchView () {
                 >
                     {isSearching && loaderComponent}
                     {!isSearching && makeRequest && (
-                        <View style={{flex: 1, marginBottom: '25%'}}>
+                        <View style={{flex: 1}}>
                             {
                                 data.map((dishObject) => {
                                     return(
