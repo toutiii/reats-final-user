@@ -16,6 +16,12 @@ export default all_constants = {
             label:{
                 search: "J'ai faim"
             }
+        },
+        custom_alert: {
+            empty_search_value: {
+                title: 'Recherche vide',
+                message: "Pas de nom de plat ?"
+            }
         }
     },
     currency_symbol: '€',
