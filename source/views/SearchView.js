@@ -14,34 +14,12 @@ import CustomAlert from "../components/CustomAlert";
 
 export default function SearchView () {
     const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const [scrollYValue, setScrollYValue] = useState(new Animated.Value(0));
     const [isSearching, setIsSearching] = useState(false);
     const [data, setData] = useState([]);
     const [makeRequest, setMakeRequest] = useState(false);
     const [meal_wanted, setMealWanted] = useState('')
     const [showAlert, setStateShowAlert] = useState(false);
-    const clampedScroll = Animated.diffClamp(
-        Animated.add(
-            scrollYValue.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 1],
-                extrapolateLeft: 'clamp',
-            }),
-            new Animated.Value(0),
-        ),
-        0,
-        50,
-    )
-    const searchBarTranslate = clampedScroll.interpolate({
-        inputRange: [0, 50],
-        outputRange: [0, -(250)],
-        extrapolate: 'clamp',
-    });
-    const searchBarOpacity = clampedScroll.interpolate({
-        inputRange: [0, 10],
-        outputRange: [1, 0],
-        extrapolate: 'clamp',
-    });
+
     var loaderComponent = array.map(
         (item, index) => {
             return (
@@ -70,17 +48,7 @@ export default function SearchView () {
         <Animated.View>
             <StatusBar barStyle="light-content" />
             <SafeAreaView>
-                <Animated.View style={[
-                    styles_search_view.container,
-                    {
-                        transform: [
-                            {
-                                translateY: searchBarTranslate
-                            }
-                        ],
-                        opacity: searchBarOpacity,
-                    }
-                ]}>
+                <Animated.View>
                     <TextInput
                         placeholder={all_constants.search.placeholder}
                         style={styles_search_view.formField}
@@ -114,10 +82,6 @@ export default function SearchView () {
                         justifyContent: 'space-around',
                         marginTop: 50,
                     }}
-                    onScroll={Animated.event(
-                        [{ nativeEvent: { contentOffset: { y: scrollYValue } } }],
-                        { useNativeDriver: false },
-                    )}
                     contentInsetAdjustmentBehavior="automatic"
                 >
                     {isSearching && loaderComponent}
