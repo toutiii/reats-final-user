@@ -73,14 +73,12 @@ export default function SearchView () {
                     showsVerticalScrollIndicator={false}
                     style={{
                         backgroundColor: 'white',
-                        paddingTop: '10%'
                     }}
                     contentContainerStyle={{
                         display: 'flex',
                         flexDirection: 'row',
                         flexWrap: 'wrap',
                         justifyContent: 'space-around',
-                        marginTop: 50,
                     }}
                     contentInsetAdjustmentBehavior="automatic"
                 >
