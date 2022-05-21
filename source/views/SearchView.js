@@ -54,6 +54,7 @@ export default function SearchView () {
                         style={styles_search_view.formField}
                         placeholderTextColor={'#888888'}
                         onChangeText={(value) => setMealWanted(value)}
+                        width={all_constants.screen.width - 40}
                     />
                     <View style={{top:10}}>
                         <CustomButton
