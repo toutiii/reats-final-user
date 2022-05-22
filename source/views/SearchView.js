@@ -89,7 +89,7 @@ export default function SearchView ({...props}) {
                                         <TouchableHighlight
                                             key={dishObject.id}
                                             style={styles_dish.dish_button_container}
-                                            onPress={() => {props.navigation.navigate('SearchItemDetail');}}
+                                            onPress={() => {props.navigation.navigate('SearchItemDetail', { item: dishObject });}}
                                             underlayColor={all_constants.colors.inputBorderColor}
                                         >
                                             <View>
