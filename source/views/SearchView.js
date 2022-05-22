@@ -45,9 +45,9 @@ export default function SearchView () {
     }
 
     return (
-        <Animated.View>
+        <Animated.View style={{backgroundColor: 'white', flex: 1}}>
             <StatusBar barStyle="light-content" />
-            <SafeAreaView style={{backgroundColor: 'white'}}>
+            <SafeAreaView>
                 <View style={{marginTop: '5%', alignItems: 'center'}}>
                     <TextInput
                         placeholder={all_constants.search.placeholder}
