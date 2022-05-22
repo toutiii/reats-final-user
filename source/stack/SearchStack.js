@@ -20,9 +20,9 @@ export default class SearchStack extends Component{
                 initialRouteName='Home'
             >
                 <Stack.Screen
-                    name="Home" 
-                    component={SearchView} 
-                    options={{headerShown: false}} 
+                    name="Home"
+                    component={SearchView}
+                    options={{headerShown: false}}
                 />
                 <Stack.Screen
                     name="SearchItemDetail"
