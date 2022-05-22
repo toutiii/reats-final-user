@@ -12,7 +12,7 @@ import CustomAlert from "../components/CustomAlert";
 
 
 
-export default function SearchView () {
+export default function SearchView ({...props}) {
     const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const [isSearching, setIsSearching] = useState(false);
     const [data, setData] = useState([]);
@@ -89,7 +89,7 @@ export default function SearchView () {
                                         <TouchableHighlight
                                             key={dishObject.id}
                                             style={styles_dish.dish_button_container}
-                                            onPress={() => {console.log('test')}}
+                                            onPress={() => {props.navigation.navigate('SearchItemDetail');}}
                                             underlayColor={all_constants.colors.inputBorderColor}
                                         >
                                             <View>
