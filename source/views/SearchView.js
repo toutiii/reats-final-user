@@ -47,29 +47,29 @@ export default function SearchView () {
     return (
         <Animated.View style={{backgroundColor: 'white', flex: 1}}>
             <StatusBar barStyle="light-content" />
-            <SafeAreaView>
-                <View style={{marginTop: '5%', alignItems: 'center'}}>
-                    <TextInput
-                        placeholder={all_constants.search.placeholder}
-                        style={styles_search_view.formField}
-                        placeholderTextColor={'#888888'}
-                        onChangeText={(value) => setMealWanted(value)}
-                        width={all_constants.screen.width - 40}
+            <View style={{marginTop: '5%', alignItems: 'center', flex: 1}}>
+                <TextInput
+                    placeholder={all_constants.search.placeholder}
+                    style={styles_search_view.formField}
+                    placeholderTextColor={'#888888'}
+                    onChangeText={(value) => setMealWanted(value)}
+                    width={all_constants.screen.width - 40}
+                />
+                <View style={{top:10}}>
+                    <CustomButton
+                        label={all_constants.search.button.label.search}
+                        height={50}
+                        border_width={3}
+                        border_radius={30}
+                        font_size={17}
+                        backgroundColor={'tomato'}
+                        label_color={'white'}
+                        button_width={all_constants.screen.width - 40}
+                        onPress={fetchData}
                     />
-                    <View style={{top:10}}>
-                        <CustomButton
-                            label={all_constants.search.button.label.search}
-                            height={50}
-                            border_width={3}
-                            border_radius={30}
-                            font_size={17}
-                            backgroundColor={'tomato'}
-                            label_color={'white'}
-                            button_width={all_constants.screen.width - 40}
-                            onPress={fetchData}
-                        />
-                    </View>
                 </View>
+            </View>
+            <Animated.View style={{flex: 5}}>
                 <Animated.ScrollView
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{
@@ -101,20 +101,20 @@ export default function SearchView () {
                         </View>
                     )}
                 </Animated.ScrollView>
-                {
-                    showAlert && (
-                        <CustomAlert
-                            show={showAlert}
-                            title={all_constants.search.custom_alert.empty_search_value.title}
-                            message={all_constants.search.custom_alert.empty_search_value.message}
-                            confirmButtonColor='red'
-                            onConfirmPressed={() => {
-                                setStateShowAlert(false);
-                            }}
-                        />
-                    )
-                }
-            </SafeAreaView>
+            </Animated.View>
+            {
+                showAlert && (
+                    <CustomAlert
+                        show={showAlert}
+                        title={all_constants.search.custom_alert.empty_search_value.title}
+                        message={all_constants.search.custom_alert.empty_search_value.message}
+                        confirmButtonColor='red'
+                        onConfirmPressed={() => {
+                            setStateShowAlert(false);
+                        }}
+                    />
+                )
+            }
         </Animated.View>
     );
 };
