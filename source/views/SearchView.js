@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Animated, StatusBar, TextInput, View} from 'react-native';
+import {Animated, StatusBar, TextInput, TouchableHighlight, View} from 'react-native';
 import LoaderComponent from "../components/LoaderComponent";
 import CustomButton from "../components/CustomButton";
 import all_constants from "../constants";
@@ -86,17 +86,24 @@ export default function SearchView () {
                             {
                                 data.map((dishObject) => {
                                     return(
-                                        <View key={dishObject.id} style={styles_dish.dish_button_container}>
-                                            <Dish
-                                                dish_photo={dishObject.photo}
-                                                dish_name={dishObject.dish_name}
-                                                dish_category={dishObject.dish_category}
-                                                dish_rating={dishObject.dish_rating}
-                                                dish_price={dishObject.dish_price + all_constants.currency_symbol}
-                                                dish_description={dishObject.dish_description}
-                                            />
-                                            <HorizontalLine/>
-                                        </View>
+                                        <TouchableHighlight
+                                            key={dishObject.id}
+                                            style={styles_dish.dish_button_container}
+                                            onPress={() => {console.log('test')}}
+                                            underlayColor={all_constants.colors.inputBorderColor}
+                                        >
+                                            <View>
+                                                <Dish
+                                                    dish_photo={dishObject.photo}
+                                                    dish_name={dishObject.dish_name}
+                                                    dish_category={dishObject.dish_category}
+                                                    dish_rating={dishObject.dish_rating}
+                                                    dish_price={dishObject.dish_price + all_constants.currency_symbol}
+                                                    dish_description={dishObject.dish_description}
+                                                />
+                                                <HorizontalLine/>
+                                            </View>
+                                        </TouchableHighlight>
                                     )})}
                         </View>
                     )}
