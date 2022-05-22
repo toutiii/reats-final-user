@@ -3,7 +3,7 @@ import React from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import SimpleView from "../views/SimpleView";
 import HomeView from "../views/HomeView";
-import SearchView from "../views/SearchView";
+import SearchStack from "../stack/SearchStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +42,7 @@ export default function MainTabNavigator(){
             }}
         >
             <Tab.Screen name="Home" component={HomeView} />
-            <Tab.Screen name="Search" component={SearchView}/>
+            <Tab.Screen name="Search" component={SearchStack}/>
             <Tab.Screen name="Pending" component={SimpleView} />
             <Tab.Screen name="Archives" component={SimpleView} />
             <Tab.Screen name="Settings" component={SimpleView} />
