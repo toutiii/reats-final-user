@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import { createStackNavigator } from '@react-navigation/stack';
-import SimpleView from "../views/SimpleView";
 import SearchView from "../views/SearchView";
 import all_constants from "../constants";
 
