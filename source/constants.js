@@ -22,6 +22,11 @@ export default all_constants = {
                 title: 'Recherche vide',
                 message: "Pas de nom de plat ?"
             }
+        },
+        stack_navigator: {
+            search_item_detail: {
+                title: 'Retour'
+            }
         }
     },
     currency_symbol: '€',
