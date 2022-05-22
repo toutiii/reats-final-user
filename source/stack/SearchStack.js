@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import { createStackNavigator } from '@react-navigation/stack';
 import SearchView from "../views/SearchView";
 import all_constants from "../constants";
+import SearchItemDetailView from "../views/SearchItemDetailView"
 
 const Stack = createStackNavigator();
 
@@ -23,13 +24,13 @@ export default class SearchStack extends Component{
                     component={SearchView} 
                     options={{headerShown: false}} 
                 />
-                <Stack.Screen 
-                    name="SearchItemDetail" 
-                    component={SimpleView} 
+                <Stack.Screen
+                    name="SearchItemDetail"
+                    component={SearchItemDetailView}
                     options={{
                         headerShown: true,
                         title: all_constants.search.stack_navigator.search_item_detail.title
-                    }} 
+                    }}
                 />
             </Stack.Navigator>
         )
