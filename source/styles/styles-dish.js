@@ -1,5 +1,5 @@
 import {StyleSheet} from "react-native";
-import React from "react";
+
 
 let styles_dish;
 export default styles_dish = StyleSheet.create({
