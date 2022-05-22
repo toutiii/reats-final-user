@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Animated, SafeAreaView, StatusBar, TextInput, TouchableHighlight, View} from 'react-native';
+import {Animated, StatusBar, TextInput, View} from 'react-native';
 import LoaderComponent from "../components/LoaderComponent";
 import CustomButton from "../components/CustomButton";
 import all_constants from "../constants";
