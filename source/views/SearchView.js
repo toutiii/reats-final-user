@@ -101,7 +101,7 @@ export default function SearchView ({...props}) {
                                                     dish_price={dishObject.dish_price + all_constants.currency_symbol}
                                                     dish_description={dishObject.dish_description}
                                                 />
-                                                <HorizontalLine/>
+
                                             </View>
                                         </TouchableHighlight>
                                     )})}
