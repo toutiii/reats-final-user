@@ -31,7 +31,12 @@ export default all_constants = {
         search_item_detail_view: {
             button: {
                 add_to_basket: 'Commander',
-                delete_from_basket: 'Supprimer'
+                delete_from_basket: 'Supprimer',
+            },
+            delivery: {
+                delivery_day: 'Livraison',
+                delivery_hour: 'Heure de livraison',
+                dish_origin: 'Origine du plat'
             }
         },
     },
