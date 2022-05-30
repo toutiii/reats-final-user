@@ -50,4 +50,6 @@ export default all_constants = {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
     },
+    french_date_format: "EEEE dd MMMM yyyy",
+    french_hour_format: "HH:mm"
 }
