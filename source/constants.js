@@ -34,9 +34,11 @@ export default all_constants = {
                 delete_from_basket: 'Supprimer',
             },
             delivery: {
+                delivery_circa: ' vers ',
                 delivery_day: 'Livraison',
                 delivery_hour: 'Heure de livraison',
-                dish_origin: 'Origine du plat'
+                delivery_info: 'Informations de livraison',
+                dish_origin: 'Origine du plat',
             }
         },
     },
