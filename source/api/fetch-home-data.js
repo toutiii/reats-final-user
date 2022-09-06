@@ -1,4 +1,4 @@
-export async function getNewDishesData(){
+export async function getNewDishesData() {
     await fetch(
         'http://www.mocky.io/v2/5e3315753200008abe94d3d8?mocky-delay=2000ms',
     );
@@ -6,7 +6,7 @@ export async function getNewDishesData(){
         status: 200,
         ok: true,
         json: {
-            "data":[
+            "data": [
                 {
                     "id": "1",
                     "photo": "https://img-3.journaldesfemmes.fr/M_bbWpTVNekL5O_MLzQ4dyInmJU=/750x/smart/1c9fe4d4419047f18efc37134a046e5a/recipe-jdf/1001383.jpg",

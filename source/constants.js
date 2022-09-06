@@ -1,19 +1,19 @@
-import {Dimensions} from "react-native";
+import { Dimensions } from "react-native";
 
 let all_constants;
 export default all_constants = {
-    home:{
-        news_feed_title:{
+    home: {
+        news_feed_title: {
             new: 'Les nouveautés',
             top_rated: 'Les mieux notés',
             famous: 'Les plus commandés'
         }
     },
-    search:{
+    search: {
         placeholder: 'Poulet Yassa',
         no_dishes_found: 'Aucun résultat.',
-        button:{
-            label:{
+        button: {
+            label: {
                 search: "J'ai faim"
             }
         },
