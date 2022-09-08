@@ -1,14 +1,14 @@
 import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SimpleView from "../views/SimpleView";
 import HomeView from "../views/HomeView";
 import SearchStack from "../stack/SearchStack";
 
 const Tab = createBottomTabNavigator();
 
-export default function MainTabNavigator(){
-    return(
+export default function MainTabNavigator() {
+    return (
         <Tab.Navigator
             initialRouteName="Home"
             screenOptions={({ route }) => ({
@@ -16,13 +16,13 @@ export default function MainTabNavigator(){
                     let iconName;
                     if (route.name === 'Home') {
                         iconName = 'home-outline'
-                    }else if (route.name === 'Search') {
+                    } else if (route.name === 'Search') {
                         iconName = 'restaurant-outline';
-                    }else if (route.name === 'Archives') {
+                    } else if (route.name === 'Archives') {
                         iconName = 'archive-outline';
-                    }else if (route.name === 'Pending') {
+                    } else if (route.name === 'Pending') {
                         iconName = 'hourglass-outline';
-                    }else if (route.name === 'Settings') {
+                    } else if (route.name === 'Settings') {
                         iconName = 'settings-outline';
                     }
                     // You can return any component that you like here!
