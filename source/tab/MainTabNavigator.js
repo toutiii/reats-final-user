@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SimpleView from "../views/SimpleView";
 import HomeView from "../views/HomeView";
 import SearchStack from "../stack/SearchStack";
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +43,21 @@ export default function MainTabNavigator() {
             }}
         >
             <Tab.Screen name="Home" component={HomeView} />
-            <Tab.Screen name="Search" component={SearchStack}/>
+            <Tab.Screen
+                name="Search"
+                component={SearchStack}
+                options={({ route }) => ({
+                    tabBarVisible: ((route) => {
+                        const routeName = getFocusedRouteNameFromRoute(route) ?? ""
+
+                        if (routeName === "SearchItemDetail") {
+                            return false
+                        }
+
+                        return true
+                    })(route),
+                })}
+            />
             <Tab.Screen name="Pending" component={SimpleView} />
             <Tab.Screen name="Archives" component={SimpleView} />
             <Tab.Screen name="Settings" component={SimpleView} />
