@@ -14,7 +14,7 @@ export default all_constants = {
         no_dishes_found: 'Aucun résultat.',
         button: {
             label: {
-                search: "J'ai faim"
+                search: "Chercher"
             }
         },
         custom_alert: {
