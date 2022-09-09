@@ -11,3 +11,8 @@ source/web-build/
 
 # macOS
 source/.DS_Store
+
+# Ignoring dev files
+.vscode/
+*/package-lock.json
+*/yarn-error.log
