@@ -30,7 +30,9 @@ export default all_constants = {
         },
         search_item_detail_view: {
             button: {
-                add_to_basket: 'Commander',
+                add_to_basket_start: "Ajouter ",
+                add_to_basket_end: " dans le panier",
+                add_to_basket_default: "Ajouter 1 dans le panier",
                 delete_from_basket: 'Supprimer',
             },
             delivery: {
