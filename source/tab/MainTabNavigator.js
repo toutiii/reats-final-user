@@ -5,6 +5,8 @@ import SimpleView from "../views/SimpleView";
 import HomeView from "../views/HomeView";
 import SearchStack from "../stack/SearchStack";
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import OrdersStack from "../stack/OrdersStack";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +22,7 @@ export default function MainTabNavigator() {
                     } else if (route.name === 'Search') {
                         iconName = 'restaurant-outline';
                     } else if (route.name === 'Archives') {
-                        iconName = 'archive-outline';
+                        iconName = 'folder-open-outline';
                     } else if (route.name === 'Pending') {
                         iconName = 'hourglass-outline';
                     } else if (route.name === 'Settings') {
@@ -58,7 +60,22 @@ export default function MainTabNavigator() {
                     })(route),
                 })}
             />
-            <Tab.Screen name="Pending" component={SimpleView} />
+            <Tab.Screen
+                name="Pending"
+                component={OrdersStack}
+                options={({ route }) => ({
+                    tabBarVisible: ((route) => {
+                        const routeName = getFocusedRouteNameFromRoute(route) ?? ""
+
+                        if (routeName === "OrderDetailView") {
+                            return false
+                        }
+
+                        return true
+                    })(route),
+                })}
+
+            />
             <Tab.Screen name="Archives" component={SimpleView} />
             <Tab.Screen name="Settings" component={SimpleView} />
         </Tab.Navigator>

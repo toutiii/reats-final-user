@@ -1,23 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Image, ScrollView, Text, View } from "react-native";
 import all_constants from "../constants";
 import CountryFlag from "react-native-country-flag";
 import CustomButton from "../components/CustomButton";
-import { format } from "date-fns";
-import frFrLocale from 'date-fns/locale/fr';
 import Counter from "react-native-counters";
 import Feather from 'react-native-vector-icons/Feather';
-
-
-function getDeliveryDateInfo(dishObject, wantedFormat) {
-    var deliveryDateObject = new Date(dishObject.dish_delivery_datetime)
-    formattedDeliveryDate = format(
-        deliveryDateObject,
-        wantedFormat,
-        { locale: frFrLocale }
-    )
-    return formattedDeliveryDate
-}
+import { getDeliveryDateInfo } from "../helpers/toolbox"
 
 
 export default function SearchItemDetailView({ ...props }) {
@@ -86,9 +74,15 @@ export default function SearchItemDetailView({ ...props }) {
 
                     <View style={{ flex: 1, justifyContent: 'center' }}>
                         <Text numberOfLines={1} style={{ fontSize: 18 }}>
-                            {getDeliveryDateInfo(props.route.params.item, all_constants.french_date_format)}
+
+                            {getDeliveryDateInfo(
+                                new Date(props.route.params.item.dish_delivery_datetime),
+                                all_constants.french_date_format)}
                             {all_constants.search.search_item_detail_view.delivery.delivery_circa}
-                            {getDeliveryDateInfo(props.route.params.item, all_constants.french_hour_format)}
+                            {getDeliveryDateInfo(
+                                new Date(props.route.params.item.dish_delivery_datetime),
+                                all_constants.french_hour_format
+                            )}
                         </Text>
                     </View>
                 </View>

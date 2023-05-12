@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 
 
 let styles_dish;
@@ -9,7 +9,7 @@ export default styles_dish = StyleSheet.create({
     },
     dish_button_container: {
         flex: 1,
-        aspectRatio: 16/9,
+        aspectRatio: 16 / 9,
         alignItems: 'center',
         marginTop: '5%',
         width: '100%'
@@ -18,18 +18,18 @@ export default styles_dish = StyleSheet.create({
     images: {
         flex: 1,
     },
-    dish_infos:{
+    dish_infos: {
         flex: 1,
         alignItems: 'flex-end',
         justifyContent: 'space-between',
         flexDirection: 'row',
     },
-    dish_price:{
+    dish_price: {
         flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
     },
-    dish_name:{
+    dish_name: {
         flex: 1,
         justifyContent: 'flex-end',
     },
@@ -39,7 +39,7 @@ export default styles_dish = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'flex-start',
     },
-    rating_star:{
+    rating_star: {
         width: 20,
         height: 20,
     },

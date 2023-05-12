@@ -44,6 +44,25 @@ export default all_constants = {
             }
         },
     },
+    pending_orders_view: {
+        no_pending_orders: "Vous n'avez pas de commande en attente.",
+        stack_navigator: {
+            order_item_detail: {
+                title: 'Retour'
+            }
+        },
+        main_title: 'Commandes en cours',
+        item_label: {
+            dish: " plat",
+            dishes: " plats",
+            total: "Total: ",
+            ordered_at: "Commandé le: ",
+            cooking: "En cours de préparation"
+        },
+        button_label: {
+            cancel_order: "ANNULER LA COMMANDE"
+        }
+    },
     currency_symbol: ' €',
     rating_star: 'https://starpng.com/public/uploads/preview/yellow-star-transparent-background-png-101577029288c5hv8odvjm.png',
     colors: {
@@ -55,5 +74,7 @@ export default all_constants = {
         height: Dimensions.get('window').height,
     },
     french_date_format: "EEEE dd MMMM yyyy",
-    french_hour_format: "HH:mm"
+    french_hour_format: "HH:mm",
+    short_french_date_format: "dd/MM/yyyy",
+    at: " à "
 }

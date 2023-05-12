@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import {Animated, StatusBar, TextInput, TouchableHighlight, View} from 'react-native';
+import { Animated, StatusBar, TextInput, TouchableHighlight, View } from 'react-native';
 import LoaderComponent from "../components/LoaderComponent";
 import CustomButton from "../components/CustomButton";
 import all_constants from "../constants";
 import styles_search_view from "../styles/styles-search-view";
-import {getNewDishesData} from "../api/fetch-home-data";
+import { getNewDishesData } from "../api/fetch-home-data";
 import styles_dish from "../styles/styles-dish";
 import Dish from "../components/Dish";
-import HorizontalLine from "../components/HorizontalLine";
 import CustomAlert from "../components/CustomAlert";
 
 
 
-export default function SearchView ({...props}) {
+export default function SearchView({ ...props }) {
     const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const [isSearching, setIsSearching] = useState(false);
     const [data, setData] = useState([]);
@@ -45,9 +44,9 @@ export default function SearchView ({...props}) {
     }
 
     return (
-        <Animated.View style={{backgroundColor: 'white', flex: 1}}>
+        <Animated.View style={{ backgroundColor: 'white', flex: 1 }}>
             <StatusBar barStyle="light-content" />
-            <View style={{marginTop: '5%', alignItems: 'center', flex: 1}}>
+            <View style={{ marginTop: '5%', alignItems: 'center', flex: 1 }}>
                 <TextInput
                     placeholder={all_constants.search.placeholder}
                     style={styles_search_view.formField}
@@ -55,7 +54,7 @@ export default function SearchView ({...props}) {
                     onChangeText={(value) => setMealWanted(value)}
                     width={all_constants.screen.width - 40}
                 />
-                <View style={{top:10}}>
+                <View style={{ top: 10 }}>
                     <CustomButton
                         label={all_constants.search.button.label.search}
                         height={50}
@@ -69,7 +68,7 @@ export default function SearchView ({...props}) {
                     />
                 </View>
             </View>
-            <Animated.View style={{flex: 5}}>
+            <Animated.View style={{ flex: 5 }}>
                 <Animated.ScrollView
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{
@@ -82,14 +81,14 @@ export default function SearchView ({...props}) {
                 >
                     {isSearching && loaderComponent}
                     {!isSearching && makeRequest && (
-                        <View style={{flex: 1}}>
+                        <View style={{ flex: 1 }}>
                             {
                                 data.map((dishObject) => {
-                                    return(
+                                    return (
                                         <TouchableHighlight
                                             key={dishObject.id}
                                             style={styles_dish.dish_button_container}
-                                            onPress={() => {props.navigation.navigate('SearchItemDetail', { item: dishObject });}}
+                                            onPress={() => { props.navigation.navigate('SearchItemDetailView', { item: dishObject }); }}
                                             underlayColor={all_constants.colors.inputBorderColor}
                                         >
                                             <View>
@@ -104,7 +103,8 @@ export default function SearchView ({...props}) {
 
                                             </View>
                                         </TouchableHighlight>
-                                    )})}
+                                    )
+                                })}
                         </View>
                     )}
                 </Animated.ScrollView>

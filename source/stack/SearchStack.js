@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import { createStackNavigator } from '@react-navigation/stack';
 import SearchView from "../views/SearchView";
 import all_constants from "../constants";
@@ -7,12 +7,12 @@ import SearchItemDetailView from "../views/SearchItemDetailView"
 const Stack = createStackNavigator();
 
 
-export default class SearchStack extends Component{
+export default class SearchStack extends Component {
     constructor(props) {
         super(props);
     }
     render() {
-        return(
+        return (
             <Stack.Navigator
                 screenOptions={{
                     headerShown: true
@@ -22,10 +22,10 @@ export default class SearchStack extends Component{
                 <Stack.Screen
                     name="Home"
                     component={SearchView}
-                    options={{headerShown: false}}
+                    options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                    name="SearchItemDetail"
+                    name="SearchItemDetailView"
                     component={SearchItemDetailView}
                     options={{
                         headerShown: true,
