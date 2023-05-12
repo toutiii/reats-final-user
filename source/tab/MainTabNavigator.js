@@ -4,80 +4,76 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SimpleView from "../views/SimpleView";
 import HomeView from "../views/HomeView";
 import SearchStack from "../stack/SearchStack";
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import OrdersStack from "../stack/OrdersStack";
-
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
-    return (
-        <Tab.Navigator
-            initialRouteName="Home"
-            screenOptions={({ route }) => ({
-                tabBarIcon: ({ focused, color, size }) => {
-                    let iconName;
-                    if (route.name === 'Home') {
-                        iconName = 'home-outline'
-                    } else if (route.name === 'Search') {
-                        iconName = 'restaurant-outline';
-                    } else if (route.name === 'Archives') {
-                        iconName = 'folder-open-outline';
-                    } else if (route.name === 'Pending') {
-                        iconName = 'hourglass-outline';
-                    } else if (route.name === 'Settings') {
-                        iconName = 'settings-outline';
-                    }
-                    // You can return any component that you like here!
-                    return <Ionicons name={iconName} size={size} color={color} />;
-                },
-                tabBarButton: [
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === "Home") {
+            iconName = "home-outline";
+          } else if (route.name === "Search") {
+            iconName = "restaurant-outline";
+          } else if (route.name === "Archives") {
+            iconName = "folder-open-outline";
+          } else if (route.name === "Pending") {
+            iconName = "hourglass-outline";
+          } else if (route.name === "Settings") {
+            iconName = "settings-outline";
+          }
+          // You can return any component that you like here!
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarButton: [].includes(route.name)
+          ? () => {
+              return null;
+            }
+          : undefined,
+      })}
+      tabBarOptions={{
+        activeTintColor: "tomato",
+        inactiveTintColor: "gray",
+      }}
+    >
+      <Tab.Screen name="Home" component={HomeView} />
+      <Tab.Screen
+        name="Search"
+        component={SearchStack}
+        options={({ route }) => ({
+          tabBarVisible: ((route) => {
+            const routeName = getFocusedRouteNameFromRoute(route) ?? "";
 
-                ].includes(route.name)
-                    ? () => {
-                        return null;
-                    }
-                    : undefined,
-            })}
-            tabBarOptions={{
-                activeTintColor: 'tomato',
-                inactiveTintColor: 'gray',
-            }}
-        >
-            <Tab.Screen name="Home" component={HomeView} />
-            <Tab.Screen
-                name="Search"
-                component={SearchStack}
-                options={({ route }) => ({
-                    tabBarVisible: ((route) => {
-                        const routeName = getFocusedRouteNameFromRoute(route) ?? ""
+            if (routeName === "SearchItemDetail") {
+              return false;
+            }
 
-                        if (routeName === "SearchItemDetail") {
-                            return false
-                        }
+            return true;
+          })(route),
+        })}
+      />
+      <Tab.Screen
+        name="Pending"
+        component={OrdersStack}
+        options={({ route }) => ({
+          tabBarVisible: ((route) => {
+            const routeName = getFocusedRouteNameFromRoute(route) ?? "";
 
-                        return true
-                    })(route),
-                })}
-            />
-            <Tab.Screen
-                name="Pending"
-                component={OrdersStack}
-                options={({ route }) => ({
-                    tabBarVisible: ((route) => {
-                        const routeName = getFocusedRouteNameFromRoute(route) ?? ""
+            if (routeName === "OrderDetailView") {
+              return false;
+            }
 
-                        if (routeName === "OrderDetailView") {
-                            return false
-                        }
-
-                        return true
-                    })(route),
-                })}
-
-            />
-            <Tab.Screen name="Archives" component={SimpleView} />
-            <Tab.Screen name="Settings" component={SimpleView} />
-        </Tab.Navigator>
-    )
+            return true;
+          })(route),
+        })}
+      />
+      <Tab.Screen name="Archives" component={SimpleView} />
+      <Tab.Screen name="Settings" component={SimpleView} />
+    </Tab.Navigator>
+  );
 }
