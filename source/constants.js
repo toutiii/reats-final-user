@@ -78,4 +78,25 @@ export default all_constants = {
   french_hour_format: "HH:mm",
   short_french_date_format: "dd/MM/yyyy",
   at: " à ",
+  drawercontent: {
+    logout: "Déconnexion",
+    hello: "Bonjour ",
+    settings: "Mes paramètres",
+    drawer_item: {
+      label: {
+        account: "Compte",
+        connection: "Connexion",
+        localization: "Localisation",
+        wallet: "Portefeuille",
+      },
+    },
+  },
+  tab: {
+    main_tab_navigator: {
+      home: "Accueil",
+      order: "Commander",
+      pending: "En attente",
+      history: "Historique",
+    },
+  },
 };

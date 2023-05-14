@@ -6,6 +6,7 @@ import HomeView from "../views/HomeView";
 import SearchStack from "../stack/SearchStack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import OrdersStack from "../stack/OrdersStack";
+import all_constants from "../constants";
 
 const Tab = createBottomTabNavigator();
 
@@ -14,18 +15,25 @@ export default function MainTabNavigator() {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: "tomato",
+        tabBarinactiveTintColor: "gray",
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          if (route.name === "Home") {
+          if (route.name === all_constants.tab.main_tab_navigator.home) {
             iconName = "home-outline";
-          } else if (route.name === "Search") {
+          } else if (
+            route.name === all_constants.tab.main_tab_navigator.order
+          ) {
             iconName = "restaurant-outline";
-          } else if (route.name === "Archives") {
+          } else if (
+            route.name === all_constants.tab.main_tab_navigator.history
+          ) {
             iconName = "folder-open-outline";
-          } else if (route.name === "Pending") {
+          } else if (
+            route.name === all_constants.tab.main_tab_navigator.pending
+          ) {
             iconName = "hourglass-outline";
-          } else if (route.name === "Settings") {
-            iconName = "settings-outline";
           }
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -36,14 +44,13 @@ export default function MainTabNavigator() {
             }
           : undefined,
       })}
-      tabBarOptions={{
-        activeTintColor: "tomato",
-        inactiveTintColor: "gray",
-      }}
     >
-      <Tab.Screen name="Home" component={HomeView} />
       <Tab.Screen
-        name="Search"
+        name={all_constants.tab.main_tab_navigator.home}
+        component={HomeView}
+      />
+      <Tab.Screen
+        name={all_constants.tab.main_tab_navigator.order}
         component={SearchStack}
         options={({ route }) => ({
           tabBarVisible: ((route) => {
@@ -58,7 +65,7 @@ export default function MainTabNavigator() {
         })}
       />
       <Tab.Screen
-        name="Pending"
+        name={all_constants.tab.main_tab_navigator.pending}
         component={OrdersStack}
         options={({ route }) => ({
           tabBarVisible: ((route) => {
@@ -72,8 +79,10 @@ export default function MainTabNavigator() {
           })(route),
         })}
       />
-      <Tab.Screen name="Archives" component={SimpleView} />
-      <Tab.Screen name="Settings" component={SimpleView} />
+      <Tab.Screen
+        name={all_constants.tab.main_tab_navigator.history}
+        component={SimpleView}
+      />
     </Tab.Navigator>
   );
 }
