@@ -119,8 +119,6 @@ export default all_constants = {
         current_password: "Mot de passe actuel",
         new_password: "Nouveau mot de passe",
         new_password_confirmation: "Confirmation nouveau mot de passe",
-        siret: "Numéro SIRET",
-        siren: "Numéro SIREN",
         firstname: "Prénom",
         lastname: "Nom",
         phone: "Numéro de téléphone",
@@ -206,8 +204,6 @@ export default all_constants = {
         evening_delivery_hours:
           "L'amplitude horaire des livraisons le soir \n Ex: 18-21",
         evening_delivery_days: "Sélectionnez les jours d'expédition en soirée",
-        siren: "Votre numéro SIREN",
-        siret: "Un numéro SIRET",
         firstname: "Votre prénom",
         lastname: "Votre nom de famille",
         phone: "Votre numéro de téléphone",
@@ -237,8 +233,7 @@ export default all_constants = {
   custom_alert: {
     form: {
       title: "ATTENTION",
-      message:
-        "Quitter le formulaire et revenir en arrière ? (vos modifications seront toujours présentes tant que vous ne sélectionnez pas un autre formulaire).",
+      message: "Quitter le formulaire et revenir en arrière ?.",
     },
   },
   validators: {
@@ -250,6 +245,10 @@ export default all_constants = {
       invalid_char: " est invalide. Veuillez enlever le ",
       invalid_price: " est invalide. Exemple: 13.90",
       invalid_postal_code: " est invalide. Exemple: 91100.",
+    },
+
+    includes: {
+      phone: "téléphone",
     },
 
     settings: {
@@ -264,6 +263,7 @@ export default all_constants = {
         "Le mot de passe doit contenir au moins un chiffre.",
       non_equal_password_error:
         "Les champs nouveau mot de passe et confirmation nouveau mot de passe doivent être identiques.",
+      phone_format_error: " doit contenir exactement 10 chiffres sans espace.",
     },
   },
   password: {

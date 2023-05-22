@@ -8,6 +8,7 @@ import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import OrdersStack from "../stack/OrdersStack";
 import all_constants from "../constants";
 import SettingsCredentialsForm from "../forms/SettingsCredentialsForm";
+import SettingsPersonalInformationForm from "../forms/SettingsPersonalInformationForm";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,7 +40,10 @@ export default function MainTabNavigator() {
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarButton: ["SettingsCredentialsForm"].includes(route.name)
+        tabBarButton: [
+          "SettingsCredentialsForm",
+          "SettingsPersonalInformationForm",
+        ].includes(route.name)
           ? () => {
               return null;
             }
@@ -88,6 +92,10 @@ export default function MainTabNavigator() {
       <Tab.Screen
         name="SettingsCredentialsForm"
         component={SettingsCredentialsForm}
+      />
+      <Tab.Screen
+        name="SettingsPersonalInformationForm"
+        component={SettingsPersonalInformationForm}
       />
     </Tab.Navigator>
   );
