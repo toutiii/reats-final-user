@@ -2,6 +2,9 @@ import { Dimensions } from "react-native";
 
 let all_constants;
 export default all_constants = {
+  colors: {
+    inputBorderColor: "#ffd700",
+  },
   home: {
     news_feed_title: {
       new: "Les nouveautés",
@@ -12,6 +15,7 @@ export default all_constants = {
   search: {
     placeholder: "Poulet Yassa",
     no_dishes_found: "Aucun résultat.",
+    no_addresses_found: "Vous n'avez renseigné aucune adresse de livraison.",
     button: {
       label: {
         search: "Chercher",
@@ -86,8 +90,20 @@ export default all_constants = {
       label: {
         account: "Compte",
         connection: "Connexion",
-        localization: "Localisation",
+        localization: "Mes adresses",
         wallet: "Portefeuille",
+      },
+    },
+    button: {
+      labels: {
+        add_address: "AJOUTER UNE ADRESSE",
+        delete_address: "SUPPRIMER CETTE ADRESSE",
+      },
+    },
+    form: {
+      title: "ATTENTION",
+      messages: {
+        remove_address_warning: "Supprimer définitivement cette adresse ?",
       },
     },
   },

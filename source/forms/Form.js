@@ -196,8 +196,8 @@ export default function Form({ ...props }) {
           {props.fourth_button_label && showAlert && removeState && (
             <CustomAlert
               show={showAlert}
-              title={all_constants.custom_alert.form.title}
-              message={all_constants.custom_alert.form.remove_item_message}
+              title={props.alert_title}
+              message={props.alert_message}
               confirmButtonColor="green"
               showCancelButton={true}
               cancelButtonColor="red"

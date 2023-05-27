@@ -7,8 +7,10 @@ import SearchStack from "../stack/SearchStack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import OrdersStack from "../stack/OrdersStack";
 import all_constants from "../constants";
+import SettingsAddressForm from "../forms/SettingsAddressForm";
 import SettingsCredentialsForm from "../forms/SettingsCredentialsForm";
 import SettingsPersonalInformationForm from "../forms/SettingsPersonalInformationForm";
+import AdressesStack from "../stack/AddressesStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -41,6 +43,8 @@ export default function MainTabNavigator() {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarButton: [
+          "AdressesStack",
+          "SettingsAddressForm",
           "SettingsCredentialsForm",
           "SettingsPersonalInformationForm",
         ].includes(route.name)
@@ -97,6 +101,8 @@ export default function MainTabNavigator() {
         name="SettingsPersonalInformationForm"
         component={SettingsPersonalInformationForm}
       />
+      <Tab.Screen name="SettingsAddressForm" component={SettingsAddressForm} />
+      <Tab.Screen name="AdressesStack" component={AdressesStack} />
     </Tab.Navigator>
   );
 }

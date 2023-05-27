@@ -105,7 +105,7 @@ export default function DrawerContent(props) {
                   all_constants.drawercontent.drawer_item.label.localization
                 }
                 onPress={() => {
-                  props.navigation.navigate("SettingsAddressForm", {
+                  props.navigation.navigate("AdressesStack", {
                     item: userData["address_section"]["data"],
                   });
                 }}
