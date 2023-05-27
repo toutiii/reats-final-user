@@ -75,9 +75,7 @@ export default function DrawerContent(props) {
                 )}
                 label={all_constants.drawercontent.drawer_item.label.wallet}
                 onPress={() => {
-                  props.navigation.navigate("SettingsOrderInformationForm", {
-                    item: userData["order_infos_section"]["data"],
-                  });
+                  console.log("Coming soon ?");
                 }}
               />
               <DrawerItem
