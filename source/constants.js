@@ -285,4 +285,14 @@ export default all_constants = {
   password: {
     min_length: 6,
   },
+  search_modal: {
+    dish_categories: "Le type de plat",
+    dish_results_sort: "Filtrer par",
+    default_button_label: "OK",
+    search_button_label: "Filtrer",
+    clear_filter_button_label: "Réinitialiser",
+  },
+  search_bar: {
+    placeholder: "Écrivez pour lancer la recherche",
+  },
 };

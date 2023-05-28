@@ -1,38 +1,28 @@
-import React, { Component } from "react";
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import SearchView from "../views/SearchView";
-import all_constants from "../constants";
-import SearchItemDetailView from "../views/SearchItemDetailView";
+import SearchDishFlatList from "../flatlist/SearchDishFlatlist";
+import Dish from "../components/Dish";
 
 const Stack = createStackNavigator();
 
-export default class SearchStack extends Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return (
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: true,
+export default function SearchStack() {
+  return (
+    <Stack.Navigator initialRouteName="SearchDishFlatList">
+      <Stack.Screen
+        name="SearchDishFlatList"
+        component={SearchDishFlatList}
+        options={{
+          headerShown: false,
+          headerMode: "none",
         }}
-        initialRouteName="Home"
-      >
-        <Stack.Screen
-          name="Home"
-          component={SearchView}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SearchItemDetailView"
-          component={SearchItemDetailView}
-          options={{
-            headerShown: true,
-            title:
-              all_constants.search.stack_navigator.search_item_detail.title,
-          }}
-        />
-      </Stack.Navigator>
-    );
-  }
+      />
+      <Stack.Screen
+        name="SearchItemDetail"
+        component={Dish}
+        options={{
+          headerTitle: "",
+        }}
+      />
+    </Stack.Navigator>
+  );
 }

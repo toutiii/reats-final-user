@@ -61,17 +61,6 @@ export default function MainTabNavigator() {
       <Tab.Screen
         name={all_constants.tab.main_tab_navigator.order}
         component={SearchStack}
-        options={({ route }) => ({
-          tabBarVisible: ((route) => {
-            const routeName = getFocusedRouteNameFromRoute(route) ?? "";
-
-            if (routeName === "SearchItemDetail") {
-              return false;
-            }
-
-            return true;
-          })(route),
-        })}
       />
       <Tab.Screen
         name={all_constants.tab.main_tab_navigator.pending}
