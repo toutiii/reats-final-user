@@ -1,7 +1,10 @@
+const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 export async function getOrders() {
-  await fetch(
-    "http://www.mocky.io/v2/5e3315753200008abe94d3d8?mocky-delay=2000ms"
-  );
+  await sleep(1000);
+
   let result = {
     status: 200,
     ok: true,
@@ -76,5 +79,5 @@ export async function getOrders() {
       ],
     },
   };
-  return result.json.data;
+  return result.json;
 }
