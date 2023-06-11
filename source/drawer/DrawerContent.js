@@ -110,6 +110,19 @@ export default function DrawerContent(props) {
                   });
                 }}
               />
+              <DrawerItem
+                icon={({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name="history"
+                    color={color}
+                    size={size}
+                  />
+                )}
+                label={all_constants.drawercontent.drawer_item.label.history}
+                onPress={() => {
+                  props.navigation.navigate("OrdersHistory");
+                }}
+              />
             </Drawer.Section>
 
             <Drawer.Section>

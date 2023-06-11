@@ -11,6 +11,7 @@ import SettingsAddressForm from "../forms/SettingsAddressForm";
 import SettingsCredentialsForm from "../forms/SettingsCredentialsForm";
 import SettingsPersonalInformationForm from "../forms/SettingsPersonalInformationForm";
 import AdressesStack from "../stack/AddressesStack";
+import OrdersHistoryStack from "../stack/OrdersHistoryStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -31,10 +32,6 @@ export default function MainTabNavigator() {
           ) {
             iconName = "restaurant-outline";
           } else if (
-            route.name === all_constants.tab.main_tab_navigator.history
-          ) {
-            iconName = "folder-open-outline";
-          } else if (
             route.name === all_constants.tab.main_tab_navigator.pending
           ) {
             iconName = "hourglass-outline";
@@ -47,6 +44,7 @@ export default function MainTabNavigator() {
           "SettingsAddressForm",
           "SettingsCredentialsForm",
           "SettingsPersonalInformationForm",
+          "OrdersHistory",
         ].includes(route.name)
           ? () => {
               return null;
@@ -77,10 +75,7 @@ export default function MainTabNavigator() {
           })(route),
         })}
       />
-      <Tab.Screen
-        name={all_constants.tab.main_tab_navigator.history}
-        component={SimpleView}
-      />
+      <Tab.Screen name="OrdersHistory" component={OrdersHistoryStack} />
 
       <Tab.Screen
         name="SettingsCredentialsForm"

@@ -92,6 +92,33 @@ export default all_constants = {
         connection: "Connexion",
         localization: "Mes adresses",
         wallet: "Portefeuille",
+        history: "Mes commandes",
+      },
+      orders_history: {
+        title: "Mes anciennes commandes",
+        no_results: "Aucune commande trouvée.",
+        infos: {
+          number: "Commande N°",
+          status: "Statut:",
+          owner: "Passée par",
+          amount: "Total de la commande: ",
+          dish_quantity: "Nombre de plats: ",
+          content: "Cette commande contient: ",
+          ordered_label: "le",
+          canceled_label: "Annulée le",
+          approved_label: "Commande acceptée le",
+          delivered_label: "Commande livrée le",
+          picking_label: "Ramassage prévu le",
+          dish_unit_price: "Prix unitaire: ",
+          dish_total: "Total: ",
+          ordered: "Commandé le ",
+        },
+        status: {
+          canceled: "Annulée",
+          delivered: "Livrée",
+          pending: "En attente de prise en charge",
+          approved: "Acceptée",
+        },
       },
     },
     button: {
@@ -112,7 +139,6 @@ export default all_constants = {
       home: "Accueil",
       order: "Commander",
       pending: "En attente",
-      history: "Historique",
     },
   },
   uri: {
@@ -156,6 +182,7 @@ export default all_constants = {
   modal: {
     dish_modal: {
       hide: "FERMER",
+      show: "AFFICHER LES PLATS",
     },
     form: {
       settings: {
@@ -286,11 +313,20 @@ export default all_constants = {
     min_length: 6,
   },
   search_modal: {
+    alert: {
+      date: {
+        title: "Erreur",
+        message:
+          "La date de fin ne peut pas être antérieure à la date de début.",
+      },
+    },
     dish_categories: "Le type de plat",
     dish_results_sort: "Filtrer par",
     default_button_label: "OK",
     search_button_label: "Filtrer",
     clear_filter_button_label: "Réinitialiser",
+    start_date: "Date de début",
+    end_date: "Date de fin",
   },
   search_bar: {
     placeholder: "Écrivez pour lancer la recherche",
