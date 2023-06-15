@@ -15,10 +15,13 @@ export default all_constants = {
   search: {
     placeholder: "Poulet Yassa",
     no_dishes_found: "Aucun résultat.",
+    delivery_scheduled_at: "Livraison prévue le ",
+
     no_addresses_found: "Vous n'avez renseigné aucune adresse de livraison.",
     button: {
       label: {
         search: "Chercher",
+        add_to_cart: "AJOUTER AU PANIER",
       },
     },
     custom_alert: {

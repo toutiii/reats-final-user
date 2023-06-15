@@ -3,7 +3,7 @@ const sleep = (ms) => {
 };
 
 export async function getDishes() {
-  await sleep(1000);
+  await sleep(500);
   const dish_list_data = {
     data: [
       {
@@ -14,8 +14,10 @@ export async function getDishes() {
         dish_category: "starter",
         dish_rating: "4.8/5",
         dish_price: "14",
-        dish_description: "Un succulent poulet Yassa",
+        dish_description:
+          "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's s",
         dish_country: "Sénégal",
+        dish_estimated_delivery_date: "2023-06-18",
       },
       {
         id: "2",
@@ -27,6 +29,7 @@ export async function getDishes() {
         dish_price: "14",
         dish_description: "Un succulent poulet Yassa",
         dish_country: "Sénégal",
+        dish_estimated_delivery_date: "2023-06-18",
       },
       {
         id: "3",
@@ -38,6 +41,7 @@ export async function getDishes() {
         dish_price: "14",
         dish_description: "Un succulent poulet Yassa",
         dish_country: "Sénégal",
+        dish_estimated_delivery_date: "2023-06-18",
       },
       {
         id: "4",
@@ -49,6 +53,7 @@ export async function getDishes() {
         dish_price: "14",
         dish_description: "Un succulent poulet Yassa",
         dish_country: "Sénégal",
+        dish_estimated_delivery_date: "2023-06-18",
       },
       {
         id: "5",
@@ -60,6 +65,7 @@ export async function getDishes() {
         dish_price: "14",
         dish_description: "Un succulent poulet Yassa",
         dish_country: "Sénégal",
+        dish_estimated_delivery_date: "2023-06-18",
       },
       {
         id: "6",
@@ -71,6 +77,7 @@ export async function getDishes() {
         dish_price: "14",
         dish_description: "Un succulent poulet Yassa",
         dish_country: "Sénégal",
+        dish_estimated_delivery_date: "2023-06-18",
       },
     ],
   };

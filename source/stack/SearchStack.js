@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import SearchDishFlatList from "../flatlist/SearchDishFlatlist";
-import Dish from "../components/Dish";
+import SearchItemDetailView from "../views/SearchItemDetailView";
 
 const Stack = createStackNavigator();
 
@@ -17,8 +17,8 @@ export default function SearchStack() {
         }}
       />
       <Stack.Screen
-        name="SearchItemDetail"
-        component={Dish}
+        name="SearchItemDetailView"
+        component={SearchItemDetailView}
         options={{
           headerTitle: "",
         }}

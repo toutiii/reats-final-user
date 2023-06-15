@@ -1,7 +1,6 @@
 import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import SimpleView from "../views/SimpleView";
 import HomeView from "../views/HomeView";
 import SearchStack from "../stack/SearchStack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
