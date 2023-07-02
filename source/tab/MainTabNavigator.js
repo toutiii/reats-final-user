@@ -11,6 +11,7 @@ import SettingsCredentialsForm from "../forms/SettingsCredentialsForm";
 import SettingsPersonalInformationForm from "../forms/SettingsPersonalInformationForm";
 import AdressesStack from "../stack/AddressesStack";
 import OrdersHistoryStack from "../stack/OrdersHistoryStack";
+import CartStack from "../stack/CartStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,6 +35,8 @@ export default function MainTabNavigator() {
             route.name === all_constants.tab.main_tab_navigator.pending
           ) {
             iconName = "hourglass-outline";
+          } else if (route.name == all_constants.tab.main_tab_navigator.cart) {
+            iconName = "cart";
           }
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -75,6 +78,11 @@ export default function MainTabNavigator() {
         })}
       />
       <Tab.Screen name="OrdersHistory" component={OrdersHistoryStack} />
+
+      <Tab.Screen
+        name={all_constants.tab.main_tab_navigator.cart}
+        component={CartStack}
+      />
 
       <Tab.Screen
         name="SettingsCredentialsForm"

@@ -70,6 +70,40 @@ export default all_constants = {
       cancel_order: "ANNULER LA COMMANDE",
     },
   },
+  cart: {
+    empty_cart: "Votre panier est vide.",
+    validate_cart: "VALIDER LE PANIER",
+    drop_cart: "VIDER LE PANIER",
+    label: {
+      item_price: "Prix unitaire: ",
+      quantity: "Qté: ",
+      item_sub_amount: "Prix: ",
+      remove_from_cart: "SUPPRIMER DU PANIER",
+      paid: "PAYER",
+    },
+    alert: {
+      title: "Attention",
+      remove_item_from_cart_message: "Supprimer cet item du panier ?",
+      drop_cart_message: "Tous les items seront supprimés du panier.",
+    },
+    add_item_alert: {
+      add_item_success_message: "L'item a bien été ajouté au panier.",
+      add_item_error_message:
+        "Échec, merci de rééssayer dans quelques instants.",
+    },
+    remove_item_alert: {
+      remove_item_success_message: "L'item a bien été retiré du panier.",
+      remove_item_error_message:
+        "Échec, merci de rééssayer dans quelques instants.",
+    },
+    summary: {
+      title: "Récapitulatif",
+      sub_amount: "Sous-total",
+      delivery_fees: "Frais de livraison",
+      service_fees: "Frais de service",
+      total_amount: "Total à payer",
+    },
+  },
   currency_symbol: " €",
   rating_star:
     "https://starpng.com/public/uploads/preview/yellow-star-transparent-background-png-101577029288c5hv8odvjm.png",
@@ -142,6 +176,7 @@ export default all_constants = {
       home: "Accueil",
       order: "Commander",
       pending: "En attente",
+      cart: "Mon panier",
     },
   },
   uri: {

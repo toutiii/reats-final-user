@@ -16,3 +16,6 @@ source/.DS_Store
 .vscode/
 */package-lock.json
 */yarn-error.log
+
+# Expo files
+*.expo/
