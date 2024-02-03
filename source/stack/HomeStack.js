@@ -1,16 +1,16 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import SearchDishFlatList from "../flatlist/SearchDishFlatlist";
+import HomeTopTab from "../toptabs/HomeTopTab";
 import SearchItemDetailView from "../views/SearchItemDetailView";
 
 const Stack = createStackNavigator();
 
-export default function SearchStack() {
+export default function HomeStack() {
     return (
-        <Stack.Navigator initialRouteName="SearchDishFlatList">
+        <Stack.Navigator initialRouteName="HomeTopTab">
             <Stack.Screen
-                name="SearchDishFlatList"
-                component={SearchDishFlatList}
+                name="HomeTopTab"
+                component={HomeTopTab}
                 options={{
                     headerShown: false,
                     headerMode: "none",
