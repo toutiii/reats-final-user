@@ -8,7 +8,6 @@ import {
     View,
 } from "react-native";
 import all_constants from "../constants";
-import { getDeliveryDateInfo } from "../helpers/toolbox";
 import CustomButton from "../components/CustomButton";
 import styles_dish from "../styles/styles-dish";
 import { AntDesign } from "@expo/vector-icons";
@@ -130,10 +129,6 @@ export default function SearchItemDetailView({ ...props }) {
                 <View style={{ flex: 2, justifyContent: "center", margin: "7%" }}>
                     <Text style={{ fontSize: 18, fontStyle: "italic" }}>
                         {all_constants.search.delivery_scheduled_at}
-                        {getDeliveryDateInfo(
-                            new Date(props.route.params.item.dish_estimated_delivery_date),
-                            all_constants.french_date_format,
-                        )}
                     </Text>
                 </View>
 

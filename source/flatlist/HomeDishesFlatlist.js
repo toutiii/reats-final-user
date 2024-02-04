@@ -9,8 +9,9 @@ import {
 import styles_order from "../styles/styles-order.js";
 import all_constants from "../constants";
 import Dish from "../components/Dish.js";
-import { getDishes } from "../helpers/dish_helpers.js";
-
+import { callBackEnd } from "../api/callBackend.js";
+import { apiBaseUrl, port } from "../env";
+// import { getItemFromSecureStore } from "../helpers/global_helpers";
 
 export default function HomeDishesFlatlist({ ...props }) {
     const queryFilter = props.route.params.filter;
@@ -37,27 +38,24 @@ export default function HomeDishesFlatlist({ ...props }) {
         }).start();
     };
 
-    const updateSearchingStatus = () => {
-        setIsFetchingData(!isFetchingData);
-    };
-
     React.useEffect(() => {
         if (isFetchingData) {
             setData(null);
             fadeOut();
             setTimeout(() => {
                 async function fetchDataFromBackend() {
-                    let results = {};
-                    if (queryFilter === "new") {
-                        results = await getDishes();
-                    } else {
-                        results = await getDishes();
-                    }
+                    let url = `${apiBaseUrl}:${port}/api/v1/customers?sort=${queryFilter}`;
+                    //const access = await getItemFromSecureStore("accessToken");
+                    const results = await callBackEnd(
+                        new FormData(),
+                        url,
+                        "GET",
+                        //(accessToken = access)
+                    );
 
                     setData(results.data);
                 }
                 fetchDataFromBackend();
-                updateSearchingStatus();
                 setIsFetchingData(false);
             }, 500);
         }
@@ -98,12 +96,12 @@ export default function HomeDishesFlatlist({ ...props }) {
                                     <Dish
                                         key={item.id}
                                         dish_photo={item.photo}
-                                        dish_name={item.dish_name}
-                                        dish_category={item.dish_category}
-                                        dish_rating={item.dish_rating}
-                                        dish_price={item.dish_price + all_constants.currency_symbol}
-                                        dish_description={item.dish_description}
-                                        dish_country={item.dish_country}
+                                        dish_name={item.name}
+                                        dish_category={item.category}
+                                        dish_rating={item.rating}
+                                        dish_price={item.price + all_constants.currency_symbol}
+                                        dish_description={item.description}
+                                        dish_country={item.country}
                                     />
                                 </TouchableHighlight>
                             </View>
