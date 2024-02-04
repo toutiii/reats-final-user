@@ -7,7 +7,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint app/",
-    "lint:fix": "eslint app/ --fix"
+    "lint:fix": "eslint app/ --fix",
+    "prepare": "cd .. && husky source/.husky"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.18.2",
@@ -24,7 +25,6 @@
     "expo-status-bar": "~1.6.0",
     "install": "^0.13.0",
     "moment": "2.30.1",
-    "prettier": "^3.2.4",
     "react": "18.2.0",
     "react-native": "0.72.6",
     "react-native-awesome-alerts": "^2.0.0",
@@ -51,7 +51,17 @@
     "@babel/plugin-proposal-unicode-property-regex": "^7.16.7",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.56.0",
-    "eslint-plugin-react": "^7.33.2"
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^9.0.10",
+    "lint-staged": "^15.2.1",
+    "prettier": "^3.2.5"
   },
-  "private": true
+  "private": true,
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  }
 }

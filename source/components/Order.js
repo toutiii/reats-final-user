@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import { Image, Text, View } from "react-native";
 import { Divider } from "react-native-paper";
 import all_constants from "../constants";

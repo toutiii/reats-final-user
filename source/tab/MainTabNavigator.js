@@ -23,7 +23,7 @@ export default function MainTabNavigator() {
                 headerShown: false,
                 tabBarActiveTintColor: "tomato",
                 tabBarinactiveTintColor: "gray",
-                tabBarIcon: ({  color, size }) => {
+                tabBarIcon: ({ color, size }) => {
                     let iconName;
                     if (route.name === all_constants.tab.main_tab_navigator.home) {
                         iconName = "home-outline";

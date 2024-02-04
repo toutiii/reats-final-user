@@ -32,4 +32,4 @@ let styles_form = StyleSheet.create({
         zIndex: 2,
     },
 });
-export default styles_form; 
+export default styles_form;

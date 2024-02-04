@@ -3,9 +3,15 @@ module.exports = {
         "es2021": true,
         "node": true
     },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "extends": [
         "eslint:recommended",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended"
     ],
     "overrides": [
         {
@@ -48,6 +54,7 @@ module.exports = {
         "no-trailing-spaces": 1,
         "no-multi-spaces":1,
         "no-unexpected-multiline":0,
-        "no-multiple-empty-lines":1
+        "no-multiple-empty-lines":1,
+        "react-hooks/exhaustive-deps":0
     }
 };

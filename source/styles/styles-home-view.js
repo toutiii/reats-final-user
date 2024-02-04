@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-let styles_home_view=styles_home_view = StyleSheet.create({
+let styles_home_view = (styles_home_view = StyleSheet.create({
     activityIndicatorContainer: {
         position: "absolute",
         flex: 1,
@@ -12,6 +12,6 @@ let styles_home_view=styles_home_view = StyleSheet.create({
         alignItems: "center",
         zIndex: 2,
     },
-});
+}));
 
-export default styles_home_view; 
+export default styles_home_view;

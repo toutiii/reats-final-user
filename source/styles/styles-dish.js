@@ -42,5 +42,4 @@ let styles_dish = StyleSheet.create({
     },
 });
 
-
-export default styles_dish; 
+export default styles_dish;

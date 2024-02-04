@@ -17,10 +17,7 @@ import CustomAlert from "../components/CustomAlert.js";
 import { deleteItemFromCart, sendItemToCart } from "../api/cart";
 
 export default function SearchItemDetailView({ ...props }) {
-    const [numberOfItem, setNumberOfItem] = props.route.params.item
-        .dish_ordered_quantity
-        ? React.useState(props.route.params.item.dish_ordered_quantity)
-        : React.useState(1);
+    const [numberOfItem, setNumberOfItem] = React.useState(1);
     const maxDishOrder = 10;
     const minDishOrder = 1;
     const [showAlert, setShowAlert] = React.useState(false);
@@ -35,6 +32,10 @@ export default function SearchItemDetailView({ ...props }) {
     const [isCallingBackend, setIsCallingBackend] = React.useState(false);
     const [isRequestOk, setIsRequestOk] = React.useState(null);
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
+
+    if (props.route.params.item.dish_ordered_quantity !== undefined) {
+        setNumberOfItem(props.route.params.item.dish_ordered_quantity);
+    }
 
     const increaseItemNumber = () => {
         if (numberOfItem < maxDishOrder) {
@@ -131,7 +132,7 @@ export default function SearchItemDetailView({ ...props }) {
                         {all_constants.search.delivery_scheduled_at}
                         {getDeliveryDateInfo(
                             new Date(props.route.params.item.dish_estimated_delivery_date),
-                            all_constants.french_date_format
+                            all_constants.french_date_format,
                         )}
                     </Text>
                 </View>

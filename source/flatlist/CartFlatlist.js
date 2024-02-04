@@ -1,4 +1,4 @@
-import React, { useCallback,  useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
     ActivityIndicator,
     Animated,
@@ -54,7 +54,7 @@ export default function CartFlatlist(props) {
             return () => {
                 setIsFetchingData(false);
             };
-        }, [isFetchingData])
+        }, [isFetchingData]),
     );
 
     const dropCart = () => {

@@ -24,7 +24,7 @@ export default function DrawerContent(props) {
     React.useEffect(() => {
         if (requesting) {
             console.log("Fetching data to feed drawer content");
-            
+
             getData();
         }
 

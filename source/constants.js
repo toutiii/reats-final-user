@@ -1,7 +1,6 @@
 import { Dimensions } from "react-native";
 
 let all_constants = {
-
     home: {
         news_feed_title: {
             new: "Nouveautés",
@@ -367,4 +366,4 @@ let all_constants = {
     },
 };
 
-export default all_constants; 
+export default all_constants;
