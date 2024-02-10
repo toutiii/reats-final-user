@@ -15,8 +15,15 @@ import { apiBaseUrl, port } from "../env";
 
 export default function HomeDishesFlatlist({ ...props }) {
     const queryFilter = props.route.params.filter;
-    const [data, setData] = React.useState([]);
-    const [isFetchingData, setIsFetchingData] = React.useState(true);
+    const [
+        data,
+        setData
+    ] = React.useState([
+    ]);
+    const [
+        isFetchingData,
+        setIsFetchingData
+    ] = React.useState(true);
 
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
 
@@ -44,7 +51,7 @@ export default function HomeDishesFlatlist({ ...props }) {
             fadeOut();
             setTimeout(() => {
                 async function fetchDataFromBackend() {
-                    let url = `${apiBaseUrl}:${port}/api/v1/customers?sort=${queryFilter}`;
+                    let url = `${apiBaseUrl}:${port}/api/v1/customers/dishes?sort=${queryFilter}`;
                     //const access = await getItemFromSecureStore("accessToken");
                     const results = await callBackEnd(
                         new FormData(),
@@ -59,7 +66,9 @@ export default function HomeDishesFlatlist({ ...props }) {
                 setIsFetchingData(false);
             }, 500);
         }
-    }, [isFetchingData]);
+    }, [
+        isFetchingData
+    ]);
 
     fadeIn();
 
@@ -73,41 +82,43 @@ export default function HomeDishesFlatlist({ ...props }) {
                     backgroundColor: "white",
                 }}
             >
-                {isFetchingData ? (
-                    <ActivityIndicator size="large" color="tomato" />
-                ) : (
-                    <FlatList
-                        data={data}
-                        onRefresh={() => {
-                            setIsFetchingData(true);
-                        }}
-                        refreshing={isFetchingData}
-                        renderItem={({ item }) => (
-                            <View style={styles_order.order_button_container}>
-                                <TouchableHighlight
-                                    onPress={() => {
-                                        props.navigation.navigate("SearchItemDetailView", {
-                                            item: item,
-                                        });
-                                    }}
-                                    style={{ flex: 1, alignItems: "center" }}
-                                    underlayColor={all_constants.colors.inputBorderColor}
-                                >
-                                    <Dish
-                                        key={item.id}
-                                        dish_photo={item.photo}
-                                        dish_name={item.name}
-                                        dish_category={item.category}
-                                        dish_rating={item.rating}
-                                        dish_price={item.price + all_constants.currency_symbol}
-                                        dish_description={item.description}
-                                        dish_country={item.country}
-                                    />
-                                </TouchableHighlight>
-                            </View>
-                        )}
-                    />
-                )}
+                {isFetchingData
+                    ? (
+                        <ActivityIndicator size="large" color="tomato" />
+                    )
+                    : (
+                        <FlatList
+                            data={data}
+                            onRefresh={() => {
+                                setIsFetchingData(true);
+                            }}
+                            refreshing={isFetchingData}
+                            renderItem={({ item }) => (
+                                <View style={styles_order.order_button_container}>
+                                    <TouchableHighlight
+                                        onPress={() => {
+                                            props.navigation.navigate("SearchItemDetailView", {
+                                                item: item,
+                                            });
+                                        }}
+                                        style={{ flex: 1, alignItems: "center" }}
+                                        underlayColor={all_constants.colors.inputBorderColor}
+                                    >
+                                        <Dish
+                                            key={item.id}
+                                            dish_photo={item.photo}
+                                            dish_name={item.name}
+                                            dish_category={item.category}
+                                            dish_rating={item.rating}
+                                            dish_price={item.price + all_constants.currency_symbol}
+                                            dish_description={item.description}
+                                            dish_country={item.country}
+                                        />
+                                    </TouchableHighlight>
+                                </View>
+                            )}
+                        />
+                    )}
             </View>
         </Animated.View>
     );

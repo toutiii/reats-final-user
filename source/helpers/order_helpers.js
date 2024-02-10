@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 };

@@ -14,6 +14,7 @@ export function checkPostalCode(value, fieldLabel) {
 
 export function checkEmailFormat(value) {
     let emailRegex =
+    // eslint-disable-next-line max-len
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (!value.match(emailRegex)) {
@@ -22,7 +23,11 @@ export function checkEmailFormat(value) {
 }
 
 export function checkPasswordFormat(value) {
-    let expectedSpecialChar = ["!", "#", "*"];
+    let expectedSpecialChar = [
+        "!",
+        "#",
+        "*"
+    ];
     let foundSpecialCharCount = 0;
     let foundUppercaseCharCount = 0;
     let foundNumericCount = 0;
@@ -167,7 +172,7 @@ export function checkHourCoherence(value, fieldLabel) {
 export function checkEmptyDeliveryHours(
     daysArray,
     fieldLabel,
-    objectToValidate
+    objectToValidate,
 ) {
     let deliveryHours = null;
     if (

@@ -22,6 +22,7 @@ export default class OrderView extends Component {
     onPressShowModal = () => {
         this.setState({ modalVisible: true });
     };
+
     onPressCloseModal = () => {
         this.setState({ modalVisible: false });
     };

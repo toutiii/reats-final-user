@@ -16,20 +16,41 @@ import CustomAlert from "../components/CustomAlert.js";
 import { deleteItemFromCart, sendItemToCart } from "../api/cart";
 
 export default function SearchItemDetailView({ ...props }) {
-    const [numberOfItem, setNumberOfItem] = React.useState(1);
+    const [
+        numberOfItem,
+        setNumberOfItem
+    ] = React.useState(1);
     const maxDishOrder = 10;
     const minDishOrder = 1;
-    const [showAlert, setShowAlert] = React.useState(false);
-    const [showAddItemResponseAlert, setShowAddItemResponseAlert] =
+    const [
+        showAlert,
+        setShowAlert
+    ] = React.useState(false);
+    const [
+        showAddItemResponseAlert,
+        setShowAddItemResponseAlert
+    ] =
     React.useState(false);
-    const [showRemoveItemResponseAlert, setShowRemoveItemResponseAlert] =
+    const [
+        showRemoveItemResponseAlert,
+        setShowRemoveItemResponseAlert
+    ] =
     React.useState(false);
-    const [cartItemObject, setCartItemObject] = React.useState({
+    const [
+        cartItemObject,
+        setCartItemObject
+    ] = React.useState({
         ...JSON.parse(JSON.stringify(props.route.params.item)),
         dish_ordered_quantity: numberOfItem,
     });
-    const [isCallingBackend, setIsCallingBackend] = React.useState(false);
-    const [isRequestOk, setIsRequestOk] = React.useState(null);
+    const [
+        isCallingBackend,
+        setIsCallingBackend
+    ] = React.useState(false);
+    const [
+        isRequestOk,
+        setIsRequestOk
+    ] = React.useState(null);
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
 
     if (props.route.params.item.dish_ordered_quantity !== undefined) {
@@ -88,7 +109,9 @@ export default function SearchItemDetailView({ ...props }) {
                 setIsCallingBackend(false);
             }, 300);
         }
-    }, [isCallingBackend]);
+    }, [
+        isCallingBackend
+    ]);
 
     return (
         <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
@@ -242,7 +265,9 @@ export default function SearchItemDetailView({ ...props }) {
                                 ? all_constants.cart.add_item_alert.add_item_success_message
                                 : all_constants.cart.add_item_alert.add_item_error_message
                         }
-                        confirmButtonColor={isRequestOk ? "green" : "red"}
+                        confirmButtonColor={isRequestOk
+                            ? "green"
+                            : "red"}
                         showCancelButton={false}
                         onConfirmPressed={() => {
                             setShowAddItemResponseAlert(false);
@@ -261,7 +286,9 @@ export default function SearchItemDetailView({ ...props }) {
                                     .remove_item_success_message
                                 : all_constants.cart.remove_item_alert.remove_item_error_message
                         }
-                        confirmButtonColor={isRequestOk ? "green" : "red"}
+                        confirmButtonColor={isRequestOk
+                            ? "green"
+                            : "red"}
                         showCancelButton={false}
                         onConfirmPressed={() => {
                             setShowRemoveItemResponseAlert(false);

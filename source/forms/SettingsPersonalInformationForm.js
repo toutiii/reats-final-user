@@ -57,7 +57,10 @@ export default function SettingsPersonalInformationForm({ ...props }) {
                             label: all_constants.label.form.settings.phone,
                             placeholder: all_constants.placeholders.form.settings.phone,
                             keyboardNumeric: true,
-                            validators: [checkValueIsDefined, checkNumericFormat],
+                            validators: [
+                                checkValueIsDefined,
+                                checkNumericFormat
+                            ],
                             maxLength: 10,
                         },
                     }}

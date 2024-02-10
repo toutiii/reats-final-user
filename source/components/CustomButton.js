@@ -26,37 +26,41 @@ export default function CustomButton({ label, ...props }) {
                 },
             ]}
         >
-            {props.use_second_label ? (
-                <View style={styles_button.button_container}>
-                    <View style={styles_button.button_first_label}>
-                        {props.icon_name ? (
-                            <Ionicons name={props.icon_name} size={30} />
-                        ) : (
+            {props.use_second_label
+                ? (
+                    <View style={styles_button.button_container}>
+                        <View style={styles_button.button_first_label}>
+                            {props.icon_name
+                                ? (
+                                    <Ionicons name={props.icon_name} size={30} />
+                                )
+                                : (
+                                    <Text
+                                        numberOfLines={1}
+                                        style={{ color: props.label_color, fontSize: props.font_size }}
+                                    >
+                                        {label}
+                                    </Text>
+                                )}
+                        </View>
+                        <View style={styles_button.button_second_label}>
                             <Text
                                 numberOfLines={1}
                                 style={{ color: props.label_color, fontSize: props.font_size }}
                             >
-                                {label}
+                                {props.second_label}
                             </Text>
-                        )}
+                        </View>
                     </View>
-                    <View style={styles_button.button_second_label}>
-                        <Text
-                            numberOfLines={1}
-                            style={{ color: props.label_color, fontSize: props.font_size }}
-                        >
-                            {props.second_label}
-                        </Text>
-                    </View>
-                </View>
-            ) : (
-                <Text
-                    numberOfLines={1}
-                    style={{ color: props.label_color, fontSize: props.font_size }}
-                >
-                    {label}
-                </Text>
-            )}
+                )
+                : (
+                    <Text
+                        numberOfLines={1}
+                        style={{ color: props.label_color, fontSize: props.font_size }}
+                    >
+                        {label}
+                    </Text>
+                )}
         </TouchableHighlight>
     );
 }

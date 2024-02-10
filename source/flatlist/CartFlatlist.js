@@ -15,9 +15,18 @@ import { useFocusEffect } from "@react-navigation/native";
 import { getAllItemsFromCart } from "../api/cart";
 
 export default function CartFlatlist(props) {
-    const [showAlert, setShowAlert] = useState(false);
-    const [isFetchingData, setIsFetchingData] = useState(false);
-    const [data, setData] = useState(null);
+    const [
+        showAlert,
+        setShowAlert
+    ] = useState(false);
+    const [
+        isFetchingData,
+        setIsFetchingData
+    ] = useState(false);
+    const [
+        data,
+        setData
+    ] = useState(null);
     const fadeAnim = useRef(new Animated.Value(1)).current;
     const timeOutDelay = 500;
 
@@ -54,7 +63,9 @@ export default function CartFlatlist(props) {
             return () => {
                 setIsFetchingData(false);
             };
-        }, [isFetchingData]),
+        }, [
+            isFetchingData
+        ]),
     );
 
     const dropCart = () => {

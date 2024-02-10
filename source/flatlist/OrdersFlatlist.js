@@ -13,8 +13,15 @@ import HorizontalLine from "../components/HorizontalLine";
 
 export default function OrdersFlatlist(props) {
     const fadeAnim = useRef(new Animated.Value(1)).current;
-    const [isFetchingData, setIsFetchingData] = useState(false);
-    const [data, setData] = useState([]);
+    const [
+        isFetchingData,
+        setIsFetchingData
+    ] = useState(false);
+    const [
+        data,
+        setData
+    ] = useState([
+    ]);
 
     const fadeIn = () => {
         Animated.timing(fadeAnim, {
@@ -44,7 +51,8 @@ export default function OrdersFlatlist(props) {
             setIsFetchingData(false);
             fadeIn();
         }, 1000);
-    }, []);
+    }, [
+    ]);
 
     const onRefresh = useCallback(() => {
         fadeOut();
@@ -57,7 +65,9 @@ export default function OrdersFlatlist(props) {
             setIsFetchingData(false);
             fadeIn();
         }, 1000);
-    }, [isFetchingData]);
+    }, [
+        isFetchingData
+    ]);
 
     return (
         <Animated.View

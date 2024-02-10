@@ -13,7 +13,7 @@ export function validateFields(fields, objectToValidate) {
                 validators,
                 value,
                 fieldLabel,
-                objectToValidate
+                objectToValidate,
             );
             if (error) {
                 errors[fieldName] = error;
@@ -56,10 +56,7 @@ export function checkValueIsDefined(value, fieldLabel) {
     }
 }
 
-export function checkValueNotContainsSpecialChar(
-    value,
-    fieldLabel,
-) {
+export function checkValueNotContainsSpecialChar(value, fieldLabel) {
     if (typeof value !== "undefined" && value !== null) {
         value = value
             .toString()
@@ -100,5 +97,13 @@ export function valueIsValidPrice(value, fieldLabel) {
       fieldLabel +
       all_constants.validators.global.invalid_price
         );
+    }
+}
+
+export function checkPhoneNumbers(value, fieldLabel, objectToValidate) {
+    console.log(value);
+    console.log(fieldLabel);
+    if (objectToValidate.phone !== objectToValidate.phone_confirmation) {
+        return all_constants.validators.global.phone_mismatch;
     }
 }

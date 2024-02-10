@@ -37,7 +37,10 @@ export default function SettingsCredentialsForm({ ...props }) {
                             labelModal: true,
                             labelModalText: all_constants.modal.form.settings.email,
                             placeholder: all_constants.placeholders.form.settings.email,
-                            validators: [checkValueIsDefined, checkEmailFormat],
+                            validators: [
+                                checkValueIsDefined,
+                                checkEmailFormat
+                            ],
                             maxLength: 100,
                         },
                         user_settings_current_password: {
@@ -49,7 +52,9 @@ export default function SettingsCredentialsForm({ ...props }) {
                             placeholder:
                 all_constants.placeholders.form.settings
                     .user_settings_current_password,
-                            validators: [checkValueIsDefined],
+                            validators: [
+                                checkValueIsDefined
+                            ],
                             maxLength: 12,
                         },
                         user_settings_new_password: {
@@ -60,7 +65,9 @@ export default function SettingsCredentialsForm({ ...props }) {
                             placeholder:
                 all_constants.placeholders.form.settings
                     .user_settings_new_password,
-                            validators: [checkPasswordFormat],
+                            validators: [
+                                checkPasswordFormat
+                            ],
                             maxLength: 12,
                         },
                         user_settings_new_password_confirmation: {
@@ -70,7 +77,10 @@ export default function SettingsCredentialsForm({ ...props }) {
                             placeholder:
                 all_constants.placeholders.form.settings
                     .user_settings_new_password_confirmation,
-                            validators: [checkPasswordFormat, checkFormCoherence],
+                            validators: [
+                                checkPasswordFormat,
+                                checkFormCoherence
+                            ],
                             maxLength: 12,
                         },
                     }}

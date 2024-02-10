@@ -64,7 +64,9 @@ export default function SettingsAddressForm({ ...props }) {
                             label: all_constants.label.form.settings.address_complement,
                             placeholder:
                 all_constants.placeholders.form.settings.address_complement,
-                            validators: [checkValueNotContainsSpecialChar],
+                            validators: [
+                                checkValueNotContainsSpecialChar
+                            ],
                             maxLength: 100,
                         },
                         postal_code: {
@@ -73,7 +75,10 @@ export default function SettingsAddressForm({ ...props }) {
                             label: all_constants.label.form.settings.postal_code,
                             placeholder: all_constants.placeholders.form.settings.postal_code,
                             keyboardNumeric: true,
-                            validators: [checkValueIsDefined, checkPostalCode],
+                            validators: [
+                                checkValueIsDefined,
+                                checkPostalCode
+                            ],
                             maxLength: 5,
                         },
                         town: {

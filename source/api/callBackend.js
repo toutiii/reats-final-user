@@ -22,10 +22,10 @@ export async function callBackEnd(
         return { ok: false };
     }
 
-    // if (apiKey === null && accessToken === null) {
-    //     console.error("You need to specify at least an access token or an APIKey.");
-    //     return { ok: false };
-    // }
+    if (apiKey === null && accessToken === null) {
+        console.error("You need to specify at least an access token or an APIKey.");
+        return { ok: false };
+    }
 
     let response = "";
     let headers = { Accept: "application/json" };
@@ -72,4 +72,29 @@ export async function callBackEnd(
         console.log(error);
         return false;
     }
+}
+
+export async function callBackendWithFormDataForCustomers(
+    data,
+    url,
+    method,
+    apiKeyBackend,
+) {
+    console.log(data);
+    console.log(url);
+    console.log(method);
+    let formData = new FormData();
+    let form_keys = [
+        "firstname",
+        "lastname",
+        "phone"
+    ];
+
+    for (let i = 0; i < form_keys.length; i++) {
+        if (data[form_keys[i]] !== undefined) {
+            formData.append(form_keys[i], data[form_keys[i]]);
+        }
+    }
+
+    return callBackEnd(formData, url, method, null, true, apiKeyBackend);
 }

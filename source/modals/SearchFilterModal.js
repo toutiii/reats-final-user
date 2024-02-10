@@ -28,10 +28,19 @@ export default function SearchFilterModal(props) {
     ];
 
     const datePickerMode = "startDate";
-    const [keyFilterComponent1, setKeyFilterComponent1] = React.useState(0);
+    const [
+        keyFilterComponent1,
+        setKeyFilterComponent1
+    ] = React.useState(0);
 
-    const [keyFilterComponent2, setKeyFilterComponent2] = React.useState(1);
-    const [show, setShow] = React.useState(false);
+    const [
+        keyFilterComponent2,
+        setKeyFilterComponent2
+    ] = React.useState(1);
+    const [
+        show,
+        setShow
+    ] = React.useState(false);
     const isStartDate = React.useRef(true);
 
     const onChange = (event, selectedDate) => {
@@ -75,7 +84,9 @@ export default function SearchFilterModal(props) {
         return (
             <DateTimePicker
                 testID="dateTimePicker"
-                value={isStartDate.current ? props.startDate : props.endDate}
+                value={isStartDate.current
+                    ? props.startDate
+                    : props.endDate}
                 mode={datePickerMode}
                 is24Hour={true}
                 onChange={onChange}

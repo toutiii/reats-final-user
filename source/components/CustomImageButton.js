@@ -7,7 +7,9 @@ export default function CustomImageButton({ ...props }) {
         <TouchableHighlight
             {...props}
             onPress={props.onPress}
-            style={[styles_home_view.home_button]}
+            style={[
+                styles_home_view.home_button
+            ]}
         >
             <View style={{ alignItems: "center" }}>
                 <Image source={{ uri: props.uri }} style={{ height: 30, width: 30 }} />

@@ -12,6 +12,7 @@ import { validateFields } from "../validators/common_validators";
 import FormField from "../components/FormField";
 import styles_form from "../styles/styles-form";
 import CustomAlert from "../components/CustomAlert";
+import { apiKeyBackend } from "../env";
 
 const getInitialErrorsState = (fieldKeys) => {
     const errors_state = {};
@@ -26,34 +27,74 @@ export default function Form({ ...props }) {
 
     const fieldsObject = props.fields;
 
-    const [newItem, setValues] = useState(props.item);
+    const [
+        newItem,
+        setValues
+    ] = useState(props.item);
 
     //To be sure to reset form initial content when we press on a flatlist item.
     useEffect(() => {
         setValues(props.item);
-    }, [props.item]);
+    }, [
+        props.item
+    ]);
 
-    const [errorMessage, setErrorMessage] = useState("");
+    const [
+    // eslint-disable-next-line no-unused-vars
+        errorMessage,
+        setErrorMessage,
+    ] = useState("");
 
-    const [validationErrors, setValidationErrors] = useState(
-        getInitialErrorsState(fieldKeys)
+    const [
+        validationErrors,
+        setValidationErrors
+    ] = useState(
+        getInitialErrorsState(fieldKeys),
     );
 
-    const [opacity] = useState(new Animated.Value(1));
+    const [
+        opacity
+    ] = useState(new Animated.Value(1));
 
-    const [isSubmitting, setSubmitting] = useState(false);
+    const [
+        isSubmitting,
+        setSubmitting
+    ] = useState(false);
 
-    const [showAlert, setStateShowAlert] = useState(false);
+    const [
+        showAlert,
+        setStateShowAlert
+    ] = useState(false);
 
-    const [noErrorsFound, setNoErrorsFound] = useState(true);
+    const [
+        noErrorsFound,
+        setNoErrorsFound
+    ] = useState(true);
 
-    const [apiOkResponse, setApiOkResponse] = useState(false);
+    const [
+        apiOkResponse,
+        setApiOkResponse
+    ] = useState(false);
 
-    const [wantToGoBack, setWantToGoBack] = useState(false);
+    const [
+        wantToGoBack,
+        setWantToGoBack
+    ] = useState(false);
 
-    const [disableState, setDisableState] = useState(false);
+    const [
+        disableState,
+        setDisableState
+    ] = useState(false);
 
-    const [removeState, setRemoveState] = useState(false);
+    const [
+        removeState,
+        setRemoveState
+    ] = useState(false);
+
+    const [
+        showAlertCancel,
+        setShowAlertCancel
+    ] = useState(false);
 
     const onChangeValue = (key, value) => {
         const newState = { ...newItem, [key]: value };
@@ -80,13 +121,9 @@ export default function Form({ ...props }) {
         }).start();
     };
 
-    //################ USEFUL FOR TESTING ###############
-    const sleep = (ms) => {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    };
-    //################ USEFUL FOR TESTING ################
-    console.log(errorMessage);
     const submit = async () => {
+        let result = {};
+        result.ok = false;
         setSubmitting(true);
         setErrorMessage("");
         setValidationErrors(getInitialErrorsState(fieldKeys, props));
@@ -99,22 +136,32 @@ export default function Form({ ...props }) {
         }
         fadeOut();
         try {
-            const result = await props.action(newItem, props.url, props.method);
+            //const userID = await getItemFromSecureStore("userID");
+            //const accessToken = await getItemFromSecureStore("accessToken");
+
+            result = await props.action(
+                newItem,
+                props.url,
+                props.method,
+
+                props.useApiKey
+                    ? apiKeyBackend
+                    : null,
+            );
             setApiOkResponse(result.ok);
-            await sleep(1000);
             fadeIn();
-            setStateShowAlert(true);
-            await props.afterSubmit(result);
+            if (props.afterSubmit === undefined || props.afterSubmit === null) {
+                setStateShowAlert(true);
+            }
         } catch (e) {
             setErrorMessage(e.message);
             fadeIn();
         }
         setSubmitting(false);
-    };
 
-    const cancel = () => {
-        setWantToGoBack(true);
-        setStateShowAlert(true);
+        if (props.afterSubmit) {
+            props.afterSubmit(result.ok, newItem);
+        }
     };
 
     const disableItem = () => {
@@ -127,9 +174,6 @@ export default function Form({ ...props }) {
         setStateShowAlert(true);
     };
 
-    const forgottenPassword = () => {
-        props.navigation.navigate("ForgottenPassword");
-    };
     const onPressForgottenPassword = () => {
         props.navigation.goBack();
         setStateShowAlert(false);
@@ -137,6 +181,24 @@ export default function Form({ ...props }) {
     return (
         <KeyboardAvoidingView>
             <ScrollView>
+                {showAlertCancel && (
+                    <CustomAlert
+                        show={showAlertCancel}
+                        title={all_constants.custom_alert.form.title}
+                        message={all_constants.custom_alert.form.message}
+                        confirmButtonColor="green"
+                        showCancelButton={true}
+                        cancelButtonColor="red"
+                        cancelText={all_constants.custom_alert.homeview.cancel_text}
+                        onConfirmPressed={() => {
+                            setShowAlertCancel(false);
+                            props.navigation.goBack();
+                        }}
+                        onCancelPressed={() => {
+                            setShowAlertCancel(false);
+                        }}
+                    />
+                )}
                 <View style={styles_form.container}>
                     {isSubmitting && (
                         <View style={styles_form.activityIndicatorContainer}>
@@ -275,36 +337,45 @@ export default function Form({ ...props }) {
                                 onPress={submit}
                             />
                         </View>
-                        {props.login ? (
-                            <View style={styles_form.cancel_button}>
-                                <CustomButton
-                                    label={all_constants.messages.forgotten_password}
-                                    height={50}
-                                    border_width={3}
-                                    border_radius={30}
-                                    font_size={18}
-                                    backgroundColor={"darkgrey"}
-                                    label_color="white"
-                                    onPress={forgottenPassword}
-                                />
-                            </View>
-                        ) : (
-                            <View style={styles_form.cancel_button}>
-                                <CustomButton
-                                    label={all_constants.messages.cancel}
-                                    height={50}
-                                    border_width={3}
-                                    border_radius={30}
-                                    font_size={18}
-                                    backgroundColor={"red"}
-                                    label_color="white"
-                                    onPress={cancel}
-                                />
-                            </View>
-                        )}
+                        {props.login
+                            ? (
+                                <View style={{ flex: 1 }}>
+                                    <View style={styles_form.form_button}>
+                                        <CustomButton
+                                            label={all_constants.messages.signup}
+                                            height={50}
+                                            border_width={3}
+                                            border_radius={30}
+                                            font_size={18}
+                                            backgroundColor={"dimgrey"}
+                                            label_color="white"
+                                            onPress={() => {
+                                                props.navigation.navigate("SignupForm");
+                                            }}
+                                        />
+                                    </View>
+                                </View>
+                            )
+                            : (
+                                <View style={styles_form.form_button}>
+                                    <CustomButton
+                                        label={all_constants.messages.cancel}
+                                        height={50}
+                                        border_width={3}
+                                        border_radius={30}
+                                        font_size={18}
+                                        backgroundColor={"red"}
+                                        label_color="white"
+                                        onPress={() => {
+                                            setShowAlertCancel(true);
+                                        }}
+                                    />
+                                </View>
+                            )}
                         {Object.keys(props.item).length !== 0 &&
             !props.is_new_item &&
-            props.third_button_label ? (
+            props.third_button_label
+                            ? (
                                 <View style={styles_form.cancel_button}>
                                     <CustomButton
                                         label={props.third_button_label}
@@ -316,12 +387,14 @@ export default function Form({ ...props }) {
                                         onPress={disableItem}
                                     />
                                 </View>
-                            ) : (
+                            )
+                            : (
                                 <View></View>
                             )}
                         {Object.keys(props.item).length !== 0 &&
             !props.is_new_item &&
-            props.fourth_button_label ? (
+            props.fourth_button_label
+                            ? (
                                 <View style={styles_form.cancel_button}>
                                     <CustomButton
                                         label={props.fourth_button_label}
@@ -333,7 +406,8 @@ export default function Form({ ...props }) {
                                         onPress={removeItem}
                                     />
                                 </View>
-                            ) : (
+                            )
+                            : (
                                 <View></View>
                             )}
                     </View>

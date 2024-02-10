@@ -46,7 +46,8 @@ export function getDaysOfWeek() {
 }
 
 export function getData(dataFromBackend) {
-    let data = [];
+    let data = [
+    ];
     const indexes = Object.keys(dataFromBackend["data"]);
 
     for (let i = 0; i < indexes.length; i++) {

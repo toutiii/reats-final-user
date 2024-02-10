@@ -15,8 +15,14 @@ import { getUserSettings } from "../helpers/settings_helpers";
 
 export default function DrawerContent(props) {
     const paperTheme = useTheme();
-    const [userData, getUserData] = React.useState(null);
-    const [requesting, isRequesting] = React.useState(true);
+    const [
+        userData,
+        getUserData
+    ] = React.useState(null);
+    const [
+        requesting,
+        isRequesting
+    ] = React.useState(true);
     async function getData() {
         const data = await getUserSettings();
         getUserData(data);
@@ -31,120 +37,126 @@ export default function DrawerContent(props) {
         return () => {
             isRequesting(false);
         };
-    }, [userData]);
+    }, [
+        userData
+    ]);
 
     return (
         <View style={{ flex: 1, backgroundColor: paperTheme.colors.surface }}>
-            {requesting ? (
-                <View style={{ flex: 1, justifyContent: "center" }}>
-                    <ActivityIndicator animating={true} color="tomato" />
-                </View>
-            ) : (
-                <DrawerContentScrollView {...props}>
-                    <Animated.View style={[styles.drawerContent]}>
-                        <View style={styles.userInfoSection}>
-                            <Title style={styles.title}>
-                                {all_constants.drawercontent.hello}
-                                {userData["personal_infos_section"]["data"]["firstname"]}
-                            </Title>
-                        </View>
+            {requesting
+                ? (
+                    <View style={{ flex: 1, justifyContent: "center" }}>
+                        <ActivityIndicator animating={true} color="tomato" />
+                    </View>
+                )
+                : (
+                    <DrawerContentScrollView {...props}>
+                        <Animated.View style={[
+                            styles.drawerContent
+                        ]}>
+                            <View style={styles.userInfoSection}>
+                                <Title style={styles.title}>
+                                    {all_constants.drawercontent.hello}
+                                    {userData["personal_infos_section"]["data"]["firstname"]}
+                                </Title>
+                            </View>
 
-                        <Drawer.Section style={{ marginTop: "15%" }}>
-                            <DrawerItem
-                                icon={({ color, size }) => (
-                                    <MaterialCommunityIcons
-                                        name="lock"
-                                        color={color}
-                                        size={size}
-                                    />
-                                )}
-                                label={all_constants.drawercontent.drawer_item.label.connection}
-                                onPress={() => {
-                                    props.navigation.navigate("SettingsCredentialsForm", {
-                                        item: userData["credential_infos_section"]["data"],
-                                    });
-                                }}
-                            />
-                            <DrawerItem
-                                icon={({ color, size }) => (
-                                    <MaterialCommunityIcons
-                                        name="wallet"
-                                        color={color}
-                                        size={size}
-                                    />
-                                )}
-                                label={all_constants.drawercontent.drawer_item.label.wallet}
-                                onPress={() => {
-                                    console.log("Coming soon ?");
-                                }}
-                            />
-                            <DrawerItem
-                                icon={({ color, size }) => (
-                                    <MaterialCommunityIcons
-                                        name="account"
-                                        color={color}
-                                        size={size}
-                                    />
-                                )}
-                                label={all_constants.drawercontent.drawer_item.label.account}
-                                onPress={() => {
-                                    props.navigation.navigate("SettingsPersonalInformationForm", {
-                                        item: userData["personal_infos_section"]["data"],
-                                    });
-                                }}
-                            />
-                            <DrawerItem
-                                icon={({ color, size }) => (
-                                    <MaterialCommunityIcons
-                                        name="map-marker"
-                                        color={color}
-                                        size={size}
-                                    />
-                                )}
-                                label={
-                                    all_constants.drawercontent.drawer_item.label.localization
-                                }
-                                onPress={() => {
-                                    props.navigation.navigate("AdressesStack", {
-                                        item: userData["address_section"]["data"],
-                                    });
-                                }}
-                            />
-                            <DrawerItem
-                                icon={({ color, size }) => (
-                                    <MaterialCommunityIcons
-                                        name="history"
-                                        color={color}
-                                        size={size}
-                                    />
-                                )}
-                                label={all_constants.drawercontent.drawer_item.label.history}
-                                onPress={() => {
-                                    props.navigation.navigate("OrdersHistory");
-                                }}
-                            />
-                        </Drawer.Section>
+                            <Drawer.Section style={{ marginTop: "15%" }}>
+                                <DrawerItem
+                                    icon={({ color, size }) => (
+                                        <MaterialCommunityIcons
+                                            name="lock"
+                                            color={color}
+                                            size={size}
+                                        />
+                                    )}
+                                    label={all_constants.drawercontent.drawer_item.label.connection}
+                                    onPress={() => {
+                                        props.navigation.navigate("SettingsCredentialsForm", {
+                                            item: userData["credential_infos_section"]["data"],
+                                        });
+                                    }}
+                                />
+                                <DrawerItem
+                                    icon={({ color, size }) => (
+                                        <MaterialCommunityIcons
+                                            name="wallet"
+                                            color={color}
+                                            size={size}
+                                        />
+                                    )}
+                                    label={all_constants.drawercontent.drawer_item.label.wallet}
+                                    onPress={() => {
+                                        console.log("Coming soon ?");
+                                    }}
+                                />
+                                <DrawerItem
+                                    icon={({ color, size }) => (
+                                        <MaterialCommunityIcons
+                                            name="account"
+                                            color={color}
+                                            size={size}
+                                        />
+                                    )}
+                                    label={all_constants.drawercontent.drawer_item.label.account}
+                                    onPress={() => {
+                                        props.navigation.navigate("SettingsPersonalInformationForm", {
+                                            item: userData["personal_infos_section"]["data"],
+                                        });
+                                    }}
+                                />
+                                <DrawerItem
+                                    icon={({ color, size }) => (
+                                        <MaterialCommunityIcons
+                                            name="map-marker"
+                                            color={color}
+                                            size={size}
+                                        />
+                                    )}
+                                    label={
+                                        all_constants.drawercontent.drawer_item.label.localization
+                                    }
+                                    onPress={() => {
+                                        props.navigation.navigate("AdressesStack", {
+                                            item: userData["address_section"]["data"],
+                                        });
+                                    }}
+                                />
+                                <DrawerItem
+                                    icon={({ color, size }) => (
+                                        <MaterialCommunityIcons
+                                            name="history"
+                                            color={color}
+                                            size={size}
+                                        />
+                                    )}
+                                    label={all_constants.drawercontent.drawer_item.label.history}
+                                    onPress={() => {
+                                        props.navigation.navigate("OrdersHistory");
+                                    }}
+                                />
+                            </Drawer.Section>
 
-                        <Drawer.Section>
-                            <DrawerItem
-                                icon={({ size }) => (
-                                    <MaterialCommunityIcons
-                                        name="power"
-                                        color="red"
-                                        size={size}
-                                    />
-                                )}
-                                label={() => (
-                                    <Text style={{ color: "red", fontWeight: "bold" }}>
-                                        {all_constants.drawercontent.logout}
-                                    </Text>
-                                )}
-                                onPress={() => {}}
-                            />
-                        </Drawer.Section>
-                    </Animated.View>
-                </DrawerContentScrollView>
-            )}
+                            <Drawer.Section>
+                                <DrawerItem
+                                    icon={({ size }) => (
+                                        <MaterialCommunityIcons
+                                            name="power"
+                                            color="red"
+                                            size={size}
+                                        />
+                                    )}
+                                    label={() => (
+                                        <Text style={{ color: "red", fontWeight: "bold" }}>
+                                            {all_constants.drawercontent.logout}
+                                        </Text>
+                                    )}
+                                    onPress={() => {}}
+                                />
+                            </Drawer.Section>
+                        </Animated.View>
+                    </DrawerContentScrollView>
+                )}
         </View>
     );
 }

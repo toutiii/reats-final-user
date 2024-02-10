@@ -11,6 +11,7 @@ export default class AdressesStack extends Component {
         super(props);
         console.log(props.route.params.item);
     }
+
     render() {
         return (
             <Stack.Navigator initialRouteName="Home">

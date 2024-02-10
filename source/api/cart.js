@@ -1,4 +1,3 @@
-
 const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 };
@@ -26,6 +25,7 @@ export async function getAllItemsFromCart() {
                 {
                     id: 1,
                     photo:
+            // eslint-disable-next-line max-len
             "https://cdn.shopify.com/s/files/1/0046/8687/2649/articles/20180428-224841_grande_da48bffe-31ad-4658-b9af-383f745ea8b3.jpg?v=1550656688",
                     dish_name: "okok ignames",
                     dish_ordered_quantity: 1,
@@ -35,6 +35,7 @@ export async function getAllItemsFromCart() {
                     is_order_deleted: false,
                     dish_rating: "4.8/5",
                     dish_description:
+            // eslint-disable-next-line max-len
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
                 },
                 {
@@ -92,6 +93,7 @@ export async function getAllItemsFromCart() {
                 {
                     id: 6,
                     photo:
+            // eslint-disable-next-line max-len
             "https://i0.wp.com/laviebami.com/wp-content/uploads/2021/04/7f66d4_e36b86ee45c4468d8ba0d41a584baad1mv2.png?w=740&ssl=1",
                     dish_name: "Beignets haricots",
                     dish_ordered_quantity: 2,

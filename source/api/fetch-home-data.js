@@ -1,6 +1,7 @@
+/* eslint-disable max-len */
 export async function getNewDishesData() {
     await fetch(
-        "http://www.mocky.io/v2/5e3315753200008abe94d3d8?mocky-delay=2000ms"
+        "http://www.mocky.io/v2/5e3315753200008abe94d3d8?mocky-delay=2000ms",
     );
     let result = {
         status: 200,

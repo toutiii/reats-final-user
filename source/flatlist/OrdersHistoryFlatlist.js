@@ -18,17 +18,42 @@ import SearchFilterModal from "../modals/SearchFilterModal.js";
 import CustomAlert from "../components/CustomAlert.js";
 
 export default function OrdersHistoryFlatList({ ...props }) {
-    const [isSearchFilterModalVisible, setSearchFilterModalVisible] =
+    const [
+        isSearchFilterModalVisible,
+        setSearchFilterModalVisible
+    ] =
     React.useState(false);
 
-    const [startDate, setStartDate] = React.useState(null);
-    const [endDate, setEndDate] = React.useState(null);
+    const [
+        startDate,
+        setStartDate
+    ] = React.useState(null);
+    const [
+        endDate,
+        setEndDate
+    ] = React.useState(null);
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
-    const [isFetchingData, setIsFetchingData] = React.useState(false);
-    const [data, setData] = React.useState([]);
-    const [runSearchByTextInput, setRunSearchByTextInput] = React.useState(false);
-    const [dateCheckingOk, setIsDateCheckingOk] = React.useState(true);
-    const [showAlert, setShowAlert] = React.useState(false);
+    const [
+        isFetchingData,
+        setIsFetchingData
+    ] = React.useState(false);
+    const [
+        data,
+        setData
+    ] = React.useState([
+    ]);
+    const [
+        runSearchByTextInput,
+        setRunSearchByTextInput
+    ] = React.useState(false);
+    const [
+        dateCheckingOk,
+        setIsDateCheckingOk
+    ] = React.useState(true);
+    const [
+        showAlert,
+        setShowAlert
+    ] = React.useState(false);
 
     const minLengthToTriggerSearch = 3;
     const maxInputLength = 100;
@@ -54,7 +79,10 @@ export default function OrdersHistoryFlatList({ ...props }) {
         setSearchFilterModalVisible(!isSearchFilterModalVisible);
     };
 
-    const [searchQuery, setSearchQuery] = React.useState("");
+    const [
+        searchQuery,
+        setSearchQuery
+    ] = React.useState("");
 
     const onChangeSearch = (query) => {
         console.log(query);
@@ -95,7 +123,8 @@ export default function OrdersHistoryFlatList({ ...props }) {
             setIsFetchingData(false);
             fadeIn();
         }, 500);
-    }, []);
+    }, [
+    ]);
 
     React.useEffect(() => {
         if (isFetchingData && dateCheckingOk) {
@@ -113,7 +142,9 @@ export default function OrdersHistoryFlatList({ ...props }) {
                 fadeIn();
             }, 1000);
         }
-    }, [isFetchingData]);
+    }, [
+        isFetchingData
+    ]);
 
     React.useEffect(() => {
         if (runSearchByTextInput) {
@@ -123,7 +154,9 @@ export default function OrdersHistoryFlatList({ ...props }) {
 
             return () => clearTimeout(delayDebounceFn);
         }
-    }, [runSearchByTextInput]);
+    }, [
+        runSearchByTextInput
+    ]);
 
     const checkDates = () => {
         if (startDate !== null && endDate !== null && startDate > endDate) {

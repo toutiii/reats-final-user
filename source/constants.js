@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Dimensions } from "react-native";
 
 let all_constants = {
@@ -197,6 +198,7 @@ let all_constants = {
                 firstname: "Prénom",
                 lastname: "Nom",
                 phone: "Numéro de téléphone",
+                phone_confirmation: "Confirmation téléphone",
                 street_number: "Numéro",
                 street_name: "Rue",
                 address_complement: "Complément d'adresse",
@@ -290,8 +292,12 @@ let all_constants = {
         failed: {
             title: "Échec",
         },
+        clear: "EFFACER",
         submit: "VALIDER",
         cancel: "ANNULER",
+        signup: "CRÉER UN COMPTE",
+        send: "ENVOYER",
+        send_again: "JE N'AI PAS REÇU DE CODE",
         errors: {
             title: "Erreur",
             empty_email: "Veuillez renseigner votre mail",
@@ -299,11 +305,26 @@ let all_constants = {
             empty_password: "Veuillez renseigner votre mot de passe",
             forgot_password: "Mot de passe oublié ?",
         },
+        otp: {
+            title: {
+                send_again_title: "Nouvelle demande",
+            },
+            message: {
+                send_again_message:
+          "Un nouveau code vous sera envoyé par SMS dans quelques instants.",
+                invalid_code:
+          "Code invalide. Veuillez réessayer ou en demander un nouveau.",
+            },
+        },
         success: {
             title: "Succès",
-            email_sent: "Un email a été envoyé à ",
-            reset_password:
-        "Si vous êtes inscrit, vous recevrez un email contenant un nouveau mot de passe. Pensez à regarder vos spams.",
+            login_message: "Connexion réussie",
+            signup_message:
+        "Vous pouvez désormais vous connecter avec votre numéro de téléphone.",
+            otp_message_signup:
+        "Vous allez recevoir dans quelques instants un code par SMS que vous devrez renseigner dans le prochain écran.",
+            otp_message_login:
+        "Si vous avez déjà créé un compte, un code de connexion vous sera envoyé par SMS dans quelques instants.",
         },
     },
     custom_alert: {
@@ -321,6 +342,8 @@ let all_constants = {
             invalid_char: " est invalide. Veuillez enlever le ",
             invalid_price: " est invalide. Exemple: 13.90",
             invalid_postal_code: " est invalide. Exemple: 91100.",
+            phone_mismatch:
+        "Les deux numéros de téléphone saisis doivent être identiques.",
         },
 
         includes: {
@@ -363,6 +386,19 @@ let all_constants = {
     },
     search_bar: {
         placeholder: "Écrivez pour lancer la recherche",
+    },
+    max_length: {
+        form: {
+            siret: 14,
+            firstname: 50,
+            lastname: 50,
+            phone: 10,
+            street_number: 20,
+            street_name: 100,
+            address_complement: 100,
+            postal_code: 5,
+            town: 100,
+        },
     },
 };
 

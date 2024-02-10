@@ -17,21 +17,47 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import SearchFilterModal from "../modals/SearchFilterModal.js";
 
 export default function SearchDishFlatList({ ...props }) {
-    const [isSearchFilterModalVisible, setSearchFilterModalVisible] =
+    const [
+        isSearchFilterModalVisible,
+        setSearchFilterModalVisible
+    ] =
     React.useState(false);
 
-    const [selectedDishCategories, setSelectedDishCategories] = React.useState(
-        []
+    const [
+        selectedDishCategories,
+        setSelectedDishCategories
+    ] = React.useState(
+        [
+        ],
     );
-    const [dishSortTypeFilter, setDishSortTypeFilter] = React.useState(null);
+    const [
+        dishSortTypeFilter,
+        setDishSortTypeFilter
+    ] = React.useState(null);
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
-    const [isFetchingData, setIsFetchingData] = React.useState(false);
-    const [data, setData] = React.useState([]);
-    const [runSearchByTextInput, setRunSearchByTextInput] = React.useState(false);
-    const [isSearchRunAtLeastOnce, setIsSearchRunAtLeastOnce] =
+    const [
+        isFetchingData,
+        setIsFetchingData
+    ] = React.useState(false);
+    const [
+        data,
+        setData
+    ] = React.useState([
+    ]);
+    const [
+        runSearchByTextInput,
+        setRunSearchByTextInput
+    ] = React.useState(false);
+    const [
+        isSearchRunAtLeastOnce,
+        setIsSearchRunAtLeastOnce
+    ] =
     React.useState(false);
 
-    const [searchQuery, setSearchQuery] = React.useState("");
+    const [
+        searchQuery,
+        setSearchQuery
+    ] = React.useState("");
 
     const minLengthToTriggerSearch = 3;
     const maxInputLength = 100;
@@ -101,7 +127,9 @@ export default function SearchDishFlatList({ ...props }) {
                 setIsSearchRunAtLeastOnce(true);
             }, 500);
         }
-    }, [isFetchingData]);
+    }, [
+        isFetchingData
+    ]);
 
     React.useEffect(() => {
         if (runSearchByTextInput) {
@@ -111,7 +139,9 @@ export default function SearchDishFlatList({ ...props }) {
 
             return () => clearTimeout(delayDebounceFn);
         }
-    }, [searchQuery]);
+    }, [
+        searchQuery
+    ]);
 
     const onPressFilter = () => {
         toggleSearchFilterModal();
@@ -124,7 +154,8 @@ export default function SearchDishFlatList({ ...props }) {
     };
 
     const resetFilters = () => {
-        setSelectedDishCategories([]);
+        setSelectedDishCategories([
+        ]);
         setDishSortTypeFilter(null);
     };
 
@@ -186,50 +217,54 @@ export default function SearchDishFlatList({ ...props }) {
                     backgroundColor: "white",
                 }}
             >
-                {data === null ? (
-                    <ActivityIndicator size="large" color="tomato" />
-                ) : data.length === 0 ? (
-                    <View
-                        style={{
-                            alignItems: "center",
-                            marginTop: "5%",
-                        }}
-                    >
-                        {isSearchRunAtLeastOnce && (
-                            <Text style={{ fontSize: 20 }}>
-                                {all_constants.search.no_dishes_found}
-                            </Text>
-                        )}
-                    </View>
-                ) : (
-                    <FlatList
-                        data={data}
-                        renderItem={({ item }) => (
-                            <View style={styles_order.order_button_container}>
-                                <TouchableHighlight
-                                    onPress={() => {
-                                        props.navigation.navigate("SearchItemDetailView", {
-                                            item: item,
-                                        });
-                                    }}
-                                    style={{ flex: 1, alignItems: "center" }}
-                                    underlayColor={all_constants.colors.inputBorderColor}
-                                >
-                                    <Dish
-                                        key={item.id}
-                                        dish_photo={item.photo}
-                                        dish_name={item.dish_name}
-                                        dish_category={item.dish_category}
-                                        dish_rating={item.dish_rating}
-                                        dish_price={item.dish_price + all_constants.currency_symbol}
-                                        dish_description={item.dish_description}
-                                        dish_country={item.dish_country}
-                                    />
-                                </TouchableHighlight>
+                {data === null
+                    ? (
+                        <ActivityIndicator size="large" color="tomato" />
+                    )
+                    : data.length === 0
+                        ? (
+                            <View
+                                style={{
+                                    alignItems: "center",
+                                    marginTop: "5%",
+                                }}
+                            >
+                                {isSearchRunAtLeastOnce && (
+                                    <Text style={{ fontSize: 20 }}>
+                                        {all_constants.search.no_dishes_found}
+                                    </Text>
+                                )}
                             </View>
+                        )
+                        : (
+                            <FlatList
+                                data={data}
+                                renderItem={({ item }) => (
+                                    <View style={styles_order.order_button_container}>
+                                        <TouchableHighlight
+                                            onPress={() => {
+                                                props.navigation.navigate("SearchItemDetailView", {
+                                                    item: item,
+                                                });
+                                            }}
+                                            style={{ flex: 1, alignItems: "center" }}
+                                            underlayColor={all_constants.colors.inputBorderColor}
+                                        >
+                                            <Dish
+                                                key={item.id}
+                                                dish_photo={item.photo}
+                                                dish_name={item.dish_name}
+                                                dish_category={item.dish_category}
+                                                dish_rating={item.dish_rating}
+                                                dish_price={item.dish_price + all_constants.currency_symbol}
+                                                dish_description={item.dish_description}
+                                                dish_country={item.dish_country}
+                                            />
+                                        </TouchableHighlight>
+                                    </View>
+                                )}
+                            />
                         )}
-                    />
-                )}
             </View>
         </Animated.View>
     );

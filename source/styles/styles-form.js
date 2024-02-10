@@ -31,5 +31,11 @@ let styles_form = StyleSheet.create({
         alignItems: "center",
         zIndex: 2,
     },
+    form_button: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "4%",
+    },
 });
 export default styles_form;
