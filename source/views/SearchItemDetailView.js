@@ -149,12 +149,6 @@ export default function SearchItemDetailView({ ...props }) {
                     </View>
                 </View>
 
-                <View style={{ flex: 2, justifyContent: "center", margin: "7%" }}>
-                    <Text style={{ fontSize: 18, fontStyle: "italic" }}>
-                        {all_constants.search.delivery_scheduled_at}
-                    </Text>
-                </View>
-
                 <View
                     style={{
                         flex: 4,

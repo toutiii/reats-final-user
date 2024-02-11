@@ -20,7 +20,6 @@ import FormLabelModal from "../modals/FormLabelModal";
 import CustomAlert from "./CustomAlert";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
-import * as Device from "expo-device";
 
 export default function FormField({ ...props }) {
     const [
@@ -133,9 +132,9 @@ export default function FormField({ ...props }) {
         <View
             style={[
                 styles_field.container,
-                { padding: props.login || props.reset_password
+                { padding: props.login
                     ? "2%"
-                    : "10%" },
+                    : "10%" }
             ]}
         >
             <View style={styles_field.label}>
@@ -237,12 +236,8 @@ export default function FormField({ ...props }) {
                                 ? "numeric"
                                 : "default"}
                             editable={!props.field.isReadOnly}
-                            caretHidden={
-                                props.field.label.toLowerCase() === "email" &&
-              Device.manufacturer.toLowerCase() === "xiaomi"
-                            }
                         />
-                        {!props.login && !props.reset_password
+                        {!props.login
                             ? (
                                 <View>
                                     {props.value

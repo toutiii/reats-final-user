@@ -6,7 +6,6 @@ import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import OrdersStack from "../stack/OrdersStack";
 import all_constants from "../constants";
 import SettingsAddressForm from "../forms/SettingsAddressForm";
-import SettingsCredentialsForm from "../forms/SettingsCredentialsForm";
 import SettingsPersonalInformationForm from "../forms/SettingsPersonalInformationForm";
 import AdressesStack from "../stack/AddressesStack";
 import OrdersHistoryStack from "../stack/OrdersHistoryStack";
@@ -44,7 +43,6 @@ export default function MainTabNavigator() {
                 tabBarButton: [
                     "AdressesStack",
                     "SettingsAddressForm",
-                    "SettingsCredentialsForm",
                     "SettingsPersonalInformationForm",
                     "OrdersHistory",
                     "TabSearchStack",
@@ -85,10 +83,6 @@ export default function MainTabNavigator() {
                 component={CartStack}
             />
 
-            <Tab.Screen
-                name="SettingsCredentialsForm"
-                component={SettingsCredentialsForm}
-            />
             <Tab.Screen
                 name="SettingsPersonalInformationForm"
                 component={SettingsPersonalInformationForm}

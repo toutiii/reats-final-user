@@ -54,7 +54,10 @@ module.exports = {
         "no-trailing-spaces": 1,
         "no-multi-spaces": 1,
         "no-unexpected-multiline": 0,
-        "no-multiple-empty-lines": 1,
+        "no-multiple-empty-lines": [
+            2,
+            { max: 2, maxEOF: 0 }
+        ],
         "no-whitespace-before-property": 1,
         "no-mixed-spaces-and-tabs": 1,
         "space-in-parens": 1,

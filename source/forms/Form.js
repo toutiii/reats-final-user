@@ -174,10 +174,6 @@ export default function Form({ ...props }) {
         setStateShowAlert(true);
     };
 
-    const onPressForgottenPassword = () => {
-        props.navigation.goBack();
-        setStateShowAlert(false);
-    };
     return (
         <KeyboardAvoidingView>
             <ScrollView>
@@ -275,18 +271,7 @@ export default function Form({ ...props }) {
                             }}
                         />
                     )}
-                    {props.reset_password &&
-            !isSubmitting &&
-            noErrorsFound &&
-            apiOkResponse && (
-                        <CustomAlert
-                            show={showAlert}
-                            title={all_constants.messages.success.title}
-                            message={all_constants.messages.success.reset_password}
-                            confirmButtonColor="green"
-                            onConfirmPressed={onPressForgottenPassword}
-                        />
-                    )}
+
                     {!isSubmitting &&
             noErrorsFound &&
             !apiOkResponse &&
@@ -308,7 +293,6 @@ export default function Form({ ...props }) {
                                 <FormField
                                     key={key}
                                     login={props.login}
-                                    reset_password={props.reset_password}
                                     itemObject={props.item}
                                     newItem={newItem}
                                     fieldName={key}
