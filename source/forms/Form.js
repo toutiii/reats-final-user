@@ -160,7 +160,7 @@ export default function Form({ ...props }) {
         setSubmitting(false);
 
         if (props.afterSubmit) {
-            props.afterSubmit(result.ok, newItem);
+            props.afterSubmit(newItem);
         }
     };
 

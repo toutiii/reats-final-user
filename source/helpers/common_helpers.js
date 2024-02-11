@@ -1,3 +1,5 @@
+import * as SecureStore from "expo-secure-store";
+
 export function getCategories(itemType) {
     let categoriesObject = {};
     if (itemType === "Dish") {
@@ -66,4 +68,9 @@ export function getDataFromUniqueField(dataFromBackend, objectNumber) {
             return itemObject;
         }
     }
+}
+
+export async function getItemFromSecureStore(key) {
+    let result = await SecureStore.getItemAsync(key);
+    return result;
 }

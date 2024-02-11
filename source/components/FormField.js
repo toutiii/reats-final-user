@@ -151,7 +151,9 @@ export default function FormField({ ...props }) {
                                         : "normal",
                                 }}
                             >
-                                {props.field.label}
+                                {props.field.hideLabel
+                                    ? ""
+                                    : props.field.label}
                             </Text>
                         </View>
                     )
@@ -165,7 +167,9 @@ export default function FormField({ ...props }) {
                                         : "normal",
                                 }}
                             >
-                                {props.field.label}
+                                {props.field.hideLabel
+                                    ? ""
+                                    : props.field.label}
                             </Text>
                         </View>
                     )}

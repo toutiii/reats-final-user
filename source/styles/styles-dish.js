@@ -23,12 +23,13 @@ let styles_dish = StyleSheet.create({
     },
     dish_price: {
         flex: 1,
-        justifyContent: "flex-end",
-        alignItems: "flex-end",
+        justifyContent: "center",
+        alignItems: "flex-start",
     },
     dish_name: {
         flex: 1,
-        justifyContent: "flex-end",
+        justifyContent: "center",
+        alignItems: "center",
     },
     dish_rating: {
         flex: 1,

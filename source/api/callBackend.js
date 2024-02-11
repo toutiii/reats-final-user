@@ -1,4 +1,6 @@
-import { apiKeyBackend, appOriginHeader } from "../env";
+import { apiBaseUrl, apiKeyBackend, appOriginHeader, port } from "../env";
+import { getItemFromSecureStore } from "../helpers/common_helpers";
+import { setItemAsync } from "expo-secure-store";
 
 export async function callBackEnd(
     data,
@@ -67,11 +69,129 @@ export async function callBackEnd(
         console.log("Below initial request's response");
         console.log(JSON.stringify(response));
         console.log("**************************************");
+
+        if (
+            response.status_code === 401 &&
+      response.error_code === "token_not_valid"
+        ) {
+            await renewAccessToken();
+            const newAccessToken = await getItemFromSecureStore("accessToken");
+            if (method === "GET") {
+                response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: newAccessToken,
+                    },
+                });
+            } else {
+                response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: newAccessToken,
+                    },
+                    body: body,
+                });
+            }
+            response = await response.json();
+            console.log("-------------------------------------------");
+            console.log("Below request response after access token renew only");
+            console.log(JSON.stringify(response));
+            console.log("-------------------------------------------");
+            if (
+                response.status_code === 401 &&
+        response.error_code === "token_not_valid"
+            ) {
+                await renewTokenPair();
+                const accessTokenFromNewPair =
+          await getItemFromSecureStore("accessToken");
+                if (method === "GET") {
+                    response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            Accept: "application/json",
+                            Authorization: accessTokenFromNewPair,
+                        },
+                    });
+                } else {
+                    response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            Accept: "application/json",
+                            Authorization: accessTokenFromNewPair,
+                        },
+                        body: body,
+                    });
+                }
+
+                response = await response.json();
+                console.log("-------------------------------------------");
+                console.log("Below request response after token pair renew");
+                console.log(JSON.stringify(response));
+                console.log("-------------------------------------------");
+            }
+        }
         return response;
     } catch (error) {
         console.log(error);
         return false;
     }
+}
+
+export async function renewAccessToken() {
+    console.log("=======================================");
+    let url = `${apiBaseUrl}:${port}/api/v1/token/refresh/`;
+    const refreshToken = await getItemFromSecureStore("refreshToken");
+
+    let formData = new FormData();
+    formData.append("refresh", refreshToken);
+
+    console.log(formData);
+    console.log(url);
+
+    let response = await fetch(url, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: formData,
+    });
+    response = await response.json();
+    console.log(JSON.stringify(response));
+
+    if (response.ok) {
+        await setItemAsync("accessToken", `Bearer ${response.access}`);
+    }
+    console.log("=======================================");
+}
+
+export async function renewTokenPair() {
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    console.log("Renewing token pair...");
+    let url = `${apiBaseUrl}:${port}/api/v1/token/`;
+
+    let formData = new FormData();
+    const phoneNumber = await getItemFromSecureStore("phoneNumber");
+    formData.append("phone", phoneNumber);
+    console.log(formData);
+    console.log(url);
+
+    let response = await fetch(url, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "X-Api-Key": apiKeyBackend,
+            "App-Origin": appOriginHeader,
+        },
+        body: formData,
+    });
+    response = await response.json();
+    console.log(JSON.stringify(response));
+
+    if (response.ok) {
+        await setItemAsync("refreshToken", `${response.token.refresh}`);
+        await setItemAsync("accessToken", `Bearer ${response.token.access}`);
+    }
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 }
 
 export async function callBackendWithFormDataForCustomers(
@@ -96,5 +216,17 @@ export async function callBackendWithFormDataForCustomers(
         }
     }
 
+    return callBackEnd(formData, url, method, null, true, apiKeyBackend);
+}
+
+export async function callBackEndForAuthentication(
+    data,
+    url,
+    method,
+    apiKeyBackend,
+) {
+    console.log(data);
+    let formData = new FormData();
+    formData.append("phone", data.phone);
     return callBackEnd(formData, url, method, null, true, apiKeyBackend);
 }
