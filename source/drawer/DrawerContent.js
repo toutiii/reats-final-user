@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
     ActivityIndicator,
     Drawer,
@@ -11,26 +11,43 @@ import {
 } from "react-native-paper";
 import Animated from "react-native-reanimated";
 import all_constants from "../constants";
-import { getUserSettings } from "../helpers/settings_helpers";
+// import { getUserSettings } from "../helpers/settings_helpers";
+import { getItemFromSecureStore } from "../helpers/common_helpers";
+import { apiBaseUrl, port } from "../env";
+import { callBackEnd } from "../api/callBackend";
 
 export default function DrawerContent(props) {
     const paperTheme = useTheme();
     const [
         userData,
-        getUserData
+        setUserData
     ] = React.useState(null);
     const [
         requesting,
         isRequesting
     ] = React.useState(true);
+    const [
+        refreshData,
+        setRefreshData
+    ] = React.useState(false);
+
     async function getData() {
-        const data = await getUserSettings();
-        getUserData(data);
+        const userID = await getItemFromSecureStore("userID");
+        const access = await getItemFromSecureStore("accessToken");
+        const result = await callBackEnd(
+            new FormData(),
+            `${apiBaseUrl}:${port}/api/v1/customers/${userID}/`,
+            "GET",
+            access,
+        );
+        setUserData(result.data);
+        isRequesting(false);
+        setRefreshData(false);
     }
+
     React.useEffect(() => {
         if (requesting) {
             console.log("Fetching data to feed drawer content");
-
             getData();
         }
 
@@ -38,8 +55,13 @@ export default function DrawerContent(props) {
             isRequesting(false);
         };
     }, [
-        userData
+        refreshData
     ]);
+
+    const changeRefreshDataState = () => {
+        setRefreshData(true);
+        isRequesting(true);
+    };
 
     return (
         <View style={{ flex: 1, backgroundColor: paperTheme.colors.surface }}>
@@ -55,6 +77,19 @@ export default function DrawerContent(props) {
                             styles.drawerContent
                         ]}>
                             <View style={styles.userInfoSection}>
+                                <TouchableOpacity
+                                    style={{ marginLeft: 10 }}
+                                    onPress={() => {
+                                        props.navigation.toggleDrawer();
+                                    }}
+                                >
+                                    <Image
+                                        source={{
+                                            uri: userData.personal_infos_section.data.photo,
+                                        }}
+                                        style={{ width: 70, height: 70, borderRadius: 150 / 2 }}
+                                    />
+                                </TouchableOpacity>
                                 <Title style={styles.title}>
                                     {all_constants.drawercontent.hello}
                                     {userData["personal_infos_section"]["data"]["firstname"]}
@@ -87,6 +122,7 @@ export default function DrawerContent(props) {
                                     onPress={() => {
                                         props.navigation.navigate("SettingsPersonalInformationForm", {
                                             item: userData["personal_infos_section"]["data"],
+                                            refreshDataStateChanger: changeRefreshDataState,
                                         });
                                     }}
                                 />
