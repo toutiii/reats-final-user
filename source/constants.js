@@ -255,6 +255,7 @@ let all_constants = {
             title: "ATTENTION",
             message: "Quitter le formulaire et revenir en arrière ?.",
         },
+        cancel_text: "ANNULER",
     },
     validators: {
         max_text_length: 30,

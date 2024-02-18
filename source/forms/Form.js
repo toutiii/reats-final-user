@@ -13,6 +13,7 @@ import FormField from "../components/FormField";
 import styles_form from "../styles/styles-form";
 import CustomAlert from "../components/CustomAlert";
 import { apiKeyBackend } from "../env";
+import { getItemFromSecureStore } from "../helpers/common_helpers";
 
 const getInitialErrorsState = (fieldKeys) => {
     const errors_state = {};
@@ -96,6 +97,8 @@ export default function Form({ ...props }) {
         setShowAlertCancel
     ] = useState(false);
 
+    const newItemCopy = props.item;
+
     const onChangeValue = (key, value) => {
         const newState = { ...newItem, [key]: value };
         setValues(newState);
@@ -136,18 +139,20 @@ export default function Form({ ...props }) {
         }
         fadeOut();
         try {
-            //const userID = await getItemFromSecureStore("userID");
-            //const accessToken = await getItemFromSecureStore("accessToken");
-
+            const userID = await getItemFromSecureStore("userID");
+            const accessToken = await getItemFromSecureStore("accessToken");
+            const apiKey = props.useApiKey
+                ? apiKeyBackend
+                : null;
             result = await props.action(
                 newItem,
                 props.url,
                 props.method,
-
-                props.useApiKey
-                    ? apiKeyBackend
-                    : null,
+                userID,
+                accessToken,
+                apiKey,
             );
+
             setApiOkResponse(result.ok);
             fadeIn();
             if (props.afterSubmit === undefined || props.afterSubmit === null) {
@@ -160,7 +165,7 @@ export default function Form({ ...props }) {
         setSubmitting(false);
 
         if (props.afterSubmit) {
-            props.afterSubmit(newItem);
+            props.afterSubmit(result.ok, newItem);
         }
     };
 
@@ -185,7 +190,7 @@ export default function Form({ ...props }) {
                         confirmButtonColor="green"
                         showCancelButton={true}
                         cancelButtonColor="red"
-                        cancelText={all_constants.custom_alert.homeview.cancel_text}
+                        cancelText={all_constants.custom_alert.cancel_text}
                         onConfirmPressed={() => {
                             setShowAlertCancel(false);
                             props.navigation.goBack();
@@ -208,6 +213,13 @@ export default function Form({ ...props }) {
                             confirmButtonColor="green"
                             onConfirmPressed={() => {
                                 setStateShowAlert(false);
+                                if (JSON.stringify(newItem) !== JSON.stringify(newItemCopy)) {
+                                    if (props.refreshDataStateChanger !== undefined) {
+                                        props.refreshDataStateChanger(true);
+                                    }
+                                }
+
+                                props.navigation.goBack(null);
                             }}
                         />
                     )}
@@ -293,7 +305,6 @@ export default function Form({ ...props }) {
                                 <FormField
                                     key={key}
                                     login={props.login}
-                                    itemObject={props.item}
                                     newItem={newItem}
                                     fieldName={key}
                                     field={fieldsObject[key]}

@@ -7,28 +7,25 @@ import {
     checkValueNotContainsSpecialChar,
 } from "../validators/common_validators";
 import { checkNumericFormat } from "../validators/settingsform_validators";
-import { callBackEnd } from "../api/fetch";
+import { callBackendWithFormDataForCustomers } from "../api/callBackend";
+import { apiBaseUrl, port } from "../env";
 
 export default function SettingsPersonalInformationForm({ ...props }) {
-    const handleResult = async (result) => {
-        if (result.ok) {
-            props.navigation.goBack(null);
-        } else {
-            throw new Error("Failed.");
-        }
-    };
-
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flex: 2, marginTop: "10%" }}>
                 <Form
-                    action={callBackEnd}
-                    url={all_constants.uri.api.mock}
-                    method={"POST"}
+                    action={callBackendWithFormDataForCustomers}
+                    url={`${apiBaseUrl}:${port}/api/v1/customers/`}
+                    method={"PATCH"}
                     navigation={props.navigation}
-                    afterSubmit={handleResult}
+                    refreshDataStateChanger={props.route.params.refreshDataStateChanger}
                     item={props.route.params.item}
                     fields={{
+                        photo: {
+                            type: all_constants.field_type.image,
+                            label: all_constants.label.form.settings.image,
+                        },
                         firstname: {
                             fieldIsMandatory: true,
                             type: all_constants.field_type.textinput,
@@ -62,6 +59,7 @@ export default function SettingsPersonalInformationForm({ ...props }) {
                                 checkNumericFormat
                             ],
                             maxLength: 10,
+                            isReadOnly: true,
                         },
                     }}
                 />

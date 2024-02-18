@@ -198,17 +198,35 @@ export async function callBackendWithFormDataForCustomers(
     data,
     url,
     method,
+    userID,
+    access,
     apiKeyBackend,
 ) {
     console.log(data);
     console.log(url);
     console.log(method);
     let formData = new FormData();
+
+    if (data.photo !== undefined && data.photo.startsWith("file:///")) {
+        const fileName = data.photo.split("/").pop();
+        const fileExtension = fileName.split(".").pop();
+        formData.append("photo", {
+            uri: data.photo,
+            name: fileName,
+            type: `image/${fileExtension}`,
+        });
+    }
+
     let form_keys = [
         "firstname",
         "lastname",
         "phone"
     ];
+
+    if (method === "PATCH") {
+        form_keys.pop();
+        url += userID + "/";
+    }
 
     for (let i = 0; i < form_keys.length; i++) {
         if (data[form_keys[i]] !== undefined) {
@@ -216,7 +234,7 @@ export async function callBackendWithFormDataForCustomers(
         }
     }
 
-    return callBackEnd(formData, url, method, null, true, apiKeyBackend);
+    return callBackEnd(formData, url, method, access, true, apiKeyBackend);
 }
 
 export async function callBackEndForAuthentication(

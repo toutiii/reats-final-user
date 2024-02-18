@@ -4,6 +4,7 @@ import {
     Platform,
     Text,
     TextInput,
+    TouchableHighlight,
     TouchableWithoutFeedback,
     View,
 } from "react-native";
@@ -11,7 +12,7 @@ import styles_field from "../styles/styles-field";
 import all_constants from "../constants";
 import RNPickerSelect from "react-native-picker-select";
 import { getCategories } from "../helpers/common_helpers";
-import CustomImageButton from "../components/CustomImageButton";
+import styles_home_view from "../styles/styles-home-view";
 import * as ImagePicker from "expo-image-picker";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
 import { getDaysOfWeek } from "../helpers/common_helpers";
@@ -78,9 +79,9 @@ export default function FormField({ ...props }) {
     };
 
     useEffect(() => {
-        setPicUri(props.itemObject.photo);
+        setPicUri(props.newItem["photo"]);
     }, [
-        props.itemObject
+        props.newItem
     ]);
     useEffect(() => {
         setCategory(props.newItem.dish_category);
@@ -105,9 +106,10 @@ export default function FormField({ ...props }) {
                 setStateShowAlert(true);
             } else {
                 let result = await ImagePicker.launchImageLibraryAsync({ options });
-                if (!result.cancelled) {
-                    setPicUri(result.uri);
-                    props.newItem["photo"] = result.uri;
+
+                if (!result.canceled) {
+                    setPicUri(result.assets[0].uri);
+                    props.newItem["photo"] = result.assets[0].uri;
                 }
             }
         }
@@ -120,9 +122,9 @@ export default function FormField({ ...props }) {
                 setStateShowAlert(true);
             } else {
                 let result = await ImagePicker.launchCameraAsync({ options });
-                if (!result.cancelled) {
-                    setPicUri(result.uri);
-                    props.newItem["photo"] = result.uri;
+                if (!result.canceled) {
+                    setPicUri(result.assets[0].uri);
+                    props.newItem["photo"] = result.assets[0].uri;
                 }
             }
         }
@@ -318,46 +320,56 @@ export default function FormField({ ...props }) {
                 : (
                     <View></View>
                 )}
-            {props.field.type === all_constants.field_type.image
-                ? (
-                    <View style={styles_field.button_container}>
-                        <View style={{ flex: 2 }}>
-                            {picUri
-                                ? (
+            {props.field.type === all_constants.field_type.image && (
+                <View style={styles_field.button_container}>
+                    <View style={{ flex: 2 }}>
+                        {picUri
+                            ? (
+                                <Image
+                                    source={{ uri: picUri }}
+                                    style={{ width: 200, height: 150 }}
+                                />
+                            )
+                            : (
+                                <View style={styles_field.no_image}>
+                                    <Text>PHOTO</Text>
+                                </View>
+                            )}
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <View style={styles_field.button}>
+                            <TouchableHighlight
+                                onPress={launchCamera}
+                                style={[
+                                    styles_home_view.home_button
+                                ]}
+                            >
+                                <View style={{ alignItems: "center" }}>
                                     <Image
-                                        source={{ uri: picUri }}
-                                        style={{ width: 200, height: 150 }}
+                                        source={require("../images/photo.png")}
+                                        style={{ height: 30, width: 30 }}
                                     />
-                                )
-                                : (
-                                    <View style={styles_field.no_image}>
-                                        <Text>PHOTO</Text>
-                                    </View>
-                                )}
+                                </View>
+                            </TouchableHighlight>
                         </View>
-                        <View style={{ flex: 1 }}>
-                            <View style={styles_field.button}>
-                                <CustomImageButton
-                                    onPress={launchCamera}
-                                    uri={
-                                        "https://pics.freeicons.io/uploads/icons/png/20607508171555590649-512.png"
-                                    }
-                                />
-                            </View>
-                            <View style={styles_field.button}>
-                                <CustomImageButton
-                                    onPress={launchGallery}
-                                    uri={
-                                        "https://pics.freeicons.io/uploads/icons/png/6433396501558096324-512.png"
-                                    }
-                                />
-                            </View>
+                        <View style={styles_field.button}>
+                            <TouchableHighlight
+                                onPress={launchGallery}
+                                style={[
+                                    styles_home_view.home_button
+                                ]}
+                            >
+                                <View style={{ alignItems: "center" }}>
+                                    <Image
+                                        source={require("../images/galerie.png")}
+                                        style={{ height: 30, width: 30 }}
+                                    />
+                                </View>
+                            </TouchableHighlight>
                         </View>
                     </View>
-                )
-                : (
-                    <View></View>
-                )}
+                </View>
+            )}
             {props.field.type === all_constants.field_type.date_picker && (
                 <TouchableWithoutFeedback>
                     <TextInput

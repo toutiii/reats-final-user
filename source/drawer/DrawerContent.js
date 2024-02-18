@@ -11,7 +11,6 @@ import {
 } from "react-native-paper";
 import Animated from "react-native-reanimated";
 import all_constants from "../constants";
-// import { getUserSettings } from "../helpers/settings_helpers";
 import { getItemFromSecureStore } from "../helpers/common_helpers";
 import { apiBaseUrl, port } from "../env";
 import { callBackEnd } from "../api/callBackend";

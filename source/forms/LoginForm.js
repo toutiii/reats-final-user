@@ -18,7 +18,8 @@ export default function LoginForm({ ...props }) {
         setItem
     ] = React.useState(null);
 
-    const handleResult = (itemObject) => {
+    const handleResult = (isRequestSuccessful, itemObject) => {
+        console.log("isRequestSuccessful: ", isRequestSuccessful);
         setItem(itemObject);
         setShowAlert(true);
     };
