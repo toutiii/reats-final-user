@@ -17,6 +17,10 @@ export default function SettingsPersonalInformationForm({ ...props }) {
                 <Form
                     action={callBackendWithFormDataForCustomers}
                     url={`${apiBaseUrl}:${port}/api/v1/customers/`}
+                    deleteAccountButton={true}
+                    deleteAccountButtonLabel={
+                        all_constants.label.form.settings.delete_account
+                    }
                     method={"PATCH"}
                     navigation={props.navigation}
                     refreshDataStateChanger={props.route.params.refreshDataStateChanger}

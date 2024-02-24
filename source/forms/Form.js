@@ -13,7 +13,11 @@ import FormField from "../components/FormField";
 import styles_form from "../styles/styles-form";
 import CustomAlert from "../components/CustomAlert";
 import { apiKeyBackend } from "../env";
-import { getItemFromSecureStore } from "../helpers/common_helpers";
+import {
+    deleteItemFromSecureStore,
+    getItemFromSecureStore,
+} from "../helpers/common_helpers";
+import { CommonActions } from "@react-navigation/native";
 
 const getInitialErrorsState = (fieldKeys) => {
     const errors_state = {};
@@ -83,19 +87,44 @@ export default function Form({ ...props }) {
     ] = useState(false);
 
     const [
-        disableState,
-        setDisableState
-    ] = useState(false);
-
-    const [
-        removeState,
-        setRemoveState
-    ] = useState(false);
-
-    const [
         showAlertCancel,
         setShowAlertCancel
     ] = useState(false);
+
+    const [
+        showAlertDeleteAccount,
+        setShowAlertDeleteAccount
+    ] = useState(false);
+
+    const [
+        showAlertDeleteAccountSuccess,
+        setShowAlertDeleteAccountSuccess
+    ] =
+    useState(false);
+
+    const [
+        redirectTologinView,
+        setRedirectTologinView
+    ] = useState(false);
+
+    const resetNavigationStackToLoginView = () => {
+        const resetAction = CommonActions.reset({
+            index: 0,
+            routes: [
+                { name: "LoginForm" }
+            ],
+        });
+        props.navigation.dispatch(resetAction);
+    };
+
+    useEffect(() => {
+        if (redirectTologinView) {
+            console.log("Delete account action success, redirecting to LoginView");
+            resetNavigationStackToLoginView();
+        }
+    }, [
+        redirectTologinView
+    ]);
 
     const newItemCopy = props.item;
 
@@ -169,14 +198,31 @@ export default function Form({ ...props }) {
         }
     };
 
-    const disableItem = () => {
-        setDisableState(true);
-        setStateShowAlert(true);
-    };
+    const deleteAccountAction = async () => {
+        setSubmitting(true);
+        setErrorMessage("");
+        fadeOut();
+        try {
+            const userID = await getItemFromSecureStore("userID");
+            const accessToken = await getItemFromSecureStore("accessToken");
+            const result = await props.action(
+                newItem,
+                props.url,
+                "DELETE",
+                userID,
+                accessToken,
+            );
+            result.ok
+                ? setShowAlertDeleteAccountSuccess(true)
+                : setStateShowAlert(true);
 
-    const removeItem = () => {
-        setRemoveState(true);
-        setStateShowAlert(true);
+            setApiOkResponse(result.ok);
+            fadeIn();
+        } catch (e) {
+            setErrorMessage(e.message);
+            fadeIn();
+        }
+        setSubmitting(false);
     };
 
     return (
@@ -243,43 +289,39 @@ export default function Form({ ...props }) {
                             }}
                         />
                     )}
-                    {props.third_button_label && showAlert && disableState && (
+
+                    {showAlertDeleteAccount && (
                         <CustomAlert
-                            show={showAlert}
-                            title={all_constants.custom_alert.form.title}
-                            message={all_constants.custom_alert.form.disable_item_message}
+                            show={showAlertDeleteAccount}
+                            title={all_constants.custom_alert.form.delete_account_title}
+                            message={all_constants.custom_alert.form.delete_account_message}
                             confirmButtonColor="green"
                             showCancelButton={true}
                             cancelButtonColor="red"
-                            cancelText={all_constants.messages.cancel}
+                            confirmText={all_constants.custom_alert.keep_account}
+                            cancelText={all_constants.custom_alert.delete_account}
                             onConfirmPressed={() => {
-                                setDisableState(false);
-                                setStateShowAlert(false);
-                                console.log("TO DO !");
+                                setShowAlertDeleteAccount(false);
                             }}
                             onCancelPressed={() => {
-                                setDisableState(false);
-                                setStateShowAlert(false);
+                                setShowAlertDeleteAccount(false);
+                                deleteAccountAction();
                             }}
                         />
                     )}
-                    {props.fourth_button_label && showAlert && removeState && (
+
+                    {showAlertDeleteAccountSuccess && (
                         <CustomAlert
-                            show={showAlert}
-                            title={props.alert_title}
-                            message={props.alert_message}
+                            show={showAlertDeleteAccountSuccess}
+                            title={all_constants.messages.success.title}
+                            message={all_constants.custom_alert.form.success}
                             confirmButtonColor="green"
-                            showCancelButton={true}
-                            cancelButtonColor="red"
-                            cancelText={all_constants.messages.cancel}
+                            cancelText={all_constants.custom_alert.delete_account}
                             onConfirmPressed={() => {
-                                setRemoveState(false);
-                                setStateShowAlert(false);
-                                console.log("TO DO REMOVE!");
-                            }}
-                            onCancelPressed={() => {
-                                setRemoveState(false);
-                                setStateShowAlert(false);
+                                deleteItemFromSecureStore("accessToken");
+                                deleteItemFromSecureStore("userID");
+                                setRedirectTologinView(true);
+                                setShowAlertDeleteAccountSuccess(false);
                             }}
                         />
                     )}
@@ -287,9 +329,7 @@ export default function Form({ ...props }) {
                     {!isSubmitting &&
             noErrorsFound &&
             !apiOkResponse &&
-            !wantToGoBack &&
-            !disableState &&
-            !removeState && (
+            !wantToGoBack && (
                         <CustomAlert
                             show={showAlert}
                             title={all_constants.messages.failed.title}
@@ -367,44 +407,21 @@ export default function Form({ ...props }) {
                                     />
                                 </View>
                             )}
-                        {Object.keys(props.item).length !== 0 &&
-            !props.is_new_item &&
-            props.third_button_label
-                            ? (
-                                <View style={styles_form.cancel_button}>
-                                    <CustomButton
-                                        label={props.third_button_label}
-                                        height={50}
-                                        border_radius={30}
-                                        font_size={18}
-                                        backgroundColor={"tomato"}
-                                        label_color="white"
-                                        onPress={disableItem}
-                                    />
-                                </View>
-                            )
-                            : (
-                                <View></View>
-                            )}
-                        {Object.keys(props.item).length !== 0 &&
-            !props.is_new_item &&
-            props.fourth_button_label
-                            ? (
-                                <View style={styles_form.cancel_button}>
-                                    <CustomButton
-                                        label={props.fourth_button_label}
-                                        height={50}
-                                        border_radius={30}
-                                        font_size={18}
-                                        backgroundColor={"darkgrey"}
-                                        label_color="white"
-                                        onPress={removeItem}
-                                    />
-                                </View>
-                            )
-                            : (
-                                <View></View>
-                            )}
+                        {props.deleteAccountButton && (
+                            <View style={styles_form.form_button}>
+                                <CustomButton
+                                    label={props.deleteAccountButtonLabel}
+                                    height={50}
+                                    border_radius={30}
+                                    font_size={18}
+                                    backgroundColor={"darkgrey"}
+                                    label_color="white"
+                                    onPress={() => {
+                                        setShowAlertDeleteAccount(true);
+                                    }}
+                                />
+                            </View>
+                        )}
                     </View>
                 </View>
             </ScrollView>

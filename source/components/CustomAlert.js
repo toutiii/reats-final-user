@@ -18,7 +18,9 @@ export default function CustomAlert({ ...props }) {
                 cancelText={props.cancelText
                     ? props.cancelText
                     : ""}
-                confirmText="OK"
+                confirmText={props.confirmText
+                    ? props.confirmText
+                    : "OK"}
                 confirmButtonColor={props.confirmButtonColor}
                 cancelButtonColor={
                     props.cancelButtonColor

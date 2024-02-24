@@ -74,3 +74,7 @@ export async function getItemFromSecureStore(key) {
     let result = await SecureStore.getItemAsync(key);
     return result;
 }
+
+export async function deleteItemFromSecureStore(key) {
+    await SecureStore.deleteItemAsync(key);
+}

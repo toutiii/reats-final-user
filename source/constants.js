@@ -192,6 +192,7 @@ let all_constants = {
                 postal_code: "Code postal",
                 town: "Ville",
                 image: "Photo de profil",
+                delete_account: "SUPPRIMER MON COMPTE",
             },
         },
     },
@@ -254,8 +255,13 @@ let all_constants = {
         form: {
             title: "ATTENTION",
             message: "Quitter le formulaire et revenir en arrière ?.",
+            delete_account_title: "ATTENTION SUPPRESSION DU COMPTE !",
+            delete_account_message:
+        "Souhaitez vous vraiment supprimer votre compte ? Attention toutes vos données seront perdues.",
         },
         cancel_text: "ANNULER",
+        delete_account: "SUPPRIMER",
+        keep_account: "CONSERVER",
     },
     validators: {
         max_text_length: 30,

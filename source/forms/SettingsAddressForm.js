@@ -28,9 +28,6 @@ export default function SettingsAddressForm({ ...props }) {
                     navigation={props.navigation}
                     afterSubmit={handleResult}
                     item={props.route.params.item}
-                    fourth_button_label={
-                        all_constants.drawercontent.button.labels.delete_address
-                    }
                     alert_title={all_constants.drawercontent.form.title}
                     alert_message={
                         all_constants.drawercontent.form.messages.remove_address_warning

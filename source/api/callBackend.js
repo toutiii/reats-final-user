@@ -207,6 +207,11 @@ export async function callBackendWithFormDataForCustomers(
     console.log(method);
     let formData = new FormData();
 
+    if (method === "DELETE") {
+        url += userID + "/";
+        return callBackEnd(formData, url, method, access);
+    }
+
     if (data.photo !== undefined && data.photo.startsWith("file:///")) {
         const fileName = data.photo.split("/").pop();
         const fileExtension = fileName.split(".").pop();
