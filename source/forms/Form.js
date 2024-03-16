@@ -18,6 +18,7 @@ import {
     getItemFromSecureStore,
 } from "../helpers/common_helpers";
 import { CommonActions } from "@react-navigation/native";
+import { callBackEnd } from "../api/callBackend";
 
 const getInitialErrorsState = (fieldKeys) => {
     const errors_state = {};
@@ -103,8 +104,29 @@ export default function Form({ ...props }) {
     useState(false);
 
     const [
+        showAlertDeleteAddress,
+        setShowAlertDeleteAddress
+    ] = useState(false);
+
+    const [
+        showAlertDeleteAddressFailed,
+        setShowAlertDeleteAddressFailed
+    ] =
+    useState(false);
+
+    const [
         redirectTologinView,
         setRedirectTologinView
+    ] = useState(false);
+
+    const [
+        forceRefreshData,
+        setForceRefreshData
+    ] = useState(false);
+
+    const [
+        reloadScreen,
+        setReloadScreen
     ] = useState(false);
 
     const resetNavigationStackToLoginView = () => {
@@ -173,14 +195,20 @@ export default function Form({ ...props }) {
             const apiKey = props.useApiKey
                 ? apiKeyBackend
                 : null;
-            result = await props.action(
-                newItem,
-                props.url,
-                props.method,
-                userID,
-                accessToken,
-                apiKey,
-            );
+            if (props.login) {
+                result = await props.action(newItem, props.url, props.method, apiKey);
+            } else {
+                result = await props.action(
+                    newItem,
+                    props.url,
+                    props.method,
+                    props.useItemID
+                        ? newItem.id
+                        : userID,
+                    accessToken,
+                    apiKey,
+                );
+            }
 
             setApiOkResponse(result.ok);
             fadeIn();
@@ -225,6 +253,68 @@ export default function Form({ ...props }) {
         setSubmitting(false);
     };
 
+    const deleteAddressAction = async () => {
+        setSubmitting(true);
+        setErrorMessage("");
+        fadeOut();
+        try {
+            const accessToken = await getItemFromSecureStore("accessToken");
+            const result = await props.action(
+                newItem,
+                props.url,
+                "DELETE",
+                newItem.id,
+                accessToken,
+            );
+            result.ok
+                ? setStateShowAlert(true)
+                : setShowAlertDeleteAddressFailed(true);
+
+            if (result.ok) {
+                setForceRefreshData(true);
+            }
+
+            setApiOkResponse(result.ok);
+            fadeIn();
+        } catch (e) {
+            setErrorMessage(e.message);
+            fadeIn();
+        }
+        setSubmitting(false);
+    };
+
+    const getTownFromPostalCode = async (postalCode) => {
+        fieldsObject["town"].selectValues.length = 0;
+        const townResults = await callBackEnd(
+            new FormData(),
+            `https://geo.api.gouv.fr/communes?codePostal=${postalCode}`,
+            "GET",
+        );
+
+        if (townResults.length === 0) {
+            console.error("No towns for postal code ", postalCode);
+            return;
+        }
+
+        for (let i = 0; i < townResults.length; i++) {
+            let tempObject = townResults[i];
+            fieldsObject["town"].selectValues.push({
+                label: tempObject.nom,
+                value: tempObject.nom,
+            });
+        }
+
+        setReloadScreen(true);
+        console.log(fieldsObject["town"]);
+    };
+
+    useEffect(() => {
+        console.log("Reloading screen");
+        setReloadScreen(false);
+    }, [
+        reloadScreen
+    ]);
+
     return (
         <KeyboardAvoidingView>
             <ScrollView>
@@ -258,11 +348,20 @@ export default function Form({ ...props }) {
                             title={all_constants.messages.success.title}
                             confirmButtonColor="green"
                             onConfirmPressed={() => {
+                                console.log("New item: ", newItem);
+                                console.log("New item copy: ", newItemCopy.current);
                                 setStateShowAlert(false);
-                                if (JSON.stringify(newItem) !== JSON.stringify(newItemCopy)) {
+                                if (
+                                    JSON.stringify(newItem) !==
+                  JSON.stringify(newItemCopy.current)
+                                ) {
                                     if (props.refreshDataStateChanger !== undefined) {
                                         props.refreshDataStateChanger(true);
                                     }
+                                }
+                                if (forceRefreshData) {
+                                    console.log("Force refresh data");
+                                    props.refreshDataStateChanger(true);
                                 }
 
                                 props.navigation.goBack(null);
@@ -326,6 +425,38 @@ export default function Form({ ...props }) {
                         />
                     )}
 
+                    {showAlertDeleteAddressFailed && (
+                        <CustomAlert
+                            show={showAlertDeleteAddressFailed}
+                            title={all_constants.messages.failed.title}
+                            confirmButtonColor="red"
+                            onConfirmPressed={() => {
+                                setShowAlertDeleteAddressFailed(false);
+                                props.navigation.goBack(null);
+                            }}
+                        />
+                    )}
+
+                    {showAlertDeleteAddress && (
+                        <CustomAlert
+                            show={showAlertDeleteAddress}
+                            title={all_constants.custom_alert.form.delete_address_title}
+                            message={all_constants.custom_alert.form.delete_address_message}
+                            confirmButtonColor="green"
+                            showCancelButton={true}
+                            cancelButtonColor="red"
+                            confirmText={all_constants.messages.cancel}
+                            cancelText={all_constants.custom_alert.delete_account}
+                            onConfirmPressed={() => {
+                                setShowAlertDeleteAddress(false);
+                            }}
+                            onCancelPressed={() => {
+                                setShowAlertDeleteAddress(false);
+                                deleteAddressAction();
+                            }}
+                        />
+                    )}
+
                     {!isSubmitting &&
             noErrorsFound &&
             !apiOkResponse &&
@@ -355,6 +486,7 @@ export default function Form({ ...props }) {
                                     onConfirmPressed={() => {
                                         setStateShowAlert(false);
                                     }}
+                                    getTownFromPostalCode={getTownFromPostalCode}
                                 />
                             );
                         })}
@@ -418,6 +550,21 @@ export default function Form({ ...props }) {
                                     label_color="white"
                                     onPress={() => {
                                         setShowAlertDeleteAccount(true);
+                                    }}
+                                />
+                            </View>
+                        )}
+                        {props.showDeleteAddressButton && (
+                            <View style={styles_form.form_button}>
+                                <CustomButton
+                                    label={props.deleteAddressButtonLabel}
+                                    height={50}
+                                    border_radius={30}
+                                    font_size={18}
+                                    backgroundColor={"darkgrey"}
+                                    label_color="white"
+                                    onPress={() => {
+                                        setShowAlertDeleteAddress(true);
                                     }}
                                 />
                             </View>

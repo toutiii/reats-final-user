@@ -4,8 +4,57 @@ import AddressItem from "../components/AddressItem";
 import all_constants from "../constants";
 import HorizontalLine from "../components/HorizontalLine";
 import CustomButton from "../components/CustomButton";
+import { getItemFromSecureStore } from "../helpers/common_helpers";
+import { apiBaseUrl, port } from "../env";
+import { callBackEnd } from "../api/callBackend";
 
 export default function AddressesFlatlist(props) {
+    const [
+        addressesData,
+        setAddressesData
+    ] = React.useState(null);
+    const [
+        requesting,
+        isRequesting
+    ] = React.useState(true);
+    const [
+        refreshData,
+        setRefreshData
+    ] = React.useState(false);
+
+    async function getData() {
+        const access = await getItemFromSecureStore("accessToken");
+        const result = await callBackEnd(
+            new FormData(),
+            `${apiBaseUrl}:${port}/api/v1/customers-addresses/`,
+            "GET",
+            access,
+        );
+        console.log("result: ", result);
+        setAddressesData(result.data);
+        isRequesting(false);
+        setRefreshData(false);
+    }
+
+    React.useEffect(() => {
+        if (requesting) {
+            console.log("Fetching updated customer addresses data...");
+            getData();
+        }
+
+        return () => {
+            isRequesting(false);
+        };
+    }, [
+        refreshData
+    ]);
+
+    const changeRefreshDataState = () => {
+        console.log("======================================================");
+        setRefreshData(true);
+        isRequesting(true);
+    };
+
     return (
         <View
             style={{
@@ -15,7 +64,7 @@ export default function AddressesFlatlist(props) {
         >
             <View style={{ flex: 7 }}>
                 <FlatList
-                    data={props.route.params.item}
+                    data={addressesData}
                     ListEmptyComponent={
                         <View
                             style={{
@@ -34,6 +83,7 @@ export default function AddressesFlatlist(props) {
                                 onPress={() => {
                                     props.navigation.navigate("SettingsAddressForm", {
                                         item: item,
+                                        refreshDataStateChanger: changeRefreshDataState,
                                     });
                                 }}
                                 style={{ alignItems: "center", marginTop: "10%" }}
@@ -45,7 +95,11 @@ export default function AddressesFlatlist(props) {
                                             key={item.id}
                                             street_number={item.street_number}
                                             street_name={item.street_name}
-                                            address_complement={item.address_complement}
+                                            address_complement={
+                                                item.address_complement
+                                                    ? item.address_complement
+                                                    : ""
+                                            }
                                             postal_code={item.postal_code}
                                             town={item.town}
                                         />
@@ -82,6 +136,7 @@ export default function AddressesFlatlist(props) {
                     onPress={() => {
                         props.navigation.navigate("SettingsAddressForm", {
                             item: {},
+                            refreshDataStateChanger: changeRefreshDataState,
                         });
                     }}
                 />

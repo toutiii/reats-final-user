@@ -7,28 +7,26 @@ import {
     checkValueNotContainsSpecialChar,
 } from "../validators/common_validators";
 import { checkPostalCode } from "../validators/settingsform_validators";
-import { callBackEnd } from "../api/fetch";
+import { callBackendWithFormDataForAddresses } from "../api/callBackend";
+import { apiBaseUrl, port } from "../env";
 
 export default function SettingsAddressForm({ ...props }) {
-    const handleResult = async (result) => {
-        if (result.ok) {
-            props.navigation.goBack(null);
-        } else {
-            throw new Error("Failed.");
-        }
-    };
-
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flex: 2, marginTop: "10%" }}>
                 <Form
-                    action={callBackEnd}
-                    url={all_constants.uri.api.mock}
+                    action={callBackendWithFormDataForAddresses}
+                    url={`${apiBaseUrl}:${port}/api/v1/customers-addresses/`}
                     method={"POST"}
                     navigation={props.navigation}
-                    afterSubmit={handleResult}
+                    useItemID={true}
+                    refreshDataStateChanger={props.route.params.refreshDataStateChanger}
                     item={props.route.params.item}
                     alert_title={all_constants.drawercontent.form.title}
+                    showDeleteAddressButton={true}
+                    deleteAddressButtonLabel={
+                        all_constants.label.form.settings.delete_address
+                    }
                     alert_message={
                         all_constants.drawercontent.form.messages.remove_address_warning
                     }
@@ -80,7 +78,7 @@ export default function SettingsAddressForm({ ...props }) {
                         },
                         town: {
                             fieldIsMandatory: true,
-                            type: all_constants.field_type.textinput,
+                            type: all_constants.field_type.select,
                             label: all_constants.label.form.settings.town,
                             placeholder: all_constants.placeholders.form.settings.town,
                             validators: [
@@ -88,6 +86,8 @@ export default function SettingsAddressForm({ ...props }) {
                                 checkValueNotContainsSpecialChar,
                             ],
                             maxLength: 100,
+                            selectValues: [
+                            ],
                         },
                     }}
                 />

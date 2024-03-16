@@ -193,6 +193,7 @@ let all_constants = {
                 town: "Ville",
                 image: "Photo de profil",
                 delete_account: "SUPPRIMER MON COMPTE",
+                delete_address: "SUPPRIMER CETTE ADRESSE",
             },
         },
     },
@@ -255,9 +256,11 @@ let all_constants = {
         form: {
             title: "ATTENTION",
             message: "Quitter le formulaire et revenir en arrière ?.",
-            delete_account_title: "ATTENTION SUPPRESSION DU COMPTE !",
+            delete_account_title: "ATTENTION",
             delete_account_message:
         "Souhaitez vous vraiment supprimer votre compte ? Attention toutes vos données seront perdues.",
+            delete_address_message: "Supprimer définitivement cette adresse ?",
+            delete_address_title: "ATTENTION",
         },
         cancel_text: "ANNULER",
         delete_account: "SUPPRIMER",

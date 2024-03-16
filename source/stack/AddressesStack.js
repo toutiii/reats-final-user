@@ -9,16 +9,14 @@ const Stack = createStackNavigator();
 export default class AdressesStack extends Component {
     constructor(props) {
         super(props);
-        console.log(props.route.params.item);
     }
 
     render() {
         return (
-            <Stack.Navigator initialRouteName="Home">
+            <Stack.Navigator initialRouteName="AdressesFlatlist">
                 <Stack.Screen
-                    name="Home"
+                    name="AdressesFlatlist"
                     component={AddressesFlatlist}
-                    initialParams={{ item: this.props.route.params.item }}
                     options={{
                         headerShown: true,
                         title: all_constants.drawercontent.drawer_item.label.localization,

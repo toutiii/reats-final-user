@@ -39,6 +39,7 @@ export default function DrawerContent(props) {
             "GET",
             access,
         );
+
         setUserData(result.data);
         isRequesting(false);
         setRefreshData(false);
@@ -137,9 +138,7 @@ export default function DrawerContent(props) {
                                         all_constants.drawercontent.drawer_item.label.localization
                                     }
                                     onPress={() => {
-                                        props.navigation.navigate("AdressesStack", {
-                                            item: userData["address_section"]["data"],
-                                        });
+                                        props.navigation.navigate("AdressesStack");
                                     }}
                                 />
                                 <DrawerItem

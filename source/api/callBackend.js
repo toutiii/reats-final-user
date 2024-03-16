@@ -6,18 +6,25 @@ export async function callBackEnd(
     data,
     url,
     method,
-    accessToken = null,
-    useFormData = false,
-    apiKey = null,
+    accessToken,
+    useFormData,
+    apiKey,
 ) {
+    console.log("====================IN CALL BACK END====================");
     console.log(data);
     console.log(url);
     console.log(method);
     console.log(accessToken);
     console.log(useFormData);
     console.log(apiKey);
+    console.log("====================IN CALL BACK END====================");
 
-    if (apiKey !== null && accessToken !== null) {
+    if (
+        apiKey !== null &&
+    accessToken !== null &&
+    apiKey !== undefined &&
+    accessToken !== undefined
+    ) {
         console.error(
             "You can't use both APIKey and access token in the same request.",
         );
@@ -249,7 +256,54 @@ export async function callBackEndForAuthentication(
     apiKeyBackend,
 ) {
     console.log(data);
+    console.log(url);
+    console.log(method);
+
     let formData = new FormData();
     formData.append("phone", data.phone);
     return callBackEnd(formData, url, method, null, true, apiKeyBackend);
+}
+
+export async function callBackendWithFormDataForAddresses(
+    data,
+    url,
+    method,
+    item_id,
+    access,
+    apiKeyBackend,
+) {
+    console.log(data);
+    console.log(url);
+    console.log(method);
+    let formData = new FormData();
+    let form_keys = [
+        "address_complement",
+        "customer",
+        "postal_code",
+        "street_name",
+        "street_number",
+        "town",
+    ];
+
+    if (method === "DELETE") {
+        url += item_id + "/";
+        return callBackEnd(formData, url, method, access);
+    }
+
+    if (item_id !== undefined && item_id !== null) {
+        method = "PUT";
+        url += item_id + "/";
+    }
+
+    for (let i = 0; i < form_keys.length; i++) {
+        if (data[form_keys[i]] !== undefined) {
+            formData.append(form_keys[i], data[form_keys[i]]);
+        }
+    }
+
+    if (method === "POST") {
+        formData.append("customer", await getItemFromSecureStore("userID"));
+    }
+
+    return callBackEnd(formData, url, method, access, true, apiKeyBackend);
 }

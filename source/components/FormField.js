@@ -11,7 +11,6 @@ import {
 import styles_field from "../styles/styles-field";
 import all_constants from "../constants";
 import RNPickerSelect from "react-native-picker-select";
-import { getCategories } from "../helpers/common_helpers";
 import styles_home_view from "../styles/styles-home-view";
 import * as ImagePicker from "expo-image-picker";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
@@ -32,8 +31,8 @@ export default function FormField({ ...props }) {
         setPicUri
     ] = useState(null);
     const [
-        category,
-        setCategory
+        town,
+        setTown
     ] = useState(null);
     const [
         labelModalState,
@@ -56,6 +55,17 @@ export default function FormField({ ...props }) {
         selected,
         setSelected,
     ] = useState("");
+
+    const [
+        postalCode,
+        setPostalCode
+    ] = useState(props.newItem.postal_code);
+
+    const [
+        postalCodehasBeenUpdated,
+        setPostalCodeHasBeenUpdated
+    ] =
+    useState(false);
 
     const showDatepicker = () => {
         showMode("date");
@@ -83,11 +93,31 @@ export default function FormField({ ...props }) {
     }, [
         props.newItem
     ]);
+
     useEffect(() => {
-        setCategory(props.newItem.dish_category);
+        if (props.fieldName === "town") {
+            console.log("REQUESTTINNGGGG");
+            setTown(props.newItem["town"]);
+            props.getTownFromPostalCode(props.newItem["postal_code"]);
+        }
     }, [
-        props.newItem
     ]);
+
+    useEffect(() => {
+        console.log(postalCodehasBeenUpdated);
+        if (
+            postalCodehasBeenUpdated &&
+      postalCode !== undefined &&
+      postalCode.length === all_constants.max_length.form.postal_code
+        ) {
+            props.onChangeText("town", null);
+            setTown(null); // Reset the selected town
+            props.getTownFromPostalCode(postalCode);
+        }
+    }, [
+        postalCode
+    ]);
+
     const options = {
         allowsEditing: true,
         aspect: [
@@ -195,19 +225,15 @@ export default function FormField({ ...props }) {
                         <View></View>
                     )}
             </View>
-            {labelModalState
-                ? (
-                    <FormLabelModal
-                        state={true}
-                        labelModalText={props.field.labelModalText}
-                        onPressCloseModal={() => {
-                            setLabelModalState(false);
-                        }}
-                    />
-                )
-                : (
-                    <View></View>
-                )}
+            {labelModalState && (
+                <FormLabelModal
+                    state={true}
+                    labelModalText={props.field.labelModalText}
+                    onPressCloseModal={() => {
+                        setLabelModalState(false);
+                    }}
+                />
+            )}
             {props.field.type === all_constants.field_type.textinput ||
       props.field.type === all_constants.field_type.textarea
                 ? (
@@ -225,7 +251,15 @@ export default function FormField({ ...props }) {
                         <TextInput
                             style={styles_field.textinput}
                             value={props.value}
-                            onChangeText={(text) => props.onChangeText(props.fieldName, text)}
+                            onChangeText={(text) => {
+                                props.onChangeText(props.fieldName, text),
+                                props.fieldName == "postal_code"
+                                    ? setPostalCode(text)
+                                    : "";
+                                props.fieldName == "postal_code"
+                                    ? setPostalCodeHasBeenUpdated(true)
+                                    : "";
+                            }}
                             maxLength={props.field.maxLength}
                             multiline={props.field.type === all_constants.field_type.textarea}
                             numberOfLines={
@@ -266,33 +300,31 @@ export default function FormField({ ...props }) {
                 : (
                     <View></View>
                 )}
-            {props.field.type === all_constants.field_type.select
-                ? (
-                    <View style={styles_field.picker_container}>
-                        <RNPickerSelect
-                            useNativeAndroidPickerStyle={false}
-                            placeholder={{ label: props.field.placeholder, value: null }}
-                            value={category
-                                ? category
-                                : null}
-                            onValueChange={(value) =>
-                                props.onChangeText(props.fieldName, value)
+            {props.field.type === all_constants.field_type.select && (
+                <View style={styles_field.picker_container}>
+                    <RNPickerSelect
+                        useNativeAndroidPickerStyle={false}
+                        placeholder={props.field.placeholder}
+                        value={town}
+                        onValueChange={(value) => {
+                            if (value !== town && !postalCodehasBeenUpdated) {
+                                setTown(value);
                             }
-                            items={getCategories("Dish")}
-                            textInputProps={{
-                                fontSize: props.value
-                                    ? 18
-                                    : 16,
-                                color: props.value
-                                    ? "black"
-                                    : "gray",
-                            }}
-                        />
-                    </View>
-                )
-                : (
-                    <View></View>
-                )}
+                            props.onChangeText("town", value);
+                        }}
+                        items={props.field.selectValues}
+                        textInputProps={{
+                            fontSize: props.value
+                                ? 18
+                                : 16,
+                            color: props.value
+                                ? "black"
+                                : "gray",
+                        }}
+                    />
+                </View>
+            )}
+
             {props.field.type === all_constants.field_type.select_picker
                 ? (
                     <View style={{ flex: 1 }}>
