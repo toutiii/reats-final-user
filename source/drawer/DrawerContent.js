@@ -14,6 +14,8 @@ import all_constants from "../constants";
 import { getItemFromSecureStore } from "../helpers/common_helpers";
 import { apiBaseUrl, port } from "../env";
 import { callBackEnd } from "../api/callBackend";
+import { CommonActions } from "@react-navigation/native";
+import CustomAlert from "../components/CustomAlert";
 
 export default function DrawerContent(props) {
     const paperTheme = useTheme();
@@ -29,6 +31,21 @@ export default function DrawerContent(props) {
         refreshData,
         setRefreshData
     ] = React.useState(false);
+
+    const [
+        showSignOutAlert,
+        setShowSignOutAlert
+    ] = React.useState(false);
+
+    const resetNavigationStackToLoginView = () => {
+        const resetAction = CommonActions.reset({
+            index: 0,
+            routes: [
+                { name: "LoginForm" }
+            ],
+        });
+        props.navigation.dispatch(resetAction);
+    };
 
     async function getData() {
         const userID = await getItemFromSecureStore("userID");
@@ -76,6 +93,25 @@ export default function DrawerContent(props) {
                         <Animated.View style={[
                             styles.drawerContent
                         ]}>
+                            {showSignOutAlert && (
+                                <CustomAlert
+                                    show={showSignOutAlert}
+                                    title={all_constants.custom_alert.sign_out_title}
+                                    message={all_constants.custom_alert.sign_out_message}
+                                    confirmButtonColor="green"
+                                    showCancelButton={true}
+                                    cancelButtonColor="red"
+                                    confirmText={all_constants.custom_alert.sign_out_confirm_text}
+                                    cancelText={all_constants.custom_alert.sign_out_cancel_text}
+                                    onConfirmPressed={() => {
+                                        setShowSignOutAlert(false);
+                                        resetNavigationStackToLoginView();
+                                    }}
+                                    onCancelPressed={() => {
+                                        setShowSignOutAlert(false);
+                                    }}
+                                />
+                            )}
                             <View style={styles.userInfoSection}>
                                 <TouchableOpacity
                                     style={{ marginLeft: 10 }}
@@ -170,7 +206,9 @@ export default function DrawerContent(props) {
                                             {all_constants.drawercontent.logout}
                                         </Text>
                                     )}
-                                    onPress={() => {}}
+                                    onPress={() => {
+                                        setShowSignOutAlert(true);
+                                    }}
                                 />
                             </Drawer.Section>
                         </Animated.View>

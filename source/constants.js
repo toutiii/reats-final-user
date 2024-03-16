@@ -265,6 +265,10 @@ let all_constants = {
         cancel_text: "ANNULER",
         delete_account: "SUPPRIMER",
         keep_account: "CONSERVER",
+        sign_out_title: "DÉCONNEXION",
+        sign_out_message: "Souhaitez-vous vous déconnecter ?",
+        sign_out_confirm_text: "OUI",
+        sign_out_cancel_text: "NON",
     },
     validators: {
         max_text_length: 30,
