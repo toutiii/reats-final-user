@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useEffect, useCallback, useRef, useState } from "react";
 import {
     ActivityIndicator,
     Animated,
@@ -9,26 +9,30 @@ import {
 } from "react-native";
 import all_constants from "../constants";
 import CartFlatlistItem from "../components/CartFlatlistItem.js";
-import CustomButton from "../components/CustomButton";
 import CustomAlert from "../components/CustomAlert.js";
 import { useFocusEffect } from "@react-navigation/native";
-import { getAllItemsFromCart } from "../api/cart";
+import { getAllCartItems, removeAllCartItems } from "../helpers/toolbox.js";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function CartFlatlist(props) {
     const [
         showAlert,
         setShowAlert
     ] = useState(false);
+
     const [
-        isFetchingData,
-        setIsFetchingData
-    ] = useState(false);
+        showRemoveAllItemResponseAlert,
+        setShowRemoveAllItemResponseAlert
+    ] =
+    useState(false);
+
     const [
         data,
         setData
-    ] = useState(null);
+    ] = useState([
+    ]);
+
     const fadeAnim = useRef(new Animated.Value(1)).current;
-    const timeOutDelay = 500;
 
     const fadeIn = () => {
         Animated.timing(fadeAnim, {
@@ -46,37 +50,64 @@ export default function CartFlatlist(props) {
         }).start();
     };
 
+    const [
+        isAsyncStorageOperationOk,
+        setIsAsyncStorageOperationOk
+    ] =
+    React.useState(false);
+
+    const [
+        clearCart,
+        setClearCart
+    ] = useState(false);
+
+    const [
+        cookerIDs,
+        setCookerIDs
+    ] = useState([
+    ]);
+
+    async function getAllCart() {
+        setData([
+        ]);
+        setCookerIDs([
+        ]);
+        const results = await getAllCartItems();
+        setData(results.data);
+        setCookerIDs([
+            ...new Set(results.data.map((item) => item.cooker))
+        ]);
+    }
+
+    const removeAllItemsFromCart = async () => {
+        const result = await removeAllCartItems();
+        console.log("Remove all items from cart: ", result);
+        setIsAsyncStorageOperationOk(result);
+        setShowRemoveAllItemResponseAlert(true);
+    };
+
     useFocusEffect(
         useCallback(() => {
-            setData(null);
             fadeOut();
-            setIsFetchingData(true);
-            setTimeout(() => {
-                async function getAllCart() {
-                    const results = await getAllItemsFromCart();
-                    setData(results.data);
-                }
-                getAllCart();
-                fadeIn();
-            }, timeOutDelay);
-
-            return () => {
-                setIsFetchingData(false);
-            };
+            getAllCart();
+            fadeIn();
         }, [
-            isFetchingData
         ]),
     );
 
-    const dropCart = () => {
-        console.log("REMOVED !");
-    };
+    useEffect(() => {
+        if (clearCart) {
+            removeAllItemsFromCart();
+            setClearCart(false);
+        }
+    }, [
+        clearCart
+    ]);
 
     return (
         <Animated.View
             style={{
                 flex: 1,
-                backgroundColor: "white",
                 opacity: fadeAnim,
             }}
         >
@@ -87,7 +118,99 @@ export default function CartFlatlist(props) {
                     <ActivityIndicator size="large" color="tomato" />
                 </View>
             )}
-            {data !== null && data.length > 0 && (
+            {data.length > 0 && (
+                <View
+                    style={{
+                        flex: 1,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        backgroundColor: "white",
+                        margin: "3%",
+                    }}
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                            alignItems: "flex-start",
+                            justifyContent: "center",
+                            marginLeft: "5%",
+                        }}
+                    >
+                        <TouchableHighlight
+                            onPress={() => {
+                                props.navigation.navigate(
+                                    "CartAdditionalItemsStartersFlatlist",
+                                    {
+                                        cookerIDs: cookerIDs,
+                                        category: "starter",
+                                    },
+                                );
+                            }}
+                            underlayColor={all_constants.colors.inputBorderColor}
+                        >
+                            <MaterialCommunityIcons
+                                name="bowl-mix"
+                                color={"tomato"}
+                                size={35}
+                            />
+                        </TouchableHighlight>
+                    </View>
+
+                    <View
+                        style={{
+                            flex: 1,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <TouchableHighlight
+                            onPress={() => {
+                                props.navigation.navigate("CartAdditionalItemsDrinksFlatlist", {
+                                    cookerIDs: cookerIDs,
+                                    category: "drink",
+                                });
+                            }}
+                            underlayColor={all_constants.colors.inputBorderColor}
+                        >
+                            <MaterialCommunityIcons
+                                name="bottle-soda-classic-outline"
+                                color={"tomato"}
+                                size={35}
+                            />
+                        </TouchableHighlight>
+                    </View>
+
+                    <View
+                        style={{
+                            flex: 1,
+                            alignItems: "flex-end",
+                            justifyContent: "center",
+                            marginRight: "5%",
+                        }}
+                    >
+                        <TouchableHighlight
+                            onPress={() => {
+                                props.navigation.navigate(
+                                    "CartAdditionalItemsDessertsFlatlist",
+                                    {
+                                        cookerIDs: cookerIDs,
+                                        category: "dessert",
+                                    },
+                                );
+                            }}
+                            underlayColor={all_constants.colors.inputBorderColor}
+                        >
+                            <MaterialCommunityIcons
+                                name="cupcake"
+                                color={"tomato"}
+                                size={35}
+                            />
+                        </TouchableHighlight>
+                    </View>
+                </View>
+            )}
+
+            {data !== null && (
                 <View style={{ flex: 8 }}>
                     <FlatList
                         data={data}
@@ -99,7 +222,7 @@ export default function CartFlatlist(props) {
                                     alignItems: "center",
                                     justifyContent: "center",
                                     backgroundColor: "white",
-                                    marginTop: "5%",
+                                    margin: "3%",
                                 }}
                             >
                                 <Text
@@ -124,7 +247,7 @@ export default function CartFlatlist(props) {
                                     onPress={() => {
                                         props.navigation.navigate("SearchItemDetailView", {
                                             item: item,
-                                            in_cart: true,
+                                            inCart: true,
                                         });
                                     }}
                                     style={{ flex: 1 }}
@@ -138,52 +261,58 @@ export default function CartFlatlist(props) {
                 </View>
             )}
 
-            {data !== null && data.length > 0 && (
+            {data.length > 0 && (
                 <View
                     style={{
                         flex: 1,
-                        justifyContent: "center",
                         alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "white",
+                        margin: "3%",
                     }}
                 >
-                    <CustomButton
-                        label={all_constants.cart.validate_cart}
-                        height={50}
-                        border_width={3}
-                        border_radius={30}
-                        font_size={17}
-                        backgroundColor={"green"}
-                        label_color={"white"}
-                        button_width={all_constants.screen.width - 40}
-                        onPress={() => {
-                            props.navigation.navigate("CartSummaryView", {});
+                    <View
+                        style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            alignItems: "center",
                         }}
-                    />
+                    >
+                        <View style={{ flex: 1, alignItems: "center" }}>
+                            <TouchableHighlight
+                                onPress={() => {
+                                    setShowAlert(true);
+                                }}
+                                underlayColor={all_constants.colors.inputBorderColor}
+                            >
+                                <MaterialCommunityIcons
+                                    name="delete-forever-outline"
+                                    color={"red"}
+                                    size={35}
+                                />
+                            </TouchableHighlight>
+                        </View>
+
+                        <View style={{ flex: 1, alignItems: "center" }}>
+                            <TouchableHighlight
+                                onPress={() => {
+                                    props.navigation.navigate("CartDeliveryInfosView", {
+                                        cartItems: data,
+                                    });
+                                }}
+                                underlayColor={all_constants.colors.inputBorderColor}
+                            >
+                                <MaterialCommunityIcons
+                                    name="basket-check"
+                                    color={"green"}
+                                    size={35}
+                                />
+                            </TouchableHighlight>
+                        </View>
+                    </View>
                 </View>
             )}
-            {data !== null && data.length > 0 && (
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <CustomButton
-                        label={all_constants.cart.drop_cart}
-                        height={50}
-                        border_width={3}
-                        border_radius={30}
-                        font_size={17}
-                        backgroundColor={"red"}
-                        label_color={"white"}
-                        button_width={all_constants.screen.width - 40}
-                        onPress={() => {
-                            setShowAlert(true);
-                        }}
-                    />
-                </View>
-            )}
+
             {showAlert && (
                 <CustomAlert
                     show={showAlert}
@@ -195,10 +324,31 @@ export default function CartFlatlist(props) {
                     cancelText={all_constants.messages.cancel}
                     onConfirmPressed={() => {
                         setShowAlert(false);
-                        dropCart();
+                        setClearCart(true);
                     }}
                     onCancelPressed={() => {
                         setShowAlert(false);
+                    }}
+                />
+            )}
+
+            {showRemoveAllItemResponseAlert && (
+                <CustomAlert
+                    show={showRemoveAllItemResponseAlert}
+                    message={
+                        isAsyncStorageOperationOk
+                            ? all_constants.cart.clear_cart_alert.clear_cart_success_message
+                            : all_constants.cart.clear_cart_alert.clear_cart_error_message
+                    }
+                    confirmButtonColor={isAsyncStorageOperationOk
+                        ? "green"
+                        : "red"}
+                    showCancelButton={false}
+                    onConfirmPressed={() => {
+                        setShowRemoveAllItemResponseAlert(false);
+                        if (isAsyncStorageOperationOk) {
+                            props.navigation.goBack();
+                        }
                     }}
                 />
             )}

@@ -11,7 +11,12 @@ let all_constants = {
     search: {
         placeholder: "Poulet Yassa",
         no_dishes_found: "Aucun résultat.",
-
+        no_drinks_found:
+      "Certains cuisiniers proposent des boissons, mais ceux de votre panier n'en proposent pas.",
+        no_desserts_found:
+      "Certains cuisiniers proposent des desserts, mais ceux de votre panier n'en proposent pas.",
+        no_starters_found:
+      "Certains cuisiniers proposent des entrées, mais ceux de votre panier n'en proposent pas.",
         no_addresses_found: "Vous n'avez renseigné aucune adresse de livraison.",
         button: {
             label: {
@@ -40,28 +45,38 @@ let all_constants = {
         },
     },
     pending_orders_view: {
-        no_pending_orders: "Vous n'avez pas de commande en attente.",
+        no_pending_orders: "Aucun résultat",
         stack_navigator: {
             order_item_detail: {
                 title: "Retour",
             },
         },
-        main_title: "Commandes en cours",
+        main_title: "Commandes",
         item_label: {
             dish: " plat",
             dishes: " plats",
+            drink: " boisson",
+            drinks: " boissons",
             total: "Total: ",
-            ordered_at: "Commandé le: ",
-            cooking: "En cours de préparation",
+            ordered_at: "Commandé le ",
+            pending: "En attente de validation",
+            processing: "En cours de préparation",
+            completed: "En attente de livraison",
         },
         button_label: {
             cancel_order: "ANNULER LA COMMANDE",
+        },
+        title: {
+            pending: "En attente",
+            processing: "En cours de préparation",
+            completed: "Préparation terminée",
         },
     },
     cart: {
         empty_cart: "Votre panier est vide.",
         validate_cart: "VALIDER LE PANIER",
         drop_cart: "VIDER LE PANIER",
+        go_to_cart_summary: "CONTINUER",
         label: {
             item_price: "Prix unitaire: ",
             quantity: "Qté: ",
@@ -73,10 +88,17 @@ let all_constants = {
             title: "Attention",
             remove_item_from_cart_message: "Supprimer cet item du panier ?",
             drop_cart_message: "Tous les items seront supprimés du panier.",
+            remove_item_with_additional_items_message:
+        "L'ajout de desserts/boissons/entrées n'est possible que si vous commandez au moins un plat. Donc si vous supprimez ce plat, les éléments ci-après seront également supprimés du panier: ",
         },
         add_item_alert: {
             add_item_success_message: "L'item a bien été ajouté au panier.",
             add_item_error_message:
+        "Échec, merci de rééssayer dans quelques instants.",
+        },
+        clear_cart_alert: {
+            clear_cart_success_message: "Le panier a bien été vidé.",
+            clear_cart_error_message:
         "Échec, merci de rééssayer dans quelques instants.",
         },
         remove_item_alert: {
@@ -89,8 +111,33 @@ let all_constants = {
             sub_amount: "Sous-total",
             service_fees: "Frais de service",
             total_amount: "Total à payer",
+            delivery_fees: "Frais de livraison",
+            delivery_infos: "Informations de livraison",
+            delivery_date: "Date",
+            delivery_time: "Heure",
+            delivery_address: "Adresse",
+        },
+        title: {
+            drinks: "Boissons",
+            desserts: "Desserts",
+            starter: "Entrées",
+        },
+        delivery: {
+            title: "Informations de livraison",
+            wrong_delivery_hours:
+        "Veuillez sélectionner une heure de livraison entre 08:00 et 22:00.",
+            missing_delivery_infos:
+        "Veuillez renseigner toutes les informations de livraison.",
+            past_time:
+        "L'heure de livraison ne peut pas être antérieure ou égale à l'heure actuelle.",
+            no_delivery_address:
+        "Aucune adresse de livraison trouvée, vous pouvez en renseigner une dans le menu principal > Mes Adresses",
+        },
+        button: {
+            close: "FERMER",
         },
     },
+
     currency_symbol: " €",
     rating_star:
     "https://starpng.com/public/uploads/preview/yellow-star-transparent-background-png-101577029288c5hv8odvjm.png",
@@ -126,22 +173,31 @@ let all_constants = {
                     status: "Statut:",
                     owner: "Passée par",
                     amount: "Total de la commande: ",
-                    dish_quantity: "Nombre de plats: ",
+                    quantity: "Nombre d'item(s): ",
                     content: "Cette commande contient: ",
                     ordered_label: "le",
                     canceled_label: "Annulée le",
                     approved_label: "Commande acceptée le",
                     delivered_label: "Commande livrée le",
                     picking_label: "Ramassage prévu le",
-                    dish_unit_price: "Prix unitaire: ",
+                    price: "Prix à l'unité(€): ",
                     dish_total: "Total: ",
                     ordered: "Commandé le ",
+                    item: "item(s)",
                 },
                 status: {
+                    ordered: "Commandée",
                     canceled: "Annulée",
                     delivered: "Livrée",
                     pending: "En attente de prise en charge",
                     approved: "Acceptée",
+                    cancelled_by_customer: "Vous avez annulé cette commande",
+                    cancelled_by_cooker: "Le cuisinier a annulé cette commande",
+                },
+                original_status: {
+                    cancelled_by_customer: "cancelled_by_customer",
+                    cancelled_by_cooker: "cancelled_by_cooker",
+                    delivered: "delivered",
                 },
             },
         },
@@ -224,6 +280,7 @@ let all_constants = {
         clear: "EFFACER",
         submit: "VALIDER",
         cancel: "ANNULER",
+        delete: "SUPPRIMER",
         signup: "CRÉER UN COMPTE",
         send: "ENVOYER",
         send_again: "JE N'AI PAS REÇU DE CODE",
@@ -255,7 +312,7 @@ let all_constants = {
     custom_alert: {
         form: {
             title: "ATTENTION",
-            message: "Quitter le formulaire et revenir en arrière ?.",
+            message: "Quitter le formulaire et revenir en arrière ?",
             delete_account_title: "ATTENTION",
             delete_account_message:
         "Souhaitez vous vraiment supprimer votre compte ? Attention toutes vos données seront perdues.",
@@ -307,6 +364,7 @@ let all_constants = {
         clear_filter_button_label: "Réinitialiser",
         start_date: "Date de début",
         end_date: "Date de fin",
+        cancel: "Annuler",
     },
     search_bar: {
         placeholder: "Écrivez pour lancer la recherche",

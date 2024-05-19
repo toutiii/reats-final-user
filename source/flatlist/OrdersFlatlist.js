@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Animated,
     FlatList,
@@ -6,17 +6,20 @@ import {
     TouchableHighlight,
     View,
 } from "react-native";
-import { getOrders } from "../api/fetch-client-orders";
 import all_constants from "../constants";
 import OrderFlatlistItem from "../components/OrderFlatlistItem";
 import HorizontalLine from "../components/HorizontalLine";
+import { getItemFromSecureStore } from "../helpers/common_helpers";
+import { apiBaseUrl, port } from "../env";
+import { callBackEnd } from "../api/callBackend";
 
 export default function OrdersFlatlist(props) {
     const fadeAnim = useRef(new Animated.Value(1)).current;
+    const queryFilter = props.route.params.filter;
     const [
         isFetchingData,
         setIsFetchingData
-    ] = useState(false);
+    ] = useState(true);
     const [
         data,
         setData
@@ -39,32 +42,26 @@ export default function OrdersFlatlist(props) {
         }).start();
     };
 
-    useEffect(() => {
-        fadeOut();
-        setIsFetchingData(true);
-        setTimeout(() => {
-            async function fetchDataFromBackend() {
-                const results = await getOrders();
-                setData(results.data);
-            }
-            fetchDataFromBackend();
-            setIsFetchingData(false);
-            fadeIn();
-        }, 1000);
-    }, [
-    ]);
+    async function fetchDataFromBackend() {
+        const access = await getItemFromSecureStore("accessToken");
+        const result = await callBackEnd(
+            new FormData(),
+            `${apiBaseUrl}:${port}/api/v1/customers-orders/?status=${queryFilter}`,
+            "GET",
+            access,
+        );
 
-    const onRefresh = useCallback(() => {
-        fadeOut();
-        setIsFetchingData(true);
-        setTimeout(() => {
-            async function fetchDataFromBackend() {
-                await getOrders();
-            }
+        setData(result.data);
+        console.log(result.data);
+    }
+
+    useEffect(() => {
+        if (isFetchingData) {
+            fadeOut();
             fetchDataFromBackend();
             setIsFetchingData(false);
             fadeIn();
-        }, 1000);
+        }
     }, [
         isFetchingData
     ]);
@@ -85,7 +82,9 @@ export default function OrdersFlatlist(props) {
             >
                 <FlatList
                     data={data}
-                    onRefresh={onRefresh}
+                    onRefresh={() => {
+                        setIsFetchingData(true);
+                    }}
                     refreshing={isFetchingData}
                     ItemSeparatorComponent={
                         <HorizontalLine
@@ -123,12 +122,25 @@ export default function OrdersFlatlist(props) {
                                 underlayColor={all_constants.colors.inputBorderColor}
                             >
                                 <OrderFlatlistItem
-                                    dish_name={item.dish_name}
-                                    number_of_dishes={item.number_of_dishes}
-                                    dish_price={item.dish_price}
-                                    dish_order_datetime={item.dish_order_datetime}
-                                    dish_status={item.dish_status}
-                                    dish_photo={item.photo}
+                                    itemName={item.dish
+                                        ? item.dish.name
+                                        : item.drink.name}
+                                    itemQuantity={
+                                        item.dish
+                                            ? item.dish_quantity
+                                            : item.drink_quantity
+                                    }
+                                    itemPrice={item.dish
+                                        ? item.dish.price
+                                        : item.drink.price}
+                                    itemPhoto={item.dish
+                                        ? item.dish.photo
+                                        : item.drink.photo}
+                                    isItemADrink={item.drink
+                                        ? true
+                                        : false}
+                                    itemOrderDate={item.created}
+                                    itemStatus={item.status}
                                 />
                             </TouchableHighlight>
                         </View>

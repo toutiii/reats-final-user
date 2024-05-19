@@ -3,7 +3,6 @@ import {
     ActivityIndicator,
     Animated,
     FlatList,
-    Image,
     Text,
     TouchableHighlight,
     View,
@@ -12,7 +11,6 @@ import styles_order from "../styles/styles-order.js";
 import all_constants from "../constants";
 import Item from "../components/Item";
 import { Searchbar } from "react-native-paper";
-import { TouchableRipple } from "react-native-paper";
 import SearchFilterModal from "../modals/SearchFilterModal.js";
 import { callBackEnd } from "../api/callBackend";
 import { getItemFromSecureStore } from "../helpers/common_helpers.js";
@@ -26,41 +24,42 @@ export default function SearchDishFlatList({ ...props }) {
     React.useState(false);
 
     const [
-        selectedState,
-        setSelectedState
+        countryFilter,
+        setCountryFilter
     ] = React.useState(null);
-    const [
-        selectedDishCategories,
-        setSelectedDishCategories
-    ] = React.useState(
-        [
-        ],
-    );
+
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
+
     const [
         isFetchingData,
         setIsFetchingData
     ] = React.useState(false);
+
     const [
         data,
         setData
     ] = React.useState([
     ]);
+
     const [
         runSearchByTextInput,
         setRunSearchByTextInput
     ] = React.useState(false);
+
     const [
         oneSearchHasBeenRun,
         setOneSearchHasBeenRun
     ] = React.useState(false);
+
     const toggleSearchFilterModal = () => {
         setSearchFilterModalVisible(!isSearchFilterModalVisible);
     };
+
     const [
         searchQuery,
         setSearchQuery
     ] = React.useState("");
+
     const [
         searchURL,
         setSearchURL
@@ -149,9 +148,7 @@ export default function SearchDishFlatList({ ...props }) {
     const onPressFilter = () => {
         toggleSearchFilterModal();
 
-        if (selectedState !== null || selectedDishCategories.length !== 0) {
-            console.log(selectedState);
-            console.log(selectedDishCategories);
+        if (countryFilter !== null) {
             console.log(searchQuery);
             setIsFetchingData(true);
             buildSearchUrl();
@@ -166,12 +163,8 @@ export default function SearchDishFlatList({ ...props }) {
             queryParams += `name=${searchQuery}`;
         }
 
-        if (selectedDishCategories.length !== 0) {
-            queryParams += `&category=${selectedDishCategories}`;
-        }
-
-        if (selectedState !== null) {
-            queryParams += `&is_enabled=${selectedState}`;
+        if (countryFilter !== null) {
+            queryParams += `&country=${countryFilter}`;
         }
 
         let localSearchURL = baseURL + queryParams;
@@ -180,9 +173,7 @@ export default function SearchDishFlatList({ ...props }) {
     };
 
     const resetFilters = () => {
-        setSelectedState(null);
-        setSelectedDishCategories([
-        ]);
+        setCountryFilter(null);
     };
 
     return (
@@ -191,12 +182,10 @@ export default function SearchDishFlatList({ ...props }) {
         >
             {isSearchFilterModalVisible && (
                 <SearchFilterModal
-                    enableActiveFilter={true}
-                    enableDishCategories={true}
                     isModalVisible={isSearchFilterModalVisible}
+                    enableCountryFilter={true}
+                    setCountryFilter={setCountryFilter}
                     toggleModal={toggleSearchFilterModal}
-                    stateSearchData={setSelectedState}
-                    dishCategoriesData={setSelectedDishCategories}
                     onPressFilter={onPressFilter}
                     onPressClear={resetFilters}
                 />
@@ -215,7 +204,7 @@ export default function SearchDishFlatList({ ...props }) {
                         value={searchQuery}
                     />
                 </View>
-                <View
+                {/* <View  // Uncomment this section when we'll need some filters
                     style={{
                         flex: 1,
                         justifyContent: "center",
@@ -231,7 +220,7 @@ export default function SearchDishFlatList({ ...props }) {
                             style={{ height: 30, width: 30 }}
                         />
                     </TouchableRipple>
-                </View>
+                </View> */}
             </View>
 
             {!oneSearchHasBeenRun && (
@@ -315,7 +304,6 @@ export default function SearchDishFlatList({ ...props }) {
                                             ? item.rating
                                             : "-/-"}
                                         price={item.price + all_constants.currency_symbol}
-                                        is_enabled={item.is_enabled}
                                         onPress={item.onPress}
                                     />
                                 </TouchableHighlight>

@@ -1,24 +1,26 @@
 import React from "react";
 import { Image, Text, View } from "react-native";
 import all_constants from "../constants";
-import { getDeliveryDateInfo } from "../helpers/toolbox";
 import {
     Fontisto,
     FontAwesome,
     MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import moment from "moment";
+import "moment/locale/fr"; // Import French locale
+
 export default function OrderFlastlistItem({ ...props }) {
     return (
         <View style={{ flex: 1, flexDirection: "row" }}>
             <View style={{ flex: 1 }}>
-                <Image source={{ uri: props.dish_photo }} style={{ flex: 1 }} />
+                <Image source={{ uri: props.itemPhoto }} style={{ flex: 1 }} />
             </View>
             <View style={{ flex: 2 }}>
                 <View
                     style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
                 >
                     <Text numberOfLines={1} style={{ fontSize: 20 }}>
-                        {props.dish_name}
+                        {props.itemName}
                     </Text>
                 </View>
 
@@ -36,10 +38,14 @@ export default function OrderFlastlistItem({ ...props }) {
                     </View>
                     <View style={{ flex: 4 }}>
                         <Text>
-                            {props.number_of_dishes}
-                            {props.number_of_dishes > 1
-                                ? all_constants.pending_orders_view.item_label.dishes
-                                : all_constants.pending_orders_view.item_label.dish}
+                            {props.itemQuantity}
+                            {props.isItemADrink
+                                ? props.itemQuantity > 1
+                                    ? all_constants.pending_orders_view.item_label.drinks
+                                    : all_constants.pending_orders_view.item_label.drink
+                                : props.itemQuantity > 1
+                                    ? all_constants.pending_orders_view.item_label.dishes
+                                    : all_constants.pending_orders_view.item_label.dish}
                         </Text>
                     </View>
                 </View>
@@ -55,7 +61,7 @@ export default function OrderFlastlistItem({ ...props }) {
                     <View style={{ flex: 4 }}>
                         <Text>
                             {all_constants.pending_orders_view.item_label.total}
-                            {props.dish_price * props.number_of_dishes}
+                            {props.itemPrice * props.itemQuantity}
                             {all_constants.currency_symbol}
                         </Text>
                     </View>
@@ -71,27 +77,61 @@ export default function OrderFlastlistItem({ ...props }) {
                     <View style={{ flex: 4 }}>
                         <Text>
                             {all_constants.pending_orders_view.item_label.ordered_at}
-                            {getDeliveryDateInfo(
-                                new Date(props.dish_order_datetime),
-                                all_constants.short_french_date_format
-                            )}
+                            {moment(props.itemOrderDate).format("dddd DD MMM à HH[h]mm")}
                         </Text>
                     </View>
                 </View>
-                <View
-                    style={{
-                        flexDirection: "row",
-                    }}
-                >
-                    <View style={{ flex: 1, alignItems: "center" }}>
-                        <FontAwesome name="hourglass-half" size={15} color="black" />
+
+                {props.itemStatus === "pending" && (
+                    <View
+                        style={{
+                            flexDirection: "row",
+                        }}
+                    >
+                        <View style={{ flex: 1, alignItems: "center" }}>
+                            <FontAwesome name="hourglass-half" size={15} color="black" />
+                        </View>
+                        <View style={{ flex: 4 }}>
+                            <Text style={{ fontWeight: "bold" }}>
+                                {all_constants.pending_orders_view.item_label.pending}
+                            </Text>
+                        </View>
                     </View>
-                    <View style={{ flex: 4 }}>
-                        <Text style={{ fontWeight: "bold" }}>
-                            {all_constants.pending_orders_view.item_label.cooking}
-                        </Text>
+                )}
+
+                {props.itemStatus === "processing" && (
+                    <View
+                        style={{
+                            flexDirection: "row",
+                        }}
+                    >
+                        <View style={{ flex: 1, alignItems: "center" }}>
+                            <FontAwesome name="hourglass-half" size={15} color="black" />
+                        </View>
+                        <View style={{ flex: 4 }}>
+                            <Text style={{ fontWeight: "bold" }}>
+                                {all_constants.pending_orders_view.item_label.processing}
+                            </Text>
+                        </View>
                     </View>
-                </View>
+                )}
+
+                {props.itemStatus === "completed" && (
+                    <View
+                        style={{
+                            flexDirection: "row",
+                        }}
+                    >
+                        <View style={{ flex: 1, alignItems: "center" }}>
+                            <FontAwesome name="hourglass-half" size={15} color="black" />
+                        </View>
+                        <View style={{ flex: 4 }}>
+                            <Text style={{ fontWeight: "bold" }}>
+                                {all_constants.pending_orders_view.item_label.completed}
+                            </Text>
+                        </View>
+                    </View>
+                )}
             </View>
         </View>
     );

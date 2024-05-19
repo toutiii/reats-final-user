@@ -10,14 +10,20 @@ import {
     MaterialIcons,
     MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import moment from "moment";
+import "moment/locale/fr"; // Import French locale
+import { buildReadableAddress } from "../helpers/toolbox";
 
 export default class OrderView extends Component {
     constructor(props) {
         super(props);
+        moment.locale("fr");
         this.state = {
             modalVisible: false,
         };
     }
+
+    iconSize = 25;
 
     onPressShowModal = () => {
         this.setState({ modalVisible: true });
@@ -34,7 +40,7 @@ export default class OrderView extends Component {
                     <DishModal
                         state={this.state.modalVisible}
                         onPressCloseModal={this.onPressCloseModal}
-                        modal_data={this.props.route.params.item.dishes}
+                        modal_data={this.props.route.params.item.items}
                     />
                 )}
                 <View
@@ -56,29 +62,33 @@ export default class OrderView extends Component {
                                     all_constants.drawercontent.drawer_item.orders_history.infos
                                         .number
                                 }
-                                {this.props.route.params.item.order_number}
+                                {this.props.route.params.item.id}
                             </Text>
                         </View>
 
                         <View style={styles_order_view.order_item_info}>
                             <View style={{ flex: 1 }}>
-                                <MaterialIcons name="shopping-cart" size={30} color="black" />
+                                <MaterialIcons
+                                    name="shopping-cart"
+                                    size={this.iconSize}
+                                    color="black"
+                                />
                             </View>
                             <View style={{ flex: 6 }}>
                                 <Text style={{ fontSize: 17 }}>
                                     {
-                                        all_constants.drawercontent.drawer_item.orders_history.infos
-                                            .ordered
-                                    }
-                                    {this.props.route.params.item.order_owner} le{" "}
-                                    {this.props.route.params.item.order_date} à{" "}
-                                    {this.props.route.params.item.order_hour}{" "}
+                                        all_constants.drawercontent.drawer_item.orders_history
+                                            .status.ordered
+                                    }{" "}
+                                    {moment(this.props.route.params.item.created).format(
+                                        "dddd DD MMM à HH[h]mm",
+                                    )}
                                 </Text>
                             </View>
                         </View>
                         <View style={styles_order_view.order_item_info}>
                             <View style={{ flex: 1 }}>
-                                <FontAwesome name="money" size={30} color="black" />
+                                <FontAwesome name="money" size={this.iconSize} color="black" />
                             </View>
                             <View style={{ flex: 6 }}>
                                 <Text style={{ fontSize: 17 }}>
@@ -91,40 +101,75 @@ export default class OrderView extends Component {
                                 </Text>
                             </View>
                         </View>
-                        {this.props.route.params.item.order_status ===
-              all_constants.drawercontent.drawer_item.orders_history.status
-                  .delivered && (
+                        {this.props.route.params.item.status ===
+              all_constants.drawercontent.drawer_item.orders_history
+                  .original_status.delivered && (
                             <View style={styles_order_view.order_item_info}>
                                 <View style={{ flex: 1 }}>
-                                    <AntDesign name="checkcircle" size={30} color="green" />
+                                    <AntDesign
+                                        name="checkcircle"
+                                        size={this.iconSize}
+                                        color="green"
+                                    />
                                 </View>
                                 <View style={{ flex: 6 }}>
                                     <Text style={{ fontSize: 17 }}>
                                         {
                                             all_constants.drawercontent.drawer_item.orders_history
-                                                .infos.delivered_label
+                                                .status.delivered
                                         }{" "}
-                                        {this.props.route.params.item.order_delivery_date} à{" "}
-                                        {this.props.route.params.item.order_delivery_hour}{" "}
+                                        {moment(this.props.route.params.item.delivery_date).format(
+                                            "dddd DD MMM à HH[h]mm",
+                                        )}
                                     </Text>
                                 </View>
                             </View>
                         )}
-                        {this.props.route.params.item.order_status ===
-              all_constants.drawercontent.drawer_item.orders_history.status
-                  .canceled && (
+                        {this.props.route.params.item.status ===
+              all_constants.drawercontent.drawer_item.orders_history
+                  .original_status.cancelled_by_cooker && (
                             <View style={styles_order_view.order_item_info}>
                                 <View style={{ flex: 1 }}>
-                                    <MaterialIcons name="cancel" size={30} color="red" />
+                                    <MaterialIcons
+                                        name="cancel"
+                                        size={this.iconSize}
+                                        color="red"
+                                    />
                                 </View>
                                 <View style={{ flex: 6 }}>
                                     <Text style={{ fontSize: 17 }}>
                                         {
                                             all_constants.drawercontent.drawer_item.orders_history
-                                                .infos.canceled_label
+                                                .status.cancelled_by_cooker
                                         }{" "}
-                                        {this.props.route.params.item.order_cancel_date} à{" "}
-                                        {this.props.route.params.item.order_cancel_hour}
+                                        {moment(this.props.route.params.item.modified).format(
+                                            "dddd DD MMM à HH[h]mm",
+                                        )}
+                                    </Text>
+                                </View>
+                            </View>
+                        )}
+
+                        {this.props.route.params.item.status ===
+              all_constants.drawercontent.drawer_item.orders_history
+                  .original_status.cancelled_by_customer && (
+                            <View style={styles_order_view.order_item_info}>
+                                <View style={{ flex: 1 }}>
+                                    <MaterialIcons
+                                        name="cancel"
+                                        size={this.iconSize}
+                                        color="red"
+                                    />
+                                </View>
+                                <View style={{ flex: 6 }}>
+                                    <Text style={{ fontSize: 17 }}>
+                                        {
+                                            all_constants.drawercontent.drawer_item.orders_history
+                                                .status.cancelled_by_customer
+                                        }{" "}
+                                        {moment(this.props.route.params.item.modified).format(
+                                            "dddd DD MMM à HH[h]mm",
+                                        )}
                                     </Text>
                                 </View>
                             </View>
@@ -134,13 +179,13 @@ export default class OrderView extends Component {
                             <View style={{ flex: 1 }}>
                                 <MaterialCommunityIcons
                                     name="google-maps"
-                                    size={30}
+                                    size={this.iconSize}
                                     color="black"
                                 />
                             </View>
                             <View style={{ flex: 6 }}>
                                 <Text style={{ fontSize: 17 }}>
-                                    {this.props.route.params.item.order_delivery_address}
+                                    {buildReadableAddress(this.props.route.params.item.address)}
                                 </Text>
                             </View>
                         </View>

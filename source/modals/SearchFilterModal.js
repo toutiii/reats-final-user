@@ -1,10 +1,7 @@
 import React from "react";
 import Modal from "react-native-modal";
 import { Button, Platform, View } from "react-native";
-import {
-    MultipleSelectList,
-    SelectList,
-} from "react-native-dropdown-select-list";
+import { SelectList } from "react-native-dropdown-select-list";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { TextInput } from "react-native-paper";
@@ -16,15 +13,7 @@ import all_constants from "../constants";
 export default function SearchFilterModal(props) {
     const dishSortFilterData = [
         { key: "1", value: "new" },
-        { key: "2", value: "top_rated" },
         { key: "2", value: "famous" },
-    ];
-
-    const dishCategoriesData = [
-        { key: "1", value: "starter" },
-        { key: "2", value: "dish" },
-        { key: "3", value: "dessert" },
-        { key: "4", value: "drink" },
     ];
 
     const datePickerMode = "startDate";
@@ -107,16 +96,6 @@ export default function SearchFilterModal(props) {
         >
             <View style={{ flex: 1, backgroundColor: "white", padding: 10 }}>
                 <View style={{ flex: 7 }}>
-                    {props.enableDishCategoriesFilter && (
-                        <MultipleSelectList
-                            key={keyFilterComponent1}
-                            setSelected={(val) => props.selectedDishCategoriesData(val)}
-                            data={dishCategoriesData}
-                            save="value"
-                            placeholder={all_constants.search_modal.dish_categories}
-                        />
-                    )}
-
                     {props.enableDishSortTypeFilter && (
                         <SelectList
                             key={keyFilterComponent2}

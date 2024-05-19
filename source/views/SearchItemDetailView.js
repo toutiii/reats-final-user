@@ -1,61 +1,79 @@
 import React from "react";
-import {
-    ActivityIndicator,
-    Animated,
-    Image,
-    Text,
-    TextInput,
-    View,
-} from "react-native";
+import { Animated, Image, Text, TextInput, View } from "react-native";
 import all_constants from "../constants";
 import CustomButton from "../components/CustomButton";
 import styles_dish from "../styles/styles-dish";
 import { AntDesign } from "@expo/vector-icons";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import CustomAlert from "../components/CustomAlert.js";
-import { deleteItemFromCart, sendItemToCart } from "../api/cart";
+import {
+    storeCartItem,
+    removeCartItem,
+    getAdditionalItemsKeys,
+    getCartItem,
+    removeMultipleItemsFromCart,
+} from "../helpers/toolbox.js";
 
 export default function SearchItemDetailView({ ...props }) {
     const [
         numberOfItem,
         setNumberOfItem
-    ] = React.useState(1);
+    ] = React.useState(
+        props.route.params.item.dish_ordered_quantity
+            ? props.route.params.item.dish_ordered_quantity
+            : 1,
+    );
+
     const maxDishOrder = 10;
+
     const minDishOrder = 1;
+
     const [
         showAlert,
         setShowAlert
     ] = React.useState(false);
+
     const [
         showAddItemResponseAlert,
         setShowAddItemResponseAlert
     ] =
     React.useState(false);
+
     const [
         showRemoveItemResponseAlert,
         setShowRemoveItemResponseAlert
     ] =
     React.useState(false);
+
     const [
         cartItemObject,
-        setCartItemObject
+        setCartItemObject, // eslint-disable-line no-unused-vars
     ] = React.useState({
         ...JSON.parse(JSON.stringify(props.route.params.item)),
         dish_ordered_quantity: numberOfItem,
     });
-    const [
-        isCallingBackend,
-        setIsCallingBackend
-    ] = React.useState(false);
-    const [
-        isRequestOk,
-        setIsRequestOk
-    ] = React.useState(null);
-    const fadeAnim = React.useRef(new Animated.Value(1)).current;
 
-    if (props.route.params.item.dish_ordered_quantity !== undefined) {
-        setNumberOfItem(props.route.params.item.dish_ordered_quantity);
-    }
+    const [
+        isAsyncStorageOperationOk,
+        setIsAsyncStorageOperationOk
+    ] =
+    React.useState(false);
+
+    const [
+        showAlertWithAdditionalItems,
+        setShowAlertWithAdditionalItems
+    ] =
+    React.useState(false);
+
+    const [
+        itemsWhichWillBeRemoved,
+        setItemsWhichWillBeRemoved
+    ] = React.useState(
+        [
+        ],
+    );
+
+    const fadeAnim = React.useRef(new Animated.Value(1)).current;
 
     const increaseItemNumber = () => {
         if (numberOfItem < maxDishOrder) {
@@ -69,56 +87,87 @@ export default function SearchItemDetailView({ ...props }) {
         }
     };
 
-    const updateIsRequestState = (result) => {
-        if (result.statusCode === 200) {
-            setIsRequestOk(true);
-        } else {
-            setIsRequestOk(false);
-        }
-    };
-
-    const removeItemFromCart = () => {
-        setIsCallingBackend(true);
-        async function callBackend() {
-            const result = await deleteItemFromCart(cartItemObject);
-            setShowRemoveItemResponseAlert(true);
-            updateIsRequestState(result);
-        }
-        callBackend();
-    };
-
-    const addItemToCart = () => {
-        setCartItemObject({
+    const addItemToCart = async () => {
+        const result = await storeCartItem({
             ...cartItemObject,
             dish_ordered_quantity: numberOfItem,
         });
-
-        setIsCallingBackend(true);
-
-        async function callBackend() {
-            const result = await sendItemToCart(cartItemObject);
-            setShowAddItemResponseAlert(true);
-            updateIsRequestState(result);
-        }
-        callBackend();
+        console.log("Storage status: ", result);
+        setIsAsyncStorageOperationOk(result);
+        setShowAddItemResponseAlert(true);
     };
 
-    React.useEffect(() => {
-        if (isCallingBackend) {
-            setTimeout(() => {
-                setIsCallingBackend(false);
-            }, 300);
+    const removeItemFromCart = async () => {
+        const result = await removeCartItem(props.route.params.item.id);
+        console.log("Remove status: ", result);
+        setIsAsyncStorageOperationOk(result);
+        setShowRemoveItemResponseAlert(result);
+    };
+
+    const removeCurrentItemAndRelatedAdditionalItemsFromCart = async () => {
+        const keysToRemove = [
+        ];
+        keysToRemove.push(props.route.params.item.id);
+        itemsWhichWillBeRemoved.map((item) => {
+            keysToRemove.push(item.id);
+        });
+        const result = await removeMultipleItemsFromCart(keysToRemove);
+        console.log("Remove status: ", result);
+        setShowRemoveItemResponseAlert(result);
+        setIsAsyncStorageOperationOk(result);
+    };
+
+    const handleAlert = async () => {
+        const keysToRemove = await getAdditionalItemsKeys(
+            props.route.params.item.id,
+        );
+
+        if (keysToRemove.length > 0) {
+            let itemsToRemove = [
+            ];
+            for (let i = 0; i < keysToRemove.length; i++) {
+                const itemObject = await getCartItem(keysToRemove[i]);
+                itemsToRemove.push(itemObject);
+            }
+            setItemsWhichWillBeRemoved(itemsToRemove);
+            setShowAlertWithAdditionalItems(true);
+        } else {
+            setShowAlert(true);
         }
-    }, [
-        isCallingBackend
-    ]);
+    };
+
+    const buildAlertMessageForAdditionalItemsDeletion = () => {
+        let message =
+      all_constants.cart.alert.remove_item_with_additional_items_message;
+        for (let i = 0; i < itemsWhichWillBeRemoved.length; i++) {
+            message += itemsWhichWillBeRemoved[i].name;
+            message += ", ";
+        }
+        message += ".";
+        message = message.replace(", .", ".");
+        return message;
+    };
 
     return (
-        <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
-            <Image
-                source={{ uri: props.route.params.item.photo }}
-                style={{ aspectRatio: 16 / 9 }}
-            />
+        <Animated.View
+            style={{ flex: 1, opacity: fadeAnim, backgroundColor: "white" }}
+        >
+            <View style={{ flex: props.route.params.inCart
+                ? 1
+                : 2 }}>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                    <Text numberOfLines={1} style={{ fontSize: 20 }}>
+                        {props.route.params.item.name}
+                    </Text>
+                </View>
+
+                <View style={{ flex: 4 }}>
+                    <Image
+                        source={{ uri: props.route.params.item.photo }}
+                        style={{ aspectRatio: 16 / 9 }}
+                    />
+                </View>
+            </View>
 
             <View
                 style={{
@@ -127,31 +176,36 @@ export default function SearchItemDetailView({ ...props }) {
                     backgroundColor: "white",
                 }}
             >
-                {isCallingBackend && (
-                    <View style={{ flex: 1, alignItems: "center" }}>
-                        <ActivityIndicator size="large" color="tomato" />
-                    </View>
-                )}
-                <View style={{ flex: 2, flexDirection: "row", margin: "4%" }}>
+                <View
+                    style={{
+                        flex: 1,
+                        margin: "3%",
+                        flexDirection: "row",
+                    }}
+                >
                     <View style={{ flex: 1 }}>
                         <Text numberOfLines={1} style={{ fontSize: 20 }}>
-                            {props.route.params.item.dish_name}
+                            {props.route.params.item.price + all_constants.currency_symbol}
                         </Text>
                     </View>
                     <View style={{ flex: 1, alignItems: "flex-end" }}>
                         <Text style={{ fontSize: 20 }}>
+                            {props.route.params.item.rating
+                                ? props.route.params.item.rating
+                                : "-/-"}
                             <Image
                                 source={{ uri: all_constants.rating_star }}
                                 style={styles_dish.rating_star}
                             />
-                            {props.route.params.item.dish_rating}
                         </Text>
                     </View>
                 </View>
 
                 <View
                     style={{
-                        flex: 4,
+                        flex: props.route.params.inCart
+                            ? 3
+                            : 3,
                         justifyContent: "center",
                         borderBottomWidth: 1,
                         borderBottomColor: "tomato",
@@ -161,14 +215,24 @@ export default function SearchItemDetailView({ ...props }) {
                     }}
                 >
                     <Text numberOfLines={3} style={{ fontSize: 16, textAlign: "center" }}>
-                        {props.route.params.item.dish_description}
+                        {props.route.params.item.description}
                     </Text>
                 </View>
 
-                <View style={{ flex: 4, flexDirection: "row", margin: "10%" }}>
+                <View
+                    style={{
+                        flex: props.route.params.inCart
+                            ? 1
+                            : 2,
+                        flexDirection: "row",
+                        marginTop: props.route.params.inCart
+                            ? "5%"
+                            : "5%",
+                    }}
+                >
                     <View style={{ flex: 2, alignItems: "flex-end" }}>
-                        <TouchableHighlight onPress={increaseItemNumber}>
-                            <AntDesign name="pluscircle" size={30} color="green" />
+                        <TouchableHighlight onPress={decreaseItemNumber}>
+                            <AntDesign name="minuscircle" size={30} color="red" />
                         </TouchableHighlight>
                     </View>
 
@@ -181,58 +245,61 @@ export default function SearchItemDetailView({ ...props }) {
                     </View>
 
                     <View style={{ flex: 2, alignItems: "flex-start" }}>
-                        <TouchableHighlight onPress={decreaseItemNumber}>
-                            <AntDesign name="minuscircle" size={30} color="red" />
+                        <TouchableHighlight onPress={increaseItemNumber}>
+                            <AntDesign name="pluscircle" size={30} color="green" />
                         </TouchableHighlight>
                     </View>
                 </View>
 
                 <View
                     style={{
-                        flex: 2,
+                        flex: props.route.params.inCart
+                            ? 4
+                            : 2,
                         justifyContent: "center",
                         alignItems: "center",
-                        bottom: "11%",
                     }}
                 >
-                    <CustomButton
-                        label={all_constants.search.button.label.add_to_cart}
-                        height={50}
-                        border_width={3}
-                        border_radius={30}
-                        font_size={17}
-                        backgroundColor={"green"}
-                        label_color={"white"}
-                        button_width={all_constants.screen.width - 40}
-                        onPress={() => {
-                            addItemToCart();
-                        }}
-                    />
-                </View>
-                {props.route.params.in_cart && (
-                    <View
-                        style={{
-                            flex: 2,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            bottom: "5%",
-                        }}
-                    >
+                    <View style={{ flex: 1, justifyContent: "center" }}>
                         <CustomButton
-                            label={all_constants.cart.label.remove_from_cart}
+                            label={all_constants.search.button.label.add_to_cart}
                             height={50}
                             border_width={3}
                             border_radius={30}
                             font_size={17}
-                            backgroundColor={"red"}
+                            backgroundColor={"green"}
                             label_color={"white"}
                             button_width={all_constants.screen.width - 40}
                             onPress={() => {
-                                setShowAlert(true);
+                                addItemToCart();
                             }}
                         />
                     </View>
-                )}
+
+                    {props.route.params.inCart && (
+                        <View
+                            style={{
+                                flex: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                bottom: "5%",
+                            }}
+                        >
+                            <CustomButton
+                                label={all_constants.cart.label.remove_from_cart}
+                                height={50}
+                                border_width={3}
+                                border_radius={30}
+                                font_size={17}
+                                backgroundColor={"red"}
+                                label_color={"white"}
+                                button_width={all_constants.screen.width - 40}
+                                onPress={handleAlert}
+                            />
+                        </View>
+                    )}
+                </View>
+
                 {showAlert && (
                     <CustomAlert
                         show={showAlert}
@@ -255,17 +322,17 @@ export default function SearchItemDetailView({ ...props }) {
                     <CustomAlert
                         show={showAddItemResponseAlert}
                         message={
-                            isRequestOk
+                            isAsyncStorageOperationOk
                                 ? all_constants.cart.add_item_alert.add_item_success_message
                                 : all_constants.cart.add_item_alert.add_item_error_message
                         }
-                        confirmButtonColor={isRequestOk
+                        confirmButtonColor={isAsyncStorageOperationOk
                             ? "green"
                             : "red"}
                         showCancelButton={false}
                         onConfirmPressed={() => {
                             setShowAddItemResponseAlert(false);
-                            if (isRequestOk) {
+                            if (isAsyncStorageOperationOk) {
                                 props.navigation.goBack();
                             }
                         }}
@@ -275,20 +342,39 @@ export default function SearchItemDetailView({ ...props }) {
                     <CustomAlert
                         show={showRemoveItemResponseAlert}
                         message={
-                            isRequestOk
+                            isAsyncStorageOperationOk
                                 ? all_constants.cart.remove_item_alert
                                     .remove_item_success_message
                                 : all_constants.cart.remove_item_alert.remove_item_error_message
                         }
-                        confirmButtonColor={isRequestOk
+                        confirmButtonColor={isAsyncStorageOperationOk
                             ? "green"
                             : "red"}
                         showCancelButton={false}
                         onConfirmPressed={() => {
                             setShowRemoveItemResponseAlert(false);
-                            if (isRequestOk) {
+                            if (isAsyncStorageOperationOk) {
                                 props.navigation.goBack();
                             }
+                        }}
+                    />
+                )}
+                {showAlertWithAdditionalItems && (
+                    <CustomAlert
+                        show={showAlertWithAdditionalItems}
+                        title={all_constants.cart.alert.title}
+                        message={buildAlertMessageForAdditionalItemsDeletion()}
+                        confirmButtonColor="green"
+                        showCancelButton={true}
+                        cancelButtonColor="red"
+                        confirmText={all_constants.messages.cancel}
+                        cancelText={all_constants.messages.delete}
+                        onCancelPressed={() => {
+                            setShowAlertWithAdditionalItems(false);
+                            removeCurrentItemAndRelatedAdditionalItemsFromCart();
+                        }}
+                        onConfirmPressed={() => {
+                            setShowAlertWithAdditionalItems(false);
                         }}
                     />
                 )}

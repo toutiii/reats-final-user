@@ -292,7 +292,7 @@ export default function Form({ ...props }) {
         );
 
         if (townResults.length === 0) {
-            console.error("No towns for postal code ", postalCode);
+            console.log("No towns for postal code ", postalCode);
             return;
         }
 
@@ -554,7 +554,10 @@ export default function Form({ ...props }) {
                                 />
                             </View>
                         )}
-                        {props.showDeleteAddressButton && (
+                        {newItem.id !== undefined &&
+              newItem.town !== undefined &&
+              newItem.town !== null &&
+              props.showDeleteAddressButton && (
                             <View style={styles_form.form_button}>
                                 <CustomButton
                                     label={props.deleteAddressButtonLabel}

@@ -79,7 +79,7 @@ export function checkValueNotContainsSpecialChar(value, fieldLabel) {
             return (
                 all_constants.validators.global.field +
         fieldLabel.toLowerCase() +
-        all_constants.validators.global.invalid +
+        all_constants.validators.global.invalid_char +
         "\"" +
         rejectedString[0] +
         "\""

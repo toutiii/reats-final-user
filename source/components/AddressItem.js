@@ -1,21 +1,9 @@
 import React from "react";
 import { Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { buildReadableAddress } from "../helpers/toolbox";
 
 export default function AddressItem(props) {
-    const buildAddress = (props) => {
-        return (
-            props.street_number +
-      " " +
-      props.street_name +
-      " " +
-      props.address_complement +
-      " " +
-      props.postal_code +
-      " " +
-      props.town
-        );
-    };
     return (
         <View
             style={{
@@ -35,7 +23,7 @@ export default function AddressItem(props) {
             </View>
             <View style={{ flex: 7 }}>
                 <Text style={{ fontSize: 18, textAlign: "center" }}>
-                    {buildAddress(props)}
+                    {buildReadableAddress(props)}
                 </Text>
             </View>
         </View>

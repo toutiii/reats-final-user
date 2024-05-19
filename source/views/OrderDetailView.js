@@ -1,16 +1,43 @@
 import React from "react";
 import { Image, Text, View } from "react-native";
 import all_constants from "../constants";
-import { getDeliveryDateInfo } from "../helpers/toolbox";
 import HorizontalLine from "../components/HorizontalLine";
 import CustomButton from "../components/CustomButton";
+import moment from "moment";
+import "moment/locale/fr"; // Import French locale
 
 export default function OrderDetailView({ ...props }) {
+    moment.locale("fr");
+
+    const itemPhoto = props.route.params.item.dish
+        ? props.route.params.item.dish.photo
+        : props.route.params.item.drink.photo;
+
+    const itemName = props.route.params.item.dish
+        ? props.route.params.item.dish.name
+        : props.route.params.item.drink.name;
+
+    const itemQuantity = props.route.params.item.dish_quantity
+        ? props.route.params.item.dish_quantity
+        : props.route.params.item.drink_quantity;
+
+    const itemPrice = props.route.params.item.dish
+        ? props.route.params.item.dish.price
+        : props.route.params.item.drink.price;
+
+    const itemOrderDate = props.route.params.item.created;
+
+    const isItemADrink = props.route.params.item.drink
+        ? true
+        : false;
+
+    const itemStatus = props.route.params.item.status;
+
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
                 <Image
-                    source={{ uri: props.route.params.item.photo }}
+                    source={{ uri: itemPhoto }}
                     style={{ aspectRatio: 16 / 9, width: "100%" }}
                 />
             </View>
@@ -18,7 +45,7 @@ export default function OrderDetailView({ ...props }) {
             <View style={{ flex: 2, alignItems: "center", backgroundColor: "white" }}>
                 <View style={{ flex: 1, justifyContent: "center" }}>
                     <Text numberOfLines={3} style={{ fontSize: 20, textAlign: "center" }}>
-                        {props.route.params.item.dish_name}
+                        {itemName}
                     </Text>
                 </View>
 
@@ -28,11 +55,20 @@ export default function OrderDetailView({ ...props }) {
 
                 <View style={{ flex: 1, justifyContent: "center" }}>
                     <Text style={{ fontStyle: "italic", fontSize: 18 }}>
-                        {props.route.params.item.number_of_dishes}
-                        {props.route.params.item.number_of_dishes > 1
-                            ? all_constants.pending_orders_view.item_label.dishes
-                            : all_constants.pending_orders_view.item_label.dish}{" "}
-                        {all_constants.pending_orders_view.item_label.cooking.toLocaleLowerCase()}
+                        {itemQuantity}
+                        {isItemADrink
+                            ? itemQuantity > 1
+                                ? all_constants.pending_orders_view.item_label.drinks
+                                : all_constants.pending_orders_view.item_label.drink
+                            : itemQuantity > 1
+                                ? all_constants.pending_orders_view.item_label.dishes
+                                : all_constants.pending_orders_view.item_label.dish}{" "}
+                        {itemStatus === "pending" &&
+              all_constants.pending_orders_view.item_label.pending.toLocaleLowerCase()}
+                        {itemStatus === "processing" &&
+              all_constants.pending_orders_view.item_label.processing.toLocaleLowerCase()}
+                        {itemStatus === "completed" &&
+              all_constants.pending_orders_view.item_label.completed.toLocaleLowerCase()}
                     </Text>
                 </View>
 
@@ -43,15 +79,9 @@ export default function OrderDetailView({ ...props }) {
                 <View style={{ flex: 1, justifyContent: "center" }}>
                     <Text style={{ fontSize: 18 }}>
                         {all_constants.pending_orders_view.item_label.ordered_at}
-                        {getDeliveryDateInfo(
-                            new Date(props.route.params.item.dish_order_datetime),
-                            all_constants.short_french_date_format
-                        )}
+                        {moment(itemOrderDate).locale("fr").format("dddd DD MMM")}
                         {all_constants.at}
-                        {getDeliveryDateInfo(
-                            new Date(props.route.params.item.dish_order_datetime),
-                            all_constants.french_hour_format
-                        )}
+                        {moment(itemOrderDate).locale("fr").format("HH[h]mm")}
                     </Text>
                 </View>
 
@@ -62,8 +92,7 @@ export default function OrderDetailView({ ...props }) {
                 <View style={{ flex: 1, justifyContent: "center" }}>
                     <Text style={{ fontSize: 18 }}>
                         {all_constants.pending_orders_view.item_label.total}
-                        {props.route.params.item.dish_price *
-              props.route.params.item.number_of_dishes}
+                        {itemPrice * itemQuantity}
                         {all_constants.currency_symbol}
                     </Text>
                 </View>

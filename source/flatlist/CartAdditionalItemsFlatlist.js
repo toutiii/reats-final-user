@@ -14,9 +14,11 @@ import { callBackEnd } from "../api/callBackend";
 import { getItemFromSecureStore } from "../helpers/common_helpers.js";
 import { apiBaseUrl, port } from "../env";
 
-export default function HomeDishesFlatlist({ ...props }) {
+export default function CartAdditionalItemsFlatlist({ ...props }) {
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
-    const queryFilter = props.route.params.filter;
+    const entityType = props.route.params.category;
+    const cookerIDs = props.route.params.cookerIDs;
+
     const [
         isFetchingData,
         setIsFetchingData
@@ -43,18 +45,35 @@ export default function HomeDishesFlatlist({ ...props }) {
         }).start();
     };
 
+    function buildURL() {
+        let url = "";
+        let queryParamCookerIDs = cookerIDs.join(",");
+
+        if (entityType === "dessert") {
+            url = `${apiBaseUrl}:${port}/api/v1/customers-desserts/?`;
+        } else if (entityType === "drink") {
+            url = `${apiBaseUrl}:${port}/api/v1/customers-drinks/?`;
+        } else if (entityType === "starter") {
+            url = `${apiBaseUrl}:${port}/api/v1/customers-starters/?`;
+        }
+        url += `cooker_ids=${encodeURIComponent(queryParamCookerIDs)}`;
+
+        return url;
+    }
+
+    async function fetchDataFromBackend() {
+        let url = buildURL();
+        let access = await getItemFromSecureStore("accessToken");
+        const results = await callBackEnd(new FormData(), url, "GET", access);
+
+        setData(results.data);
+    }
+
     React.useEffect(() => {
         if (isFetchingData) {
             setData(null);
             fadeOut();
             setTimeout(() => {
-                async function fetchDataFromBackend() {
-                    let url = `${apiBaseUrl}:${port}/api/v1/customers-dishes/?sort=${queryFilter}`;
-                    let access = await getItemFromSecureStore("accessToken");
-                    const results = await callBackEnd(new FormData(), url, "GET", access);
-
-                    setData(results.data);
-                }
                 fetchDataFromBackend();
                 setIsFetchingData(false);
                 fadeIn();
@@ -112,8 +131,19 @@ export default function HomeDishesFlatlist({ ...props }) {
                                     marginTop: "5%",
                                 }}
                             >
-                                <Text style={{ fontSize: 20 }}>
-                                    {all_constants.search.no_dishes_found}
+                                <Text
+                                    style={{
+                                        fontSize: 17,
+                                        textAlign: "center",
+                                        fontStyle: "italic",
+                                    }}
+                                >
+                                    {entityType === "dessert" &&
+                    all_constants.search.no_desserts_found}
+                                    {entityType === "drink" &&
+                    all_constants.search.no_drinks_found}
+                                    {entityType === "starter" &&
+                    all_constants.search.no_starters_found}
                                 </Text>
                             </View>
                         }

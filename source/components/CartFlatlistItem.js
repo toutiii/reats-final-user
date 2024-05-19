@@ -21,13 +21,13 @@ export default function CartFlatlistItem({ ...props }) {
             <View style={{ flex: 2 }}>
                 <View style={{ flex: 1, alignItems: "center" }}>
                     <Text numberOfLines={1} style={{ fontSize: 18, fontWeight: "300" }}>
-                        {props.dish_name}
+                        {props.name}
                     </Text>
                 </View>
                 <View style={{ flex: 1, marginLeft: "5%" }}>
                     <Text style={{ fontSize: 15 }}>
                         {all_constants.cart.label.item_price}
-                        {props.dish_price}
+                        {props.price}
                         {all_constants.currency_symbol}
                     </Text>
                 </View>
@@ -45,7 +45,7 @@ export default function CartFlatlistItem({ ...props }) {
                 <View style={{ flex: 1, marginLeft: "5%" }}>
                     <Text style={{ fontSize: 16, fontWeight: "600" }}>
                         {all_constants.cart.label.item_sub_amount}
-                        {props.dish_ordered_quantity * props.dish_price}
+                        {props.dish_ordered_quantity * props.price}
                         {all_constants.currency_symbol}
                     </Text>
                 </View>

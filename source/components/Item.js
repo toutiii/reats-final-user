@@ -8,32 +8,15 @@ export default function Item({ ...props }) {
         <View style={{ flex: 1 }}>
             <View style={{ flex: 5 }}>
                 <View style={styles_dish.dish_name}>
-                    {props.is_enabled
-                        ? (
-                            <Text
-                                numberOfLines={1}
-                                style={{
-                                    fontSize: 20,
-                                }}
-                            >
-                                {" "}
-                                {props.name}{" "}
-                            </Text>
-                        )
-                        : (
-                            <Text
-                                numberOfLines={1}
-                                style={{
-                                    fontSize: 20,
-                                    textDecorationLine: "line-through",
-                                    textDecorationStyle: "solid",
-                                    color: "red",
-                                }}
-                            >
-                                {" "}
-                                {props.name}{" "}
-                            </Text>
-                        )}
+                    <Text
+                        numberOfLines={1}
+                        style={{
+                            fontSize: 20,
+                        }}
+                    >
+                        {" "}
+                        {props.name}{" "}
+                    </Text>
                 </View>
                 <View style={{ flex: 4 }}>
                     <Image

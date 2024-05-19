@@ -2,6 +2,8 @@ import { FlatList, View, Button } from "react-native";
 import React from "react";
 import DishForModal from "../components/DishForModal";
 import Modal from "react-native-modal";
+import all_constants from "../constants";
+
 export default function DishModal({ ...props }) {
     return (
         <View>
@@ -18,7 +20,10 @@ export default function DishModal({ ...props }) {
             >
                 <View style={{ flex: 1, backgroundColor: "white", padding: 10 }}>
                     <View style={{ flex: 1 }}>
-                        <Button title="Close" onPress={props.onPressCloseModal} />
+                        <Button
+                            title={all_constants.cart.button.close}
+                            onPress={props.onPressCloseModal}
+                        />
                     </View>
 
                     <View style={{ flex: 8 }}>
@@ -26,16 +31,30 @@ export default function DishModal({ ...props }) {
                             data={props.modal_data}
                             renderItem={({ item }) => (
                                 <DishForModal
-                                    key={item.id}
-                                    dish_photo={item.photo}
-                                    dish_name={item.dish_name}
-                                    dish_rating={item.dish_rating}
-                                    dish_unit_price={item.dish_unit_price}
-                                    dish_style={item.dish_style}
-                                    dish_quantity={item.dish_quantity}
-                                    dish_order_date={item.dish_order_date}
-                                    dish_order_status={item.dish_order_status}
-                                    dish_total={item.dish_total}
+                                    key={item.dish
+                                        ? item.dish.id
+                                        : item.drink.id}
+                                    photo={item.dish
+                                        ? item.dish.photo
+                                        : item.drink.photo}
+                                    name={item.dish
+                                        ? item.dish.name
+                                        : item.drink.name}
+                                    rating={
+                                        item.dish
+                                            ? item.dish.rating
+                                            : item.drink.rating
+                                                ? item.drink.rating
+                                                : "-/-"
+                                    }
+                                    price={item.dish
+                                        ? item.dish.price
+                                        : item.drink.price}
+                                    quantity={
+                                        item.dish_quantity
+                                            ? item.dish_quantity
+                                            : item.drink_quantity
+                                    }
                                 />
                             )}
                         />

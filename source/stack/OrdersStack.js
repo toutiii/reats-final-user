@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import all_constants from "../constants";
-import OrdersFlatlist from "../flatlist/OrdersFlatlist";
+import OrdersTopTab from "../toptabs/OrdersToptab";
 import OrderDetailView from "../views/OrderDetailView";
 
 const Stack = createStackNavigator();
@@ -16,7 +16,7 @@ export default class OrdersStack extends Component {
             <Stack.Navigator initialRouteName="Home">
                 <Stack.Screen
                     name={this.props.route.name + "Home"}
-                    component={OrdersFlatlist}
+                    component={OrdersTopTab}
                     initialParams={{ test: "test" }}
                     options={{
                         headerShown: true,

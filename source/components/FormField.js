@@ -96,7 +96,6 @@ export default function FormField({ ...props }) {
 
     useEffect(() => {
         if (props.fieldName === "town") {
-            console.log("REQUESTTINNGGGG");
             setTown(props.newItem["town"]);
             props.getTownFromPostalCode(props.newItem["postal_code"]);
         }
