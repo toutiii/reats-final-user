@@ -9,6 +9,10 @@ let all_constants = {
         },
     },
     search: {
+        alert: {
+            title: "Erreur",
+            message: "Veuillez sélectionner une adresse de livraison.",
+        },
         placeholder: "Poulet Yassa",
         no_dishes_found: "Aucun résultat.",
         no_drinks_found:
@@ -22,6 +26,7 @@ let all_constants = {
             label: {
                 search: "Chercher",
                 add_to_cart: "AJOUTER AU PANIER",
+                search_dishes: "RECHERCHER",
             },
         },
         custom_alert: {
@@ -42,6 +47,12 @@ let all_constants = {
                 add_to_basket_default: "Ajouter 1 dans le panier",
                 delete_from_basket: "Supprimer",
             },
+        },
+        address: {
+            title: "Adresse de livraison",
+            no_address: "Aucune adresse de livraison trouvée.",
+            placeholder: "Choisir une adresse de livraison",
+            search_placeholder: "Rechercher une adresse",
         },
     },
     pending_orders_view: {
@@ -365,6 +376,17 @@ let all_constants = {
         start_date: "Date de début",
         end_date: "Date de fin",
         cancel: "Annuler",
+        dish_name_filter_placeholder: "Ex: Poulet Yassa",
+        dish_name_filter_label: "Nom du plat",
+        dish_country_filter_label: "Origine du plat",
+        dish_country_filter_placeholder: "Ex: Choisissez un pays",
+        dish_delivery_mode: "Plats livrables:",
+        radion_button: {
+            label: {
+                now_delivery_mode: "Immédiatement",
+                schedule_delivery_mode: "En différé",
+            },
+        },
     },
     search_bar: {
         placeholder: "Écrivez pour lancer la recherche",

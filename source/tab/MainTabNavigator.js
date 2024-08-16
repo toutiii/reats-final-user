@@ -10,7 +10,6 @@ import SettingsPersonalInformationForm from "../forms/SettingsPersonalInformatio
 import AdressesStack from "../stack/AddressesStack";
 import OrdersHistoryStack from "../stack/OrdersHistoryStack";
 import CartStack from "../stack/CartStack";
-import HomeStack from "../stack/HomeStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -53,10 +52,6 @@ export default function MainTabNavigator() {
                     : undefined,
             })}
         >
-            <Tab.Screen
-                name={all_constants.tab.main_tab_navigator.home}
-                component={HomeStack}
-            />
             <Tab.Screen
                 name={all_constants.tab.main_tab_navigator.order}
                 component={SearchStack}

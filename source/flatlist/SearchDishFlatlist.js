@@ -3,18 +3,27 @@ import {
     ActivityIndicator,
     Animated,
     FlatList,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
     Text,
     TouchableHighlight,
     View,
 } from "react-native";
 import styles_order from "../styles/styles-order.js";
+import styles_dropdown_for_dishes_search from "../styles/styles-dropdown-for-dishes-search.js";
 import all_constants from "../constants";
 import Item from "../components/Item";
-import { Searchbar } from "react-native-paper";
+import { TouchableRipple } from "react-native-paper";
 import SearchFilterModal from "../modals/SearchFilterModal.js";
 import { callBackEnd } from "../api/callBackend";
 import { getItemFromSecureStore } from "../helpers/common_helpers.js";
 import { apiBaseUrl, port } from "../env";
+import { Dropdown } from "react-native-element-dropdown";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { buildReadableAddress } from "../helpers/toolbox";
+import CustomButton from "../components/CustomButton";
+import CustomAlert from "../components/CustomAlert";
 
 export default function SearchDishFlatList({ ...props }) {
     const [
@@ -24,8 +33,8 @@ export default function SearchDishFlatList({ ...props }) {
     React.useState(false);
 
     const [
-        countryFilter,
-        setCountryFilter
+        countryNameFilter,
+        setCountryNameFilter
     ] = React.useState(null);
 
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
@@ -42,11 +51,6 @@ export default function SearchDishFlatList({ ...props }) {
     ]);
 
     const [
-        runSearchByTextInput,
-        setRunSearchByTextInput
-    ] = React.useState(false);
-
-    const [
         oneSearchHasBeenRun,
         setOneSearchHasBeenRun
     ] = React.useState(false);
@@ -56,18 +60,35 @@ export default function SearchDishFlatList({ ...props }) {
     };
 
     const [
-        searchQuery,
-        setSearchQuery
-    ] = React.useState("");
-
-    const [
         searchURL,
         setSearchURL
     ] = React.useState("");
 
-    const minLengthToTriggerSearch = 3;
-    const maxInputLength = 100;
-    const delaySearch = 2000;
+    const [
+        addressesData,
+        setAddressesData
+    ] = React.useState([
+    ]);
+
+    const [
+        dishNameFilter,
+        setDishNameFilter
+    ] = React.useState(null);
+
+    const [
+        addressValue,
+        setAddressValue
+    ] = React.useState(null);
+
+    const [
+        showAlert,
+        setShowAlert
+    ] = React.useState(false);
+
+    const [
+        checked,
+        setChecked
+    ] = React.useState("now");
 
     const fadeIn = () => {
         Animated.timing(fadeAnim, {
@@ -85,23 +106,43 @@ export default function SearchDishFlatList({ ...props }) {
         }).start();
     };
 
-    const onChangeSearch = (query) => {
-        console.log(query);
-        if (query.length === 0) {
-            setSearchQuery("");
-        }
-
-        if (query.length > 0 && query.length <= maxInputLength) {
-            setSearchQuery(query.replace("  ", ""));
-        }
-
-        if (
-            query.replace("  ", "").replace(" ", "").length >=
-      minLengthToTriggerSearch
-        ) {
-            setRunSearchByTextInput(true);
-        }
+    const resetFilters = () => {
+        setDishNameFilter(null);
+        setCountryNameFilter(null);
+        setChecked("now");
     };
+
+    async function getCustomersAddresses() {
+        const access = await getItemFromSecureStore("accessToken");
+        const result = await callBackEnd(
+            new FormData(),
+            `${apiBaseUrl}:${port}/api/v1/customers-addresses/`,
+            "GET",
+            access,
+        );
+        console.log("result: ", result);
+        let readableAddresses = [
+        ];
+        for (let i = 0; i < result.data.length; i++) {
+            readableAddresses.push(buildReadableAddress(result.data[i]));
+        }
+        let addressesDataForDropdown = [
+        ];
+        for (let i = 0; i < readableAddresses.length; i++) {
+            addressesDataForDropdown.push({
+                label: readableAddresses[i],
+                value: result.data[i].id,
+            });
+        }
+        setAddressesData(addressesDataForDropdown);
+        console.log("addressesData: ", addressesDataForDropdown);
+    }
+
+    React.useEffect(() => {
+        console.log("Fetching customer addresses...");
+        getCustomersAddresses();
+    }, [
+    ]);
 
     React.useEffect(() => {
         if (isFetchingData) {
@@ -122,196 +163,275 @@ export default function SearchDishFlatList({ ...props }) {
                 fetchDataFromBackend();
                 setIsFetchingData(false);
                 resetFilters();
-                setRunSearchByTextInput(false);
                 setOneSearchHasBeenRun(true);
                 setSearchURL("");
                 fadeIn();
             }, 200);
         }
     }, [
-        searchURL
+        isFetchingData
     ]);
 
-    React.useEffect(() => {
-        if (runSearchByTextInput) {
-            const delayDebounceFn = setTimeout(() => {
-                setIsFetchingData(true);
-                buildSearchUrl();
-            }, delaySearch);
-
-            return () => clearTimeout(delayDebounceFn);
+    const onPressSearchButton = () => {
+        if (addressValue === null) {
+            setShowAlert(true);
+            return;
         }
-    }, [
-        searchQuery
-    ]);
-
-    const onPressFilter = () => {
-        toggleSearchFilterModal();
-
-        if (countryFilter !== null) {
-            console.log(searchQuery);
-            setIsFetchingData(true);
-            buildSearchUrl();
-        }
+        setSearchFilterModalVisible(false);
+        buildSearchUrl();
+        setIsFetchingData(true);
     };
 
     const buildSearchUrl = () => {
         let queryParams = "";
         let baseURL = `${apiBaseUrl}:${port}/api/v1/customers-dishes/?`;
 
-        if (searchQuery.length >= minLengthToTriggerSearch) {
-            queryParams += `name=${searchQuery}`;
+        if (dishNameFilter !== null) {
+            queryParams += `name=${dishNameFilter}`;
         }
 
-        if (countryFilter !== null) {
-            queryParams += `&country=${countryFilter}`;
+        if (countryNameFilter !== null) {
+            queryParams += `&country=${countryNameFilter}`;
+        }
+
+        if (addressValue !== null) {
+            queryParams += `&search_address_id=${addressValue}`;
+        }
+
+        if (checked !== null) {
+            queryParams += `&delivery_mode=${checked}`;
         }
 
         let localSearchURL = baseURL + queryParams;
+
         localSearchURL = localSearchURL.replace("?&", "?");
+
+        console.log("localSearchURL: ", localSearchURL);
+
         setSearchURL(localSearchURL);
     };
 
-    const resetFilters = () => {
-        setCountryFilter(null);
-    };
-
     return (
-        <Animated.View
-            style={{ flex: 1, opacity: fadeAnim, backgroundColor: "white" }}
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios"
+                ? "padding"
+                : "height"}
         >
-            {isSearchFilterModalVisible && (
-                <SearchFilterModal
-                    isModalVisible={isSearchFilterModalVisible}
-                    enableCountryFilter={true}
-                    setCountryFilter={setCountryFilter}
-                    toggleModal={toggleSearchFilterModal}
-                    onPressFilter={onPressFilter}
-                    onPressClear={resetFilters}
-                />
-            )}
-
-            <View
-                style={{
-                    flexDirection: "row",
-                    backgroundColor: "white",
-                }}
+            <Animated.View
+                style={{ flex: 1, opacity: fadeAnim, backgroundColor: "white" }}
             >
-                <View style={{ flex: 4 }}>
-                    <Searchbar
-                        placeholder={all_constants.search_bar.placeholder}
-                        onChangeText={onChangeSearch}
-                        value={searchQuery}
+                {showAlert && (
+                    <CustomAlert
+                        show={showAlert}
+                        title={all_constants.search.alert.title}
+                        message={all_constants.search.alert.message}
+                        confirmButtonColor="red"
+                        onConfirmPressed={() => {
+                            setShowAlert(false);
+                        }}
                     />
-                </View>
-                {/* <View  // Uncomment this section when we'll need some filters
+                )}
+
+                {isSearchFilterModalVisible && (
+                    <SearchFilterModal
+                        isModalVisible={isSearchFilterModalVisible}
+                        checked={checked}
+                        setChecked={setChecked}
+                        setDishNameFilter={setDishNameFilter}
+                        dishNameFilter={dishNameFilter}
+                        countryNameFilter={countryNameFilter}
+                        setCountryNameFilter={setCountryNameFilter}
+                        searchURL={searchURL}
+                        onPressSearchButton={onPressSearchButton}
+                        onPressClear={resetFilters}
+                    />
+                )}
+
+                <View
                     style={{
                         flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
+                        backgroundColor: "white",
                     }}
                 >
-                    <TouchableRipple
-                        onPress={toggleSearchFilterModal}
-                        rippleColor="rgba(0, 0, 0, .32)"
+                    <View
+                        style={{
+                            flex: 1,
+                        }}
                     >
-                        <Image
-                            source={require("../images/filtre.png")}
-                            style={{ height: 30, width: 30 }}
+                        <Dropdown
+                            style={styles_dropdown_for_dishes_search.dropdown}
+                            placeholderStyle={
+                                styles_dropdown_for_dishes_search.placeholderStyle
+                            }
+                            selectedTextStyle={
+                                styles_dropdown_for_dishes_search.selectedTextStyle
+                            }
+                            inputSearchStyle={
+                                styles_dropdown_for_dishes_search.inputSearchStyle
+                            }
+                            iconStyle={styles_dropdown_for_dishes_search.iconStyle}
+                            data={addressesData}
+                            search
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={all_constants.search.address.placeholder}
+                            searchPlaceholder={
+                                all_constants.search.address.search_placeholder
+                            }
+                            value={addressValue}
+                            onChange={(item) => {
+                                setAddressValue(item.value);
+                            }}
+                            renderLeftIcon={() => (
+                                <MaterialCommunityIcons
+                                    style={styles_dropdown_for_dishes_search.icon}
+                                    color="black"
+                                    name="google-maps"
+                                    size={20}
+                                />
+                            )}
                         />
-                    </TouchableRipple>
-                </View> */}
-            </View>
+                    </View>
 
-            {!oneSearchHasBeenRun && (
-                <View
-                    style={{
-                        flex: 1,
-                        backgroundColor: "white",
-                        alignItems: "center",
-                        marginTop: "5%",
-                    }}
-                >
-                    <Text
-                        style={{ fontSize: 16, textAlign: "center", fontStyle: "italic" }}
+                    <View
+                        style={{
+                            flex: 2,
+                            flexDirection: "row",
+                            backgroundColor: "white",
+                            marginLeft: "2%",
+                            marginRight: "2%",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "tomato",
+                            alignItems: "center",
+                        }}
                     >
-                        {all_constants.search_bar.search_bar_dishes}
-                    </Text>
-                </View>
-            )}
-
-            {isFetchingData && (
-                <View
-                    style={{
-                        backgroundColor: "white",
-                        alignItems: "center",
-                        marginTop: "5%",
-                    }}
-                >
-                    <ActivityIndicator size="large" color="tomato" />
-                </View>
-            )}
-
-            {oneSearchHasBeenRun && (
-                <View
-                    style={{
-                        flex: 1,
-                        backgroundColor: "white",
-                    }}
-                >
-                    <FlatList
-                        data={data}
-                        ItemSeparatorComponent={
-                            <View
-                                style={{
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: "#C8C8C8",
-                                    height: 2.5,
-                                    marginLeft: "10%",
-                                    marginRight: "10%",
-                                }}
+                        <View style={{ flex: 4 }}>
+                            <CustomButton
+                                label={all_constants.search.button.label.search_dishes}
+                                backgroundColor="tomato"
+                                height={50}
+                                border_width={3}
+                                border_radius={30}
+                                font_size={17}
+                                button_width="100%"
+                                label_color="white"
+                                onPress={onPressSearchButton}
                             />
-                        }
-                        ListEmptyComponent={
+                        </View>
+                        {addressValue !== null && (
                             <View
                                 style={{
+                                    flex: 1,
                                     alignItems: "center",
-                                    marginTop: "5%",
                                 }}
                             >
-                                <Text style={{ fontSize: 20 }}>
-                                    {all_constants.search.no_dishes_found}
-                                </Text>
-                            </View>
-                        }
-                        renderItem={({ item }) => (
-                            <View style={styles_order.order_button_container}>
-                                <TouchableHighlight
-                                    onPress={() => {
-                                        props.navigation.navigate("SearchItemDetailView", {
-                                            item: item,
-                                        });
-                                    }}
-                                    style={{ flex: 1 }}
-                                    underlayColor={all_constants.colors.inputBorderColor}
+                                <TouchableRipple
+                                    onPress={toggleSearchFilterModal}
+                                    rippleColor="rgba(0, 0, 0, .32)"
                                 >
-                                    <Item
-                                        key={item.id}
-                                        photo={item.photo}
-                                        name={item.name}
-                                        rating={item.rating
-                                            ? item.rating
-                                            : "-/-"}
-                                        price={item.price + all_constants.currency_symbol}
-                                        onPress={item.onPress}
+                                    <Image
+                                        source={require("../images/filtre.png")}
+                                        style={{ height: 30, width: 30 }}
                                     />
-                                </TouchableHighlight>
+                                </TouchableRipple>
                             </View>
                         )}
-                    />
+                    </View>
                 </View>
-            )}
-        </Animated.View>
+
+                {!oneSearchHasBeenRun && (
+                    <View
+                        style={{
+                            flex: 3,
+                            backgroundColor: "white",
+                            alignItems: "center",
+                            marginTop: "5%",
+                        }}
+                    >
+                        <Text
+                            style={{ fontSize: 16, textAlign: "center", fontStyle: "italic" }}
+                        >
+                            {all_constants.search_bar.search_bar_dishes}
+                        </Text>
+                    </View>
+                )}
+
+                {isFetchingData && (
+                    <View
+                        style={{
+                            flex: 1,
+                            backgroundColor: "white",
+                            alignItems: "center",
+                            marginTop: "5%",
+                        }}
+                    >
+                        <ActivityIndicator size="large" color="tomato" />
+                    </View>
+                )}
+
+                {oneSearchHasBeenRun && (
+                    <View
+                        style={{
+                            flex: 3,
+                            backgroundColor: "white",
+                        }}
+                    >
+                        <FlatList
+                            data={data}
+                            ItemSeparatorComponent={
+                                <View
+                                    style={{
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        backgroundColor: "#C8C8C8",
+                                        height: 2.5,
+                                        marginLeft: "10%",
+                                        marginRight: "10%",
+                                    }}
+                                />
+                            }
+                            ListEmptyComponent={
+                                <View
+                                    style={{
+                                        alignItems: "center",
+                                        marginTop: "5%",
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 20 }}>
+                                        {all_constants.search.no_dishes_found}
+                                    </Text>
+                                </View>
+                            }
+                            renderItem={({ item }) => (
+                                <View style={styles_order.order_button_container}>
+                                    <TouchableHighlight
+                                        onPress={() => {
+                                            props.navigation.navigate("SearchItemDetailView", {
+                                                item: item,
+                                            });
+                                        }}
+                                        style={{ flex: 1 }}
+                                        underlayColor={all_constants.colors.inputBorderColor}
+                                    >
+                                        <Item
+                                            key={item.id}
+                                            photo={item.photo}
+                                            name={item.name}
+                                            rating={item.rating
+                                                ? item.rating
+                                                : "-/-"}
+                                            price={item.price + all_constants.currency_symbol}
+                                            onPress={item.onPress}
+                                        />
+                                    </TouchableHighlight>
+                                </View>
+                            )}
+                        />
+                    </View>
+                )}
+            </Animated.View>
+        </KeyboardAvoidingView>
     );
 }

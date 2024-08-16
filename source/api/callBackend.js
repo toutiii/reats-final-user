@@ -75,6 +75,8 @@ export async function callBackEnd(
         console.log("**************************************");
         console.log("Below initial request's response");
         console.log(JSON.stringify(response));
+        console.log(response.status_code);
+        console.log(response.error_code);
         console.log("**************************************");
 
         if (
