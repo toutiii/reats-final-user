@@ -8,6 +8,7 @@ import { TouchableHighlight } from "react-native-gesture-handler";
 import CustomAlert from "../components/CustomAlert.js";
 import {
     storeCartItem,
+    storeGlobalCookerID,
     removeCartItem,
     getAdditionalItemsKeys,
     getCartItem,
@@ -27,6 +28,8 @@ export default function SearchItemDetailView({ ...props }) {
     const maxDishOrder = 10;
 
     const minDishOrder = 1;
+
+    const previousScreenName = props.navigation.getState().routes[0].name;
 
     const [
         showAlert,
@@ -52,6 +55,11 @@ export default function SearchItemDetailView({ ...props }) {
         ...JSON.parse(JSON.stringify(props.route.params.item)),
         dish_ordered_quantity: numberOfItem,
     });
+
+    const [
+        cookerID,
+        setCookerID, // eslint-disable-line no-unused-vars
+    ] = React.useState(props.route.params.item.cooker);
 
     const [
         isAsyncStorageOperationOk,
@@ -88,13 +96,23 @@ export default function SearchItemDetailView({ ...props }) {
     };
 
     const addItemToCart = async () => {
-        const result = await storeCartItem({
+        const addItemResult = await storeCartItem({
             ...cartItemObject,
             dish_ordered_quantity: numberOfItem,
         });
-        console.log("Storage status: ", result);
-        setIsAsyncStorageOperationOk(result);
-        setShowAddItemResponseAlert(true);
+        const addCookerIDResult = await storeGlobalCookerID(
+            props.route.params.item.cooker,
+        );
+
+        console.log("Add status: ", addItemResult);
+        console.log("Add cooker ID status: ", addCookerIDResult);
+
+        if (addItemResult && addCookerIDResult) {
+            setIsAsyncStorageOperationOk(true);
+            setShowAddItemResponseAlert(true);
+        } else {
+            setIsAsyncStorageOperationOk(false);
+        }
     };
 
     const removeItemFromCart = async () => {
@@ -145,6 +163,33 @@ export default function SearchItemDetailView({ ...props }) {
         }
         message += ".";
         message = message.replace(", .", ".");
+        return message;
+    };
+
+    const goAway = () => {
+        if (previousScreenName === "SearchDishFlatList") {
+            props.navigation.navigate(previousScreenName, {
+                cookerID: cookerID,
+            });
+        } else {
+            props.navigation.goBack();
+        }
+    };
+
+    const getItemAddedToCartMessage = () => {
+        let message;
+
+        if (isAsyncStorageOperationOk) {
+            if (previousScreenName === "SearchDishFlatList") {
+                message =
+          all_constants.cart.add_item_alert.add_item_success_message_advanced;
+            } else {
+                message = all_constants.cart.add_item_alert.add_item_success_message;
+            }
+        } else {
+            message = all_constants.cart.add_item_alert.add_item_error_message;
+        }
+
         return message;
     };
 
@@ -321,11 +366,7 @@ export default function SearchItemDetailView({ ...props }) {
                 {showAddItemResponseAlert && (
                     <CustomAlert
                         show={showAddItemResponseAlert}
-                        message={
-                            isAsyncStorageOperationOk
-                                ? all_constants.cart.add_item_alert.add_item_success_message
-                                : all_constants.cart.add_item_alert.add_item_error_message
-                        }
+                        message={getItemAddedToCartMessage()}
                         confirmButtonColor={isAsyncStorageOperationOk
                             ? "green"
                             : "red"}
@@ -333,7 +374,7 @@ export default function SearchItemDetailView({ ...props }) {
                         onConfirmPressed={() => {
                             setShowAddItemResponseAlert(false);
                             if (isAsyncStorageOperationOk) {
-                                props.navigation.goBack();
+                                goAway();
                             }
                         }}
                     />
@@ -354,7 +395,7 @@ export default function SearchItemDetailView({ ...props }) {
                         onConfirmPressed={() => {
                             setShowRemoveItemResponseAlert(false);
                             if (isAsyncStorageOperationOk) {
-                                props.navigation.goBack();
+                                goAway();
                             }
                         }}
                     />

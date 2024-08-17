@@ -11,7 +11,11 @@ import all_constants from "../constants";
 import CartFlatlistItem from "../components/CartFlatlistItem.js";
 import CustomAlert from "../components/CustomAlert.js";
 import { useFocusEffect } from "@react-navigation/native";
-import { getAllCartItems, removeAllCartItems } from "../helpers/toolbox.js";
+import {
+    getAllCartItems,
+    removeAllCartItems,
+    removeGlobalCookerID,
+} from "../helpers/toolbox.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function CartFlatlist(props) {
@@ -81,9 +85,15 @@ export default function CartFlatlist(props) {
 
     const removeAllItemsFromCart = async () => {
         const result = await removeAllCartItems();
+        const resultCookerID = await removeGlobalCookerID();
+        console.log("Remove global cooker ID: ", resultCookerID);
         console.log("Remove all items from cart: ", result);
-        setIsAsyncStorageOperationOk(result);
-        setShowRemoveAllItemResponseAlert(true);
+        if (result && resultCookerID) {
+            setIsAsyncStorageOperationOk(true);
+            setShowRemoveAllItemResponseAlert(true);
+        } else {
+            setIsAsyncStorageOperationOk(false);
+        }
     };
 
     useFocusEffect(

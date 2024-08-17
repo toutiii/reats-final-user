@@ -24,8 +24,22 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { buildReadableAddress } from "../helpers/toolbox";
 import CustomButton from "../components/CustomButton";
 import CustomAlert from "../components/CustomAlert";
+import { getGlobalCookerID } from "../helpers/toolbox.js";
 
 export default function SearchDishFlatList({ ...props }) {
+    const [
+        cookerID,
+        setCookerID, // eslint-disable-line no-unused-vars
+    ] = React.useState(null);
+
+    async function getCookerIDFromAsyncStorage() {
+        const cookerIDValue = await getGlobalCookerID();
+        setCookerID(cookerIDValue);
+        console.log("cookerIDValue: ", cookerIDValue);
+    }
+
+    getCookerIDFromAsyncStorage();
+
     const [
         isSearchFilterModalVisible,
         setSearchFilterModalVisible
@@ -139,6 +153,26 @@ export default function SearchDishFlatList({ ...props }) {
     }
 
     React.useEffect(() => {
+        if (addressValue !== null) {
+            if (cookerID !== null) {
+                console.log("cookerID: ", cookerID);
+                console.log("Filtering by cookerID", cookerID);
+                buildSearchUrl();
+                setIsFetchingData(true);
+            } else {
+                setTimeout(() => {
+                    console.log("cookerID is null");
+                    console.log("Filtering by default");
+                    buildSearchUrl();
+                    setIsFetchingData(true);
+                }, 500);
+            }
+        }
+    }, [
+        cookerID
+    ]);
+
+    React.useEffect(() => {
         console.log("Fetching customer addresses...");
         getCustomersAddresses();
     }, [
@@ -172,7 +206,7 @@ export default function SearchDishFlatList({ ...props }) {
         isFetchingData
     ]);
 
-    const onPressSearchButton = () => {
+    const onPressSearchButton = async () => {
         if (addressValue === null) {
             setShowAlert(true);
             return;
@@ -183,6 +217,7 @@ export default function SearchDishFlatList({ ...props }) {
     };
 
     const buildSearchUrl = () => {
+        console.log("cookerID: ", cookerID);
         let queryParams = "";
         let baseURL = `${apiBaseUrl}:${port}/api/v1/customers-dishes/?`;
 
@@ -198,9 +233,11 @@ export default function SearchDishFlatList({ ...props }) {
             queryParams += `&search_address_id=${addressValue}`;
         }
 
-        if (checked !== null) {
-            queryParams += `&delivery_mode=${checked}`;
-        }
+        // if (checked !== null) {
+        //     queryParams += `&delivery_mode=${checked}`;
+        // }
+
+        queryParams += `&cooker_id=${cookerID}`;
 
         let localSearchURL = baseURL + queryParams;
 

@@ -38,6 +38,45 @@ export async function storeCartItem(cartItemObject) {
     }
 }
 
+export async function storeGlobalCookerID(cookerID) {
+    try {
+        const objectKey = "cooker_id";
+        const jsonValue = JSON.stringify(cookerID);
+        console.log("Storing global cooker ID with key: ", objectKey);
+        console.log("Storing global cooker ID with value: ", jsonValue);
+        await AsyncStorage.setItem(objectKey, jsonValue);
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}
+
+export async function getGlobalCookerID() {
+    try {
+        const objectKey = "cooker_id";
+        const jsonValue = await AsyncStorage.getItem(objectKey);
+        console.log(jsonValue);
+        return jsonValue != null
+            ? JSON.parse(jsonValue)
+            : null;
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export async function removeGlobalCookerID() {
+    try {
+        const objectKey = "cooker_id";
+        console.log("Removing global cooker ID with key: ", objectKey);
+        await AsyncStorage.removeItem(objectKey);
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}
+
 export async function getAdditionalItemsKeys(ItemID) {
     const objectKey = `reats_cart_item_${ItemID}`;
     let objectToRemove = JSON.parse(await AsyncStorage.getItem(objectKey));

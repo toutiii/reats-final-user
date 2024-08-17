@@ -12,15 +12,18 @@ let all_constants = {
         alert: {
             title: "Erreur",
             message: "Veuillez sélectionner une adresse de livraison.",
+            warning_title: "ATTENTION",
+            warning_message:
+        "La commande chez plusieurs cuisiniers à la fois n'étant pas pris en charge, " +
+        "la liste des résultats a été mise à jour pour vous proposer des plats préparés par" +
+        "le même cuisinier.",
         },
         placeholder: "Poulet Yassa",
         no_dishes_found: "Aucun résultat.",
-        no_drinks_found:
-      "Certains cuisiniers proposent des boissons, mais ceux de votre panier n'en proposent pas.",
+        no_drinks_found: "Ce cuisinier ne propose pas de boissons pour l'instant.",
         no_desserts_found:
-      "Certains cuisiniers proposent des desserts, mais ceux de votre panier n'en proposent pas.",
-        no_starters_found:
-      "Certains cuisiniers proposent des entrées, mais ceux de votre panier n'en proposent pas.",
+      "Ce cuisinier ne propose pas de desserts pour l'instant.",
+        no_starters_found: "Ce cuisinier ne propose pas d'entrées pour l'instant.",
         no_addresses_found: "Vous n'avez renseigné aucune adresse de livraison.",
         button: {
             label: {
@@ -100,10 +103,14 @@ let all_constants = {
             remove_item_from_cart_message: "Supprimer cet item du panier ?",
             drop_cart_message: "Tous les items seront supprimés du panier.",
             remove_item_with_additional_items_message:
-        "L'ajout de desserts/boissons/entrées n'est possible que si vous commandez au moins un plat. Donc si vous supprimez ce plat, les éléments ci-après seront également supprimés du panier: ",
+        "L'ajout de desserts/boissons/entrées n'est possible que si vous commandez un plat. Si vous supprimez cet item, les éléments ci-après seront également supprimés du panier: ",
         },
         add_item_alert: {
             add_item_success_message: "L'item a bien été ajouté au panier.",
+            add_item_success_message_advanced:
+        "L'item a bien été ajouté au panier. \n \n" +
+        "Notez que la liste des résultats sera filtrée pour vous proposer des plats préparés par le même cuisinier. \n \n" +
+        "Pour supprimer ce filtre, il vous suffit de vider le panier et de lancer une nouvelle recherche.",
             add_item_error_message:
         "Échec, merci de rééssayer dans quelques instants.",
         },
