@@ -6,6 +6,7 @@ import CartSummaryView from "../views/CartSummaryView";
 import CartAdditionalItemsFlatlist from "../flatlist/CartAdditionalItemsFlatlist";
 import all_constants from "../constants";
 import CartDeliveryInfosView from "../views/CartDeliveryInfosView";
+import AsapDeliveryInfosView from "../views/AsapDeliveryInfosView";
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,13 @@ export default function CartStack() {
                 options={{
                     headerShown: false,
                     headerMode: "none",
+                }}
+            />
+            <Stack.Screen
+                name="AsapDeliveryInfosView"
+                component={AsapDeliveryInfosView}
+                options={{
+                    headerTitle: all_constants.cart.asap.title,
                 }}
             />
             <Stack.Screen

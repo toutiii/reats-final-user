@@ -1,25 +1,19 @@
 import React from "react";
-import {
-    Button,
-    FlatList,
-    TextInput,
-    TouchableHighlight,
-    Text,
-    View,
-} from "react-native";
+import { TextInput, TouchableHighlight, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import all_constants from "../constants";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomAlert from "../components/CustomAlert";
-import { getItemFromSecureStore } from "../helpers/common_helpers";
-import { apiBaseUrl, port } from "../env";
-import { callBackEnd } from "../api/callBackend";
-import Modal from "react-native-modal";
-import AddressItem from "../components/AddressItem";
 import CustomButton from "../components/CustomButton";
-import { buildReadableAddress, formatDateToFrench } from "../helpers/toolbox";
+import { formatDateToFrench } from "../helpers/toolbox";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CartDeliveryInfosView({ ...props }) {
+    const [
+        addressID,
+        setAddressID
+    ] = React.useState(null);
+
     const [
         deliveryDate,
         setDeliveryDate
@@ -43,18 +37,7 @@ export default function CartDeliveryInfosView({ ...props }) {
     const [
         deliveryAddress,
         setDeliveryAddress
-    ] = React.useState("");
-
-    const [
-        showModal,
-        setShowModal
-    ] = React.useState(false);
-
-    const [
-        addressesData,
-        setAddressesData
-    ] = React.useState([
-    ]);
+    ] = React.useState(null);
 
     const [
         showTimeMode,
@@ -73,28 +56,16 @@ export default function CartDeliveryInfosView({ ...props }) {
     React.useState(false);
 
     const [
+        showNotEditableAddressAlert,
+        setShowNotEditableAddressAlert
+    ] =
+    React.useState(false);
+
+    const [
         showAlertMissingDeliveryInfos,
         setShowAlertMissingDeliveryInfos
     ] =
     React.useState(false);
-
-    async function getData() {
-        const access = await getItemFromSecureStore("accessToken");
-        const result = await callBackEnd(
-            new FormData(),
-            `${apiBaseUrl}:${port}/api/v1/customers-addresses/`,
-            "GET",
-            access,
-        );
-        console.log("result: ", result);
-        setAddressesData(result.data);
-    }
-
-    React.useEffect(() => {
-        console.log("Fetching updated customer addresses data...");
-        getData();
-    }, [
-    ]);
 
     const onChangeDate = (event, selectedDate) => {
         console.log("event: ", event);
@@ -107,9 +78,14 @@ export default function CartDeliveryInfosView({ ...props }) {
     };
 
     React.useEffect(() => {
-        console.log("deliveryDate: ", deliveryDate);
+        const fetchAddress = async () => {
+            const address = await AsyncStorage.getItem("full_delivery_address");
+            const addressID = await AsyncStorage.getItem("address_id");
+            setDeliveryAddress(JSON.parse(address));
+            setAddressID(JSON.parse(addressID));
+        };
+        fetchAddress();
     }, [
-        deliveryDate
     ]);
 
     const onChangeTime = (event, selectedTime) => {
@@ -137,18 +113,7 @@ export default function CartDeliveryInfosView({ ...props }) {
     };
 
     const navigateToCartSummary = () => {
-        if (deliveryDate === formatDateToFrench(new Date())) {
-            setShowPastTimeCustomAlert(true);
-            setDeliveryTime("");
-            setDeliveryDate("");
-            return;
-        }
-
-        if (
-            deliveryDate.length === 0 ||
-      deliveryTime.length === 0 ||
-      deliveryAddress.length === 0
-        ) {
+        if (deliveryDate.length === 0 || deliveryTime.length === 0) {
             setShowAlertMissingDeliveryInfos(true);
             return;
         }
@@ -158,6 +123,7 @@ export default function CartDeliveryInfosView({ ...props }) {
             originalDeliveryDate: originalDeliveryDate,
             deliveryTime: deliveryTime,
             deliveryAddress: deliveryAddress,
+            addressID: addressID,
             cartItems: props.route.params.cartItems,
         });
     };
@@ -171,103 +137,6 @@ export default function CartDeliveryInfosView({ ...props }) {
                 backgroundColor: "white",
             }}
         >
-            {showModal && (
-                <Modal
-                    isVisible={showModal}
-                    backdropOpacity={0.8}
-                    animationIn="zoomInDown"
-                    animationOut="zoomOutUp"
-                    animationInTiming={600}
-                    animationOutTiming={600}
-                    backdropTransitionInTiming={600}
-                    backdropTransitionOutTiming={600}
-                >
-                    <View
-                        style={{
-                            flex: 1,
-                            backgroundColor: "white",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <FlatList
-                            data={addressesData}
-                            ListEmptyComponent={
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        marginTop: "5%",
-                                    }}
-                                >
-                                    <View style={{ flex: 1 }}>
-                                        <Text style={{ fontSize: 20, textAlign: "center" }}>
-                                            {all_constants.cart.delivery.no_delivery_address}
-                                        </Text>
-                                    </View>
-
-                                    <View style={{ flex: 1, marginTop: "15%" }}>
-                                        <Button
-                                            title={all_constants.cart.button.close}
-                                            onPress={() => {
-                                                setShowModal(false);
-                                                props.navigation.goBack(null);
-                                            }}
-                                        />
-                                    </View>
-                                </View>
-                            }
-                            ItemSeparatorComponent={
-                                <View
-                                    style={{
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        backgroundColor: "#C8C8C8",
-                                        height: 2.5,
-                                        marginLeft: "10%",
-                                        marginRight: "10%",
-                                    }}
-                                />
-                            }
-                            renderItem={({ item }) => (
-                                <View style={{ flex: 1 }}>
-                                    <TouchableHighlight
-                                        onPress={() => {
-                                            setDeliveryAddress(item);
-                                            setShowModal(false);
-                                        }}
-                                        style={{ alignItems: "center", marginTop: "10%" }}
-                                        underlayColor={all_constants.colors.inputBorderColor}
-                                    >
-                                        <View
-                                            style={{ flex: 1, alignItems: "center", width: "90%" }}
-                                        >
-                                            <View style={{ flex: 1, width: "90%" }}>
-                                                <AddressItem
-                                                    key={item.id}
-                                                    street_number={item.street_number}
-                                                    street_name={item.street_name}
-                                                    address_complement={
-                                                        item.address_complement
-                                                            ? item.address_complement
-                                                            : ""
-                                                    }
-                                                    postal_code={item.postal_code}
-                                                    town={item.town}
-                                                />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    paddingTop: "5%",
-                                                    width: "80%",
-                                                }}
-                                            ></View>
-                                        </View>
-                                    </TouchableHighlight>
-                                </View>
-                            )}
-                        />
-                    </View>
-                </Modal>
-            )}
             {showCustomAlert && (
                 <CustomAlert
                     show={showCustomAlert}
@@ -301,13 +170,27 @@ export default function CartDeliveryInfosView({ ...props }) {
                     }}
                 />
             )}
+            {showNotEditableAddressAlert && (
+                <CustomAlert
+                    show={showNotEditableAddressAlert}
+                    title={all_constants.cart.alert.title}
+                    message={all_constants.cart.alert.not_editable_address_message}
+                    confirmButtonColor={"green"}
+                    onConfirmPressed={() => {
+                        setShowNotEditableAddressAlert(false);
+                    }}
+                    style={{
+                        flex: 1,
+                    }}
+                />
+            )}
             {showDateMode && (
                 <DateTimePicker
                     testID="datePicker"
                     value={new Date()}
                     mode={"date"}
                     is24Hour={true}
-                    minimumDate={new Date(new Date().setDate(new Date().getDate() + 2))}
+                    minimumDate={new Date(new Date().setDate(new Date().getDate()))}
                     maximumDate={new Date(new Date().setDate(new Date().getDate() + 21))}
                     onChange={onChangeDate}
                 />
@@ -358,14 +241,21 @@ export default function CartDeliveryInfosView({ ...props }) {
                         borderBottomColor: "tomato",
                     }}
                 >
-                    <TextInput
-                        style={{
-                            fontSize: 18,
-                            color: "black",
+                    <TouchableHighlight
+                        onPress={() => {
+                            setShowDateMode(true);
                         }}
-                        value={deliveryDate}
-                        editable={false}
-                    />
+                        underlayColor={all_constants.colors.inputBorderColor}
+                    >
+                        <TextInput
+                            style={{
+                                fontSize: 18,
+                                color: "black",
+                            }}
+                            value={deliveryDate}
+                            editable={false}
+                        />
+                    </TouchableHighlight>
                 </View>
             </View>
 
@@ -404,14 +294,21 @@ export default function CartDeliveryInfosView({ ...props }) {
                         borderBottomColor: "tomato",
                     }}
                 >
-                    <TextInput
-                        style={{
-                            fontSize: 18,
-                            color: "black",
+                    <TouchableHighlight
+                        onPress={() => {
+                            setShowTimeMode(true);
                         }}
-                        value={deliveryTime}
-                        editable={false}
-                    />
+                        underlayColor={all_constants.colors.inputBorderColor}
+                    >
+                        <TextInput
+                            style={{
+                                fontSize: 18,
+                                color: "black",
+                            }}
+                            value={deliveryTime}
+                            editable={false}
+                        />
+                    </TouchableHighlight>
                 </View>
             </View>
 
@@ -431,14 +328,12 @@ export default function CartDeliveryInfosView({ ...props }) {
                 >
                     <TouchableHighlight
                         onPress={() => {
-                            console.log("showModal: ", showModal);
-                            setShowModal(true);
+                            setShowNotEditableAddressAlert(true);
                         }}
-                        underlayColor={all_constants.colors.inputBorderColor}
                     >
                         <MaterialCommunityIcons
                             name="map-marker-outline"
-                            color={"tomato"}
+                            color={"darkgrey"}
                             size={40}
                         />
                     </TouchableHighlight>
@@ -448,19 +343,26 @@ export default function CartDeliveryInfosView({ ...props }) {
                         flex: 3,
                         marginRight: "5%",
                         borderBottomWidth: 2,
-                        borderBottomColor: "tomato",
+                        borderBottomColor: "darkgrey",
                     }}
                 >
-                    <TextInput
-                        style={{
-                            fontSize: 18,
-                            color: "black",
+                    <TouchableHighlight
+                        onPress={() => {
+                            setShowNotEditableAddressAlert(true);
                         }}
-                        value={buildReadableAddress(deliveryAddress)}
-                        editable={false}
-                        multiline={true}
-                        numberOfLines={4}
-                    />
+                    >
+                        <TextInput
+                            style={{
+                                fontSize: 18,
+                                color: "darkgrey",
+                                fontStyle: "italic",
+                            }}
+                            value={deliveryAddress}
+                            editable={false}
+                            multiline={true}
+                            numberOfLines={6}
+                        />
+                    </TouchableHighlight>
                 </View>
             </View>
 

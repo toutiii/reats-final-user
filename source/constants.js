@@ -11,7 +11,10 @@ let all_constants = {
     search: {
         alert: {
             title: "Erreur",
-            message: "Veuillez sélectionner une adresse de livraison.",
+            missing_address_message:
+        "Veuillez sélectionner une adresse de livraison.",
+            missing_delivery_mode_message:
+        "Veuillez sélectionner un mode de livraison.",
             warning_title: "ATTENTION",
             warning_message:
         "La commande chez plusieurs cuisiniers à la fois n'étant pas pris en charge, " +
@@ -54,8 +57,15 @@ let all_constants = {
         address: {
             title: "Adresse de livraison",
             no_address: "Aucune adresse de livraison trouvée.",
-            placeholder: "Choisir une adresse de livraison",
+            placeholder: "Veuillez choisir une adresse",
             search_placeholder: "Rechercher une adresse",
+        },
+        delivery_mode: {
+            now: "Immédiat",
+            scheduled: "Différé",
+            delivery_mode_placeholder: "Veuillez choisir un un mode de livraison",
+            original_now_name: "now",
+            original_scheduled_name: "scheduled",
         },
     },
     pending_orders_view: {
@@ -96,7 +106,7 @@ let all_constants = {
             quantity: "Qté: ",
             item_sub_amount: "Prix: ",
             remove_from_cart: "SUPPRIMER DU PANIER",
-            paid: "PAYER",
+            paid: "RÉGLER MA COMMANDE",
         },
         alert: {
             title: "Attention",
@@ -104,6 +114,8 @@ let all_constants = {
             drop_cart_message: "Tous les items seront supprimés du panier.",
             remove_item_with_additional_items_message:
         "L'ajout de desserts/boissons/entrées n'est possible que si vous commandez un plat. Si vous supprimez cet item, les éléments ci-après seront également supprimés du panier: ",
+            not_editable_address_message:
+        "Pour modifier l'adresse de livraison, veuillez revenir sur l'écran de recherche.",
         },
         add_item_alert: {
             add_item_success_message: "L'item a bien été ajouté au panier.",
@@ -153,6 +165,9 @@ let all_constants = {
         },
         button: {
             close: "FERMER",
+        },
+        asap: {
+            title: "Livraison immédiate",
         },
     },
 

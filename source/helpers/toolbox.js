@@ -12,16 +12,11 @@ export function getDeliveryDateInfo(dateObject, wantedFormat) {
 }
 
 export function formatDateToFrench(dateString) {
-    const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    };
-    const date = moment(dateString);
     moment.locale("fr");
-    console.log(date.toLocaleDateString("fr-FR", options));
-    return date.toLocaleDateString("fr-FR", options);
+    const date = moment(dateString);
+    const formattedDate = date.format("dddd D MMMM YYYY");
+
+    return formattedDate;
 }
 
 export async function storeCartItem(cartItemObject) {

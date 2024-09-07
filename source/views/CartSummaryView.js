@@ -2,12 +2,12 @@ import React from "react";
 import { Text, TextInput, ScrollView, View } from "react-native";
 import all_constants from "../constants";
 import CustomButton from "../components/CustomButton";
-import { buildReadableAddress } from "../helpers/toolbox";
 import { getItemFromSecureStore } from "../helpers/common_helpers";
 import { apiBaseUrl, port } from "../env";
 import { callBackEnd } from "../api/callBackend";
 
 export default function CartSummaryView({ ...props }) {
+    console.log("\n CartSummaryView____PARAMS", props.route.params);
     function computeSubTotal() {
         let subTotal = 0;
         props.route.params.cartItems.map((item) => {
@@ -17,9 +17,21 @@ export default function CartSummaryView({ ...props }) {
     }
 
     const subTotal = computeSubTotal();
-    const deliveryFees = 3;
-    const serviceFees = Math.round(subTotal * 0.05);
-    const totalAmount = subTotal + deliveryFees + serviceFees;
+
+    const [
+        currentOrderData, // eslint-disable-line no-unused-vars
+        setCurrentOrderData,
+    ] = React.useState(null);
+
+    const [
+        deliveryFees,
+        setDeliveryFees
+    ] = React.useState(0);
+
+    const [
+        servicePercentage,
+        setServicePercentage, // eslint-disable-line no-unused-vars
+    ] = React.useState(0.07);
 
     async function getUserID() {
         const userID = await getItemFromSecureStore("userID");
@@ -44,25 +56,37 @@ export default function CartSummaryView({ ...props }) {
         return orderItems;
     };
 
-    const sendOrderToBackend = async () => {
-        let formData = new FormData();
-        formData.append("date", props.route.params.originalDeliveryDate);
-        formData.append("time", props.route.params.deliveryTime + ":00");
-        formData.append("addressID", props.route.params.deliveryAddress.id);
-        formData.append("customerID", await getUserID());
-        formData.append("items", JSON.stringify(buildOrderItems()));
+    React.useEffect(() => {
+        const getOrderData = async () => {
+            console.log("Requesting backend to create a new order...");
 
-        const access = await getItemFromSecureStore("accessToken");
-        const result = await callBackEnd(
-            formData,
-            `${apiBaseUrl}:${port}/api/v1/customers-orders/`,
-            "POST",
-            access,
-            true,
-            null,
-        );
-        console.log("RESULT", result);
-    };
+            let formData = new FormData();
+            if (props.route.params.originalDeliveryDate !== undefined) {
+                formData.append("date", props.route.params.originalDeliveryDate);
+            }
+            if (props.route.params.deliveryTime !== undefined) {
+                formData.append("time", props.route.params.deliveryTime + ":00");
+            }
+            formData.append("addressID", props.route.params.addressID);
+            formData.append("customerID", await getUserID());
+            formData.append("items", JSON.stringify(buildOrderItems()));
+
+            const access = await getItemFromSecureStore("accessToken");
+            const result = await callBackEnd(
+                formData,
+                `${apiBaseUrl}:${port}/api/v1/customers-orders/`,
+                "POST",
+                access,
+                true,
+                null,
+            );
+            setCurrentOrderData(result.data);
+            setDeliveryFees(result.data.delivery_fees);
+            console.log("result: ", result.data);
+        };
+        getOrderData();
+    }, [
+    ]);
 
     return (
         <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -133,7 +157,7 @@ export default function CartSummaryView({ ...props }) {
                             </View>
                             <View style={{ flex: 1, alignItems: "flex-end" }}>
                                 <Text style={{ fontStyle: "italic", fontSize: 18 }}>
-                                    {serviceFees} {all_constants.currency_symbol}
+                                    {servicePercentage * subTotal} {all_constants.currency_symbol}
                                 </Text>
                             </View>
                         </View>
@@ -154,7 +178,8 @@ export default function CartSummaryView({ ...props }) {
                             </View>
                             <View style={{ flex: 1, alignItems: "flex-end" }}>
                                 <Text style={{ fontStyle: "italic", fontSize: 18 }}>
-                                    {totalAmount} {all_constants.currency_symbol}
+                                    {subTotal + servicePercentage * subTotal + deliveryFees}
+                                    {all_constants.currency_symbol}
                                 </Text>
                             </View>
                         </View>
@@ -234,9 +259,7 @@ export default function CartSummaryView({ ...props }) {
                                         fontSize: 18,
                                         textAlign: "right",
                                     }}
-                                    value={buildReadableAddress(
-                                        props.route.params.deliveryAddress,
-                                    )}
+                                    value={props.route.params.deliveryAddress}
                                     numberOfLines={5}
                                     multiline={true}
                                 />
@@ -264,7 +287,7 @@ export default function CartSummaryView({ ...props }) {
                         label_color={"white"}
                         button_width={all_constants.screen.width - 40}
                         onPress={() => {
-                            sendOrderToBackend();
+                            //sendOrderToBackend();
                             console.log("PRESSED");
                         }}
                     />

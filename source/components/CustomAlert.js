@@ -4,7 +4,7 @@ import { View } from "react-native";
 
 export default function CustomAlert({ ...props }) {
     return (
-        <View style={{ flex: 1 }}>
+        <View>
             <AwesomeAlert
                 show={props.show}
                 title={props.title}

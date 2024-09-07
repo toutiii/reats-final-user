@@ -8,7 +8,7 @@ import { callBackEnd } from "../api/callBackend";
 import { Dropdown } from "react-native-element-dropdown";
 import styles_dropdown_for_dishes_search from "../styles/styles-dropdown-for-dishes-search.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { RadioButton, TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 
 export default function SearchFilterModal(props) {
     const [
@@ -164,85 +164,9 @@ export default function SearchFilterModal(props) {
                                 />
                             </View>
                         </View>
-
-                        <View style={{ flex: 1 }}>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    borderBottomWidth: 1,
-                                    borderBottomColor: "tomato",
-                                }}
-                            >
-                                <Text style={{ fontSize: 18, fontStyle: "italic" }}>
-                                    {all_constants.search_modal.dish_delivery_mode}
-                                </Text>
-                            </View>
-
-                            <View
-                                style={{
-                                    flex: 3,
-                                }}
-                            >
-                                <View style={{ flex: 1, flexDirection: "row" }}>
-                                    <View style={{ flex: 1, justifyContent: "center" }}>
-                                        <Text style={{ fontSize: 18 }}>
-                                            {
-                                                all_constants.search_modal.radion_button.label
-                                                    .now_delivery_mode
-                                            }
-                                        </Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <RadioButton
-                                            color="tomato"
-                                            value="now"
-                                            status={props.checked === "now"
-                                                ? "checked"
-                                                : "unchecked"}
-                                            onPress={() => props.setChecked("now")}
-                                        />
-                                    </View>
-                                </View>
-
-                                <View style={{ flex: 1, flexDirection: "row" }}>
-                                    <View style={{ flex: 1, justifyContent: "center" }}>
-                                        <Text style={{ fontSize: 18 }}>
-                                            {
-                                                all_constants.search_modal.radion_button.label
-                                                    .schedule_delivery_mode
-                                            }
-                                        </Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <RadioButton
-                                            color="tomato"
-                                            value="scheduled"
-                                            status={
-                                                props.checked === "scheduled"
-                                                    ? "checked"
-                                                    : "unchecked"
-                                            }
-                                            onPress={() => props.setChecked("scheduled")}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                        </View>
                     </View>
-                    <View style={{ flex: 3 }}></View>
-                    <View style={{ flex: 3 }}>
+                    <View style={{ flex: 10 }}></View>
+                    <View style={{ flex: 5 }}>
                         <View style={{ flex: 1 }}>
                             <Button
                                 title={all_constants.search_modal.default_button_label}

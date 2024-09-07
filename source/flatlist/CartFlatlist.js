@@ -17,6 +17,7 @@ import {
     removeGlobalCookerID,
 } from "../helpers/toolbox.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CartFlatlist(props) {
     const [
@@ -71,6 +72,21 @@ export default function CartFlatlist(props) {
     ] = useState([
     ]);
 
+    const [
+        deliveryMode,
+        setDeliveryMode
+    ] = useState(null);
+
+    useEffect(() => {
+        const getDeliveryModeFromStorage = async () => {
+            const deliveryModeFromStorage =
+        await AsyncStorage.getItem("delivery_mode");
+            setDeliveryMode(JSON.parse(deliveryModeFromStorage));
+        };
+        getDeliveryModeFromStorage();
+    }, [
+    ]);
+
     async function getAllCart() {
         setData([
         ]);
@@ -94,6 +110,28 @@ export default function CartFlatlist(props) {
         } else {
             setIsAsyncStorageOperationOk(false);
         }
+    };
+
+    const getNextNavigationViewName = async () => {
+        if (
+            deliveryMode ===
+      all_constants.search.delivery_mode.original_scheduled_name
+        ) {
+            return "CartDeliveryInfosView";
+        }
+
+        if (deliveryMode === all_constants.search.delivery_mode.original_now_name) {
+            return "AsapDeliveryInfosView";
+        }
+
+        throw new Error(`Delivery mode ${deliveryMode} is unknown`);
+    };
+
+    const nagivateToNextView = async () => {
+        const nextViewName = await getNextNavigationViewName();
+        props.navigation.navigate(nextViewName, {
+            cartItems: data,
+        });
     };
 
     useFocusEffect(
@@ -305,11 +343,7 @@ export default function CartFlatlist(props) {
 
                         <View style={{ flex: 1, alignItems: "center" }}>
                             <TouchableHighlight
-                                onPress={() => {
-                                    props.navigation.navigate("CartDeliveryInfosView", {
-                                        cartItems: data,
-                                    });
-                                }}
+                                onPress={nagivateToNextView}
                                 underlayColor={all_constants.colors.inputBorderColor}
                             >
                                 <MaterialCommunityIcons

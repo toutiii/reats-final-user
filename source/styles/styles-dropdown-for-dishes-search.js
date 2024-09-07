@@ -12,6 +12,7 @@ let styles_dropdown_for_dishes_search = StyleSheet.create({
     },
     placeholderStyle: {
         fontSize: 16,
+        fontStyle: "italic",
     },
     selectedTextStyle: {
         fontSize: 16,
