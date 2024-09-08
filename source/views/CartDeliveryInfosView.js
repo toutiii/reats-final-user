@@ -56,6 +56,12 @@ export default function CartDeliveryInfosView({ ...props }) {
     React.useState(false);
 
     const [
+        showTooSoonOrderCustomAlert,
+        setShowTooSoonOrderCustomAlert
+    ] =
+    React.useState(false);
+
+    const [
         showNotEditableAddressAlert,
         setShowNotEditableAddressAlert
     ] =
@@ -112,9 +118,63 @@ export default function CartDeliveryInfosView({ ...props }) {
             : setDeliveryTime(`${hours}:${minutes}`);
     };
 
+    const isTimeInPast = (deliveryTime) => {
+        const currentDate = new Date();
+
+        const [
+            hours,
+            minutes
+        ] = deliveryTime.split(":").map(Number);
+
+        const providedTime = new Date();
+        providedTime.setHours(hours);
+        providedTime.setMinutes(minutes);
+        providedTime.setSeconds(0);
+        console.log("providedTime: ", providedTime);
+        console.log("currentDate: ", currentDate);
+        console.log("providedTime < currentDate: ", providedTime < currentDate);
+        return providedTime < currentDate;
+    };
+
+    const isTimeAtLeastOneHourInFuture = (deliveryTime) => {
+        const currentDate = new Date();
+
+        const currentDatePlusOneHour = new Date(
+            currentDate.getTime() + 60 * 60 * 1000,
+        );
+
+        const [
+            hours,
+            minutes
+        ] = deliveryTime.split(":").map(Number);
+
+        const providedTime = new Date();
+        providedTime.setHours(hours);
+        providedTime.setMinutes(minutes);
+        providedTime.setSeconds(0);
+        console.log("providedTime: ", providedTime);
+        console.log("currentDatePlusOneHour: ", currentDatePlusOneHour);
+        console.log(
+            "providedTime >= currentDatePlusOneHour: ",
+            providedTime >= currentDatePlusOneHour,
+        );
+
+        return providedTime >= currentDatePlusOneHour;
+    };
+
     const navigateToCartSummary = () => {
         if (deliveryDate.length === 0 || deliveryTime.length === 0) {
             setShowAlertMissingDeliveryInfos(true);
+            return;
+        }
+
+        if (isTimeInPast(deliveryTime)) {
+            setShowPastTimeCustomAlert(true);
+            return;
+        }
+
+        if (!isTimeAtLeastOneHourInFuture(deliveryTime)) {
+            setShowTooSoonOrderCustomAlert(true);
             return;
         }
 
@@ -148,6 +208,7 @@ export default function CartDeliveryInfosView({ ...props }) {
                     }}
                 />
             )}
+
             {showPastTimeCustomAlert && (
                 <CustomAlert
                     show={showPastTimeCustomAlert}
@@ -159,6 +220,19 @@ export default function CartDeliveryInfosView({ ...props }) {
                     }}
                 />
             )}
+
+            {showTooSoonOrderCustomAlert && (
+                <CustomAlert
+                    show={showTooSoonOrderCustomAlert}
+                    title={all_constants.messages.failed.title}
+                    message={all_constants.cart.delivery.too_soon}
+                    confirmButtonColor={"red"}
+                    onConfirmPressed={() => {
+                        setShowTooSoonOrderCustomAlert(false);
+                    }}
+                />
+            )}
+
             {showAlertMissingDeliveryInfos && (
                 <CustomAlert
                     show={showAlertMissingDeliveryInfos}
@@ -170,6 +244,7 @@ export default function CartDeliveryInfosView({ ...props }) {
                     }}
                 />
             )}
+
             {showNotEditableAddressAlert && (
                 <CustomAlert
                     show={showNotEditableAddressAlert}
@@ -184,6 +259,7 @@ export default function CartDeliveryInfosView({ ...props }) {
                     }}
                 />
             )}
+
             {showDateMode && (
                 <DateTimePicker
                     testID="datePicker"
@@ -195,6 +271,7 @@ export default function CartDeliveryInfosView({ ...props }) {
                     onChange={onChangeDate}
                 />
             )}
+
             {showTimeMode && (
                 <DateTimePicker
                     testID="timePicker"
@@ -206,6 +283,7 @@ export default function CartDeliveryInfosView({ ...props }) {
                     onChange={onChangeTime}
                 />
             )}
+
             <View
                 style={{
                     flex: 1,

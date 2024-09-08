@@ -162,6 +162,8 @@ let all_constants = {
         "L'heure de livraison ne peut pas être antérieure ou égale à l'heure actuelle.",
             no_delivery_address:
         "Aucune adresse de livraison trouvée, vous pouvez en renseigner une dans le menu principal > Mes Adresses",
+            too_soon:
+        "Une commande planifiée doit être passsée au plus tôt une heure à l'avance.",
         },
         button: {
             close: "FERMER",
