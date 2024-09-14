@@ -26,6 +26,11 @@ import CustomButton from "../components/CustomButton";
 import CustomAlert from "../components/CustomAlert";
 import { getGlobalCookerID } from "../helpers/toolbox.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+    getAllCartItems,
+    removeAllCartItems,
+    removeGlobalCookerID,
+} from "../helpers/toolbox.js";
 
 export default function SearchDishFlatList({ ...props }) {
     const [
@@ -108,8 +113,19 @@ export default function SearchDishFlatList({ ...props }) {
     React.useState(false);
 
     const [
+        showAlertUpdateDeliveryMode,
+        setShowAlertUpdateDeliveryMode
+    ] =
+    React.useState(false);
+
+    const [
         deliveryModeValue,
         setDeliveryModeValue
+    ] = React.useState(null);
+
+    const [
+        tempDeliveryMode,
+        setTempDeliveryMode
     ] = React.useState(null);
 
     const deliveryModeData = [
@@ -151,6 +167,8 @@ export default function SearchDishFlatList({ ...props }) {
             `${apiBaseUrl}:${port}/api/v1/customers-addresses/`,
             "GET",
             access,
+            false,
+            null,
         );
         console.log("result: ", result);
         let readableAddresses = [
@@ -208,6 +226,8 @@ export default function SearchDishFlatList({ ...props }) {
                         searchURL,
                         "GET",
                         access,
+                        false,
+                        null,
                     );
                     console.log(results);
                     setData(results.data);
@@ -282,6 +302,15 @@ export default function SearchDishFlatList({ ...props }) {
         }
     };
 
+    const updateDeliveryMode = async () => {
+        const result = await removeAllCartItems();
+        const resultCookerID = await removeGlobalCookerID();
+        console.log("Remove global cooker ID: ", resultCookerID);
+        console.log("Remove all items from cart: ", result);
+        setDeliveryModeValue(tempDeliveryMode);
+        addToStorage("delivery_mode", tempDeliveryMode);
+    };
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -308,6 +337,28 @@ export default function SearchDishFlatList({ ...props }) {
                                     confirmButtonColor="red"
                                     onConfirmPressed={() => {
                                         setShowAlertMissingAddress(false);
+                                    }}
+                                />
+                            )}
+
+                            {showAlertUpdateDeliveryMode && (
+                                <CustomAlert
+                                    show={showAlertUpdateDeliveryMode}
+                                    title={all_constants.search.alert.warning_title}
+                                    message={
+                                        all_constants.search.alert.delivery_mode_change_warning
+                                    }
+                                    confirmButtonColor="green"
+                                    cancelButtonColor="red"
+                                    cancelText={all_constants.search.alert.button.label.no}
+                                    confirmText={all_constants.search.alert.button.label.yes}
+                                    showCancelButton={true}
+                                    onConfirmPressed={() => {
+                                        setShowAlertUpdateDeliveryMode(false);
+                                        updateDeliveryMode();
+                                    }}
+                                    onCancelPressed={() => {
+                                        setShowAlertUpdateDeliveryMode(false);
                                     }}
                                 />
                             )}
@@ -419,9 +470,22 @@ export default function SearchDishFlatList({ ...props }) {
                                         all_constants.search.delivery_mode.delivery_mode_placeholder
                                     }
                                     value={deliveryModeValue}
-                                    onChange={(item) => {
-                                        setDeliveryModeValue(item.value);
-                                        addToStorage("delivery_mode", item.value);
+                                    onChange={async (item) => {
+                                        const results = await getAllCartItems();
+                                        console.log(
+                                            "results.data.length > 0: ",
+                                            results.data.length > 0,
+                                        );
+                                        if (
+                                            results.data.length > 0 &&
+                      deliveryModeValue !== item.value
+                                        ) {
+                                            setTempDeliveryMode(item.value);
+                                            setShowAlertUpdateDeliveryMode(true);
+                                        } else {
+                                            setDeliveryModeValue(item.value);
+                                            addToStorage("delivery_mode", item.value);
+                                        }
                                     }}
                                     renderLeftIcon={() => (
                                         <MaterialIcons

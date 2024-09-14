@@ -20,6 +20,14 @@ let all_constants = {
         "La commande chez plusieurs cuisiniers à la fois n'étant pas pris en charge, " +
         "la liste des résultats a été mise à jour pour vous proposer des plats préparés par" +
         "le même cuisinier.",
+            delivery_mode_change_warning:
+        "Le changement du mode de livraison entraînera la suppression de votre panier. Continuer ?",
+            button: {
+                label: {
+                    yes: "OUI",
+                    no: "NON",
+                },
+            },
         },
         placeholder: "Poulet Yassa",
         no_dishes_found: "Aucun résultat.",
