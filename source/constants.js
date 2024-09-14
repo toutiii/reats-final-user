@@ -22,6 +22,13 @@ let all_constants = {
         "le même cuisinier.",
             delivery_mode_change_warning:
         "Le changement du mode de livraison entraînera la suppression de votre panier. Continuer ?",
+            no_delivery_address_alert_message:
+        "Pour vous proposer des plats, cette application a besoin que vous renseigniez au moins une adresse de livraison. \n\n" +
+        "Appuyez sur OK pour ouvrir le menu principal. Vous pourrez ensuite le faire dans la section 'Mes adresses'.",
+            no_delivery_address_set:
+        "Attention aucune adresse de livraison ne semble avoir été configurée, appuyez ici.",
+            delivery_address_change_warning:
+        "Le changement de l'adresse de livraison entraînera la suppression de votre panier. Continuer ?",
             button: {
                 label: {
                     yes: "OUI",
@@ -168,8 +175,6 @@ let all_constants = {
         "Veuillez renseigner toutes les informations de livraison.",
             past_time:
         "L'heure de livraison ne peut pas être antérieure ou égale à l'heure actuelle.",
-            no_delivery_address:
-        "Aucune adresse de livraison trouvée, vous pouvez en renseigner une dans le menu principal > Mes Adresses",
             too_soon:
         "Une commande planifiée doit être passsée au plus tôt une heure à l'avance.",
         },
