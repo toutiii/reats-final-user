@@ -51,8 +51,28 @@ export default function OrdersFlatlist(props) {
             access,
         );
 
-        setData(result.data);
+        const itemsWithOrderInfo = result.data.flatMap((order) =>
+            order.items.map((item) => {
+                const isDish = !!item.dish;
+                const itemData = isDish
+                    ? item.dish
+                    : item.drink;
+
+                return {
+                    ...item,
+                    ...order, // Add global order info
+                    items: undefined, // Remove 'items' to prevent duplication
+                    order_id: order.id, // Rename order's 'id' to 'order_id'
+                    item_id: itemData.id, // Move item's 'id' to root level as 'id'
+                    isDish, // Flag to indicate if it's a dish or drink
+                    randomKey: Math.random(),
+                };
+            }),
+        );
+
         console.log(result.data);
+        console.log("\n\nitemsWithOrderInfo: ", itemsWithOrderInfo);
+        setData(itemsWithOrderInfo);
     }
 
     useEffect(() => {
@@ -82,6 +102,7 @@ export default function OrdersFlatlist(props) {
             >
                 <FlatList
                     data={data}
+                    keyExtractor={(item) => item.randomKey.toString()}
                     onRefresh={() => {
                         setIsFetchingData(true);
                     }}
@@ -136,9 +157,7 @@ export default function OrdersFlatlist(props) {
                                     itemPhoto={item.dish
                                         ? item.dish.photo
                                         : item.drink.photo}
-                                    isItemADrink={item.drink
-                                        ? true
-                                        : false}
+                                    isItemADrink={!item.isDish}
                                     itemOrderDate={item.created}
                                     itemStatus={item.status}
                                 />
