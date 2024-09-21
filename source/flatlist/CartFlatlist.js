@@ -18,8 +18,12 @@ import {
 } from "../helpers/toolbox.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { formatDateToFrench } from "../helpers/toolbox";
 
 export default function CartFlatlist(props) {
+    const cartDeliveryInfosView = "CartDeliveryInfosView";
+    const cartSummaryView = "CartSummaryView";
+
     const [
         showAlert,
         setShowAlert
@@ -77,13 +81,27 @@ export default function CartFlatlist(props) {
         setDeliveryMode
     ] = useState(null);
 
+    const [
+        deliveryAddress,
+        setDeliveryAddress
+    ] = React.useState(null);
+
+    const [
+        addressID,
+        setAddressID
+    ] = React.useState(null);
+
     useEffect(() => {
-        const getDeliveryModeFromStorage = async () => {
+        const getDataFromStorage = async () => {
             const deliveryModeFromStorage =
         await AsyncStorage.getItem("delivery_mode");
+            const address = await AsyncStorage.getItem("full_delivery_address");
+            const addressID = await AsyncStorage.getItem("address_id");
+            setDeliveryAddress(JSON.parse(address));
+            setAddressID(JSON.parse(addressID));
             setDeliveryMode(JSON.parse(deliveryModeFromStorage));
         };
-        getDeliveryModeFromStorage();
+        getDataFromStorage();
     }, [
     ]);
 
@@ -117,11 +135,11 @@ export default function CartFlatlist(props) {
             deliveryMode ===
       all_constants.search.delivery_mode.original_scheduled_name
         ) {
-            return "CartDeliveryInfosView";
+            return cartDeliveryInfosView;
         }
 
         if (deliveryMode === all_constants.search.delivery_mode.original_now_name) {
-            return "AsapDeliveryInfosView";
+            return cartSummaryView;
         }
 
         throw new Error(`Delivery mode ${deliveryMode} is unknown`);
@@ -129,9 +147,32 @@ export default function CartFlatlist(props) {
 
     const nagivateToNextView = async () => {
         const nextViewName = await getNextNavigationViewName();
-        props.navigation.navigate(nextViewName, {
-            cartItems: data,
-        });
+        console.log("Next view name: ", nextViewName);
+
+        const date = new Date(Date.now() + 45 * 60000);
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const timeString = `${hours}:${minutes}`;
+        console.log(timeString); // Output example: "17:45"
+
+        if (nextViewName === cartDeliveryInfosView) {
+            props.navigation.navigate(nextViewName, {
+                cartItems: data,
+                deliveryMode: deliveryMode,
+            });
+        } else if (nextViewName === cartSummaryView) {
+            props.navigation.navigate(nextViewName, {
+                deliveryDate: formatDateToFrench(new Date()),
+                originalDeliveryDate: new Date().toLocaleDateString("en-US"),
+                deliveryTime: timeString,
+                deliveryAddress: deliveryAddress,
+                addressID: addressID,
+                cartItems: data,
+                deliveryMode: deliveryMode,
+            });
+        } else {
+            console.error("Unknown view name: ", nextViewName);
+        }
     };
 
     useFocusEffect(

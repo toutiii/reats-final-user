@@ -360,7 +360,7 @@ export default function SearchDishFlatList({ ...props }) {
         console.log("Remove global cooker ID: ", resultCookerID);
         console.log("Remove all items from cart: ", result);
         setDeliveryModeValue(tempDeliveryMode);
-        addToStorage("delivery_mode", tempDeliveryMode);
+        await addToStorage("delivery_mode", tempDeliveryMode);
     };
 
     const updateDeliveryAddress = async () => {
@@ -369,8 +369,8 @@ export default function SearchDishFlatList({ ...props }) {
         console.log("Remove global cooker ID: ", resultCookerID);
         console.log("Remove all items from cart: ", result);
         setAddressValue(tempAddressValue);
-        addToStorage("address_id", tempAddressValue);
-        addToStorage("full_delivery_address", tempAddressLabel);
+        await addToStorage("address_id", tempAddressValue);
+        await addToStorage("full_delivery_address", tempAddressLabel);
     };
 
     return (
@@ -430,9 +430,9 @@ export default function SearchDishFlatList({ ...props }) {
                                     cancelText={all_constants.search.alert.button.label.no}
                                     confirmText={all_constants.search.alert.button.label.yes}
                                     showCancelButton={true}
-                                    onConfirmPressed={() => {
+                                    onConfirmPressed={async () => {
                                         setShowAlertUpdateDeliveryMode(false);
-                                        updateDeliveryMode();
+                                        await updateDeliveryMode();
                                     }}
                                     onCancelPressed={() => {
                                         setShowAlertUpdateDeliveryMode(false);
@@ -452,9 +452,9 @@ export default function SearchDishFlatList({ ...props }) {
                                     cancelText={all_constants.search.alert.button.label.no}
                                     confirmText={all_constants.search.alert.button.label.yes}
                                     showCancelButton={true}
-                                    onConfirmPressed={() => {
+                                    onConfirmPressed={async () => {
                                         setShowAlertUpdateDeliveryAddress(false);
-                                        updateDeliveryAddress();
+                                        await updateDeliveryAddress();
                                     }}
                                     onCancelPressed={() => {
                                         setShowAlertUpdateDeliveryAddress(false);
@@ -582,8 +582,8 @@ export default function SearchDishFlatList({ ...props }) {
                                                 setShowAlertUpdateDeliveryAddress(true);
                                             } else {
                                                 setAddressValue(item.value);
-                                                addToStorage("address_id", item.value);
-                                                addToStorage("full_delivery_address", item.label);
+                                                await addToStorage("address_id", item.value);
+                                                await addToStorage("full_delivery_address", item.label);
                                             }
                                         }}
                                         renderLeftIcon={() => (
@@ -633,7 +633,7 @@ export default function SearchDishFlatList({ ...props }) {
                                             setShowAlertUpdateDeliveryMode(true);
                                         } else {
                                             setDeliveryModeValue(item.value);
-                                            addToStorage("delivery_mode", item.value);
+                                            await addToStorage("delivery_mode", item.value);
                                         }
                                     }}
                                     renderLeftIcon={() => (

@@ -159,7 +159,7 @@ let all_constants = {
             delivery_fees: "Frais de livraison",
             delivery_infos: "Informations de livraison",
             delivery_date: "Date",
-            delivery_time: "Heure",
+            estimated_delivery_time: "Heure",
             delivery_address: "Adresse",
         },
         title: {

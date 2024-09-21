@@ -61,15 +61,20 @@ export default function CartSummaryView({ ...props }) {
             console.log("Requesting backend to create a new order...");
 
             let formData = new FormData();
-            if (props.route.params.originalDeliveryDate !== undefined) {
-                formData.append("date", props.route.params.originalDeliveryDate);
-            }
-            if (props.route.params.deliveryTime !== undefined) {
-                formData.append("time", props.route.params.deliveryTime + ":00");
-            }
             formData.append("addressID", props.route.params.addressID);
             formData.append("customerID", await getUserID());
             formData.append("items", JSON.stringify(buildOrderItems()));
+            if (
+                props.route.params.deliveryMode ===
+        all_constants.search.delivery_mode.original_scheduled_name
+            ) {
+                if (props.route.params.originalDeliveryDate !== undefined) {
+                    formData.append("date", props.route.params.originalDeliveryDate);
+                }
+                if (props.route.params.deliveryTime !== undefined) {
+                    formData.append("time", props.route.params.deliveryTime + ":00");
+                }
+            }
 
             const access = await getItemFromSecureStore("accessToken");
             const result = await callBackEnd(
@@ -228,7 +233,7 @@ export default function CartSummaryView({ ...props }) {
                         >
                             <View style={{ flex: 1 }}>
                                 <Text style={{ fontStyle: "italic", fontSize: 18 }}>
-                                    {all_constants.cart.summary.delivery_time}
+                                    {all_constants.cart.summary.estimated_delivery_time}
                                 </Text>
                             </View>
                             <View style={{ flex: 1, alignItems: "flex-end" }}>

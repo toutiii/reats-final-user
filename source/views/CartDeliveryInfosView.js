@@ -185,6 +185,7 @@ export default function CartDeliveryInfosView({ ...props }) {
             deliveryAddress: deliveryAddress,
             addressID: addressID,
             cartItems: props.route.params.cartItems,
+            deliveryMode: props.route.params.deliveryMode,
         });
     };
 
