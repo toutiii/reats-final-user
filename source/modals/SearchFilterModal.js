@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "react-native-modal";
-import { Button, Platform, Text, View } from "react-native";
+import { Button, Platform, ScrollView, Text, View } from "react-native";
 import all_constants from "../constants";
 import { getItemFromSecureStore } from "../helpers/common_helpers.js";
 import { apiBaseUrl, port } from "../env";
@@ -77,7 +77,13 @@ export default function SearchFilterModal(props) {
                 backdropTransitionOutTiming={600}
                 avoidKeyboard={true}
             >
-                <View style={{ flex: 1, backgroundColor: "white", padding: 10 }}>
+                <ScrollView
+                    contentContainerStyle={{
+                        flexGrow: 1,
+                        backgroundColor: "white",
+                        padding: "5%",
+                    }}
+                >
                     <View style={{ flex: 10 }}>
                         <View style={{ flex: 1 }}>
                             <View
@@ -169,6 +175,7 @@ export default function SearchFilterModal(props) {
                     <View style={{ flex: 5 }}>
                         <View style={{ flex: 1 }}>
                             <Button
+                                color="green"
                                 title={all_constants.search_modal.default_button_label}
                                 onPress={() => {
                                     props.onPressSearchButton();
@@ -186,8 +193,17 @@ export default function SearchFilterModal(props) {
                                 }}
                             />
                         </View>
+                        <View style={{ flex: 1 }}>
+                            <Button
+                                color="darkgrey"
+                                title={all_constants.search_modal.close_filter_button_label}
+                                onPress={() => {
+                                    props.onPressCloseButton();
+                                }}
+                            />
+                        </View>
                     </View>
-                </View>
+                </ScrollView>
             </Modal>
         </View>
     );

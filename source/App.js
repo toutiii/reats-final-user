@@ -6,6 +6,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import LoginForm from "./forms/LoginForm";
 import SignupForm from "./forms/SignupForm";
 import OTPView from "./views/OTPView";
+import { StripeProvider } from "@stripe/stripe-react-native";
+import { stripePublishableKey } from "./env";
 
 const Stack = createStackNavigator();
 
@@ -13,31 +15,37 @@ export default class App extends Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
-                <NavigationContainer>
-                    <Stack.Navigator initialRouteName="LoginForm">
-                        <Stack.Screen
-                            name="MainDrawerNavigator"
-                            component={MainDrawerNavigator}
-                            options={{ headerShown: false }}
-                        />
-                        <Stack.Screen
-                            name="OTPView"
-                            component={OTPView}
-                            options={{ headerShown: false }}
-                        />
-                        <Stack.Screen
-                            name="LoginForm"
-                            component={LoginForm}
-                            options={{ headerShown: false }}
-                        />
+                <StripeProvider
+                    publishableKey={stripePublishableKey}
+                    merchantIdentifier="merchant.identifier" // required for Apple Pay
+                    urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+                >
+                    <NavigationContainer>
+                        <Stack.Navigator initialRouteName="LoginForm">
+                            <Stack.Screen
+                                name="MainDrawerNavigator"
+                                component={MainDrawerNavigator}
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="OTPView"
+                                component={OTPView}
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="LoginForm"
+                                component={LoginForm}
+                                options={{ headerShown: false }}
+                            />
 
-                        <Stack.Screen
-                            name="SignupForm"
-                            component={SignupForm}
-                            options={{ headerShown: true, headerTitle: "" }}
-                        />
-                    </Stack.Navigator>
-                </NavigationContainer>
+                            <Stack.Screen
+                                name="SignupForm"
+                                component={SignupForm}
+                                options={{ headerShown: true, headerTitle: "" }}
+                            />
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </StripeProvider>
             </SafeAreaView>
         );
     }

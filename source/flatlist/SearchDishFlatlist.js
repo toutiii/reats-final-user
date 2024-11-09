@@ -27,6 +27,7 @@ import CustomAlert from "../components/CustomAlert";
 import { getGlobalCookerID } from "../helpers/toolbox.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
+    cleanCurrentOrderState,
     getAllCartItems,
     removeAllCartItems,
     removeGlobalCookerID,
@@ -35,7 +36,7 @@ import {
 export default function SearchDishFlatList({ ...props }) {
     const [
         cookerID,
-        setCookerID, // eslint-disable-line no-unused-vars
+        setCookerID
     ] = React.useState(null);
 
     async function getCookerIDFromAsyncStorage() {
@@ -187,31 +188,7 @@ export default function SearchDishFlatList({ ...props }) {
     };
 
     React.useEffect(() => {
-        async function emptyCartItems() {
-            const result = await removeAllCartItems();
-            console.log("Remove all items from cart: ", result);
-        }
-        async function emptyGlobalCookerID() {
-            const result = await removeGlobalCookerID();
-            console.log("Remove global cooker ID: ", result);
-        }
-        async function emptyDeliveryMode() {
-            const result = await AsyncStorage.removeItem("delivery_mode");
-            console.log("Remove delivery mode: ", result);
-        }
-        async function emptyAddressID() {
-            const result = await AsyncStorage.removeItem("address_id");
-            console.log("Remove address ID: ", result);
-        }
-        async function emptyFullDeliveryAddress() {
-            const result = await AsyncStorage.removeItem("full_delivery_address");
-            console.log("Remove full delivery address: ", result);
-        }
-        emptyCartItems();
-        emptyGlobalCookerID();
-        emptyDeliveryMode();
-        emptyAddressID();
-        emptyFullDeliveryAddress();
+        cleanCurrentOrderState();
     }, [
     ]);
 
@@ -313,6 +290,10 @@ export default function SearchDishFlatList({ ...props }) {
         setIsFetchingData(true);
     };
 
+    const onPressCloseButton = () => {
+        setSearchFilterModalVisible(false);
+    };
+
     const buildSearchUrl = () => {
         let queryParams = "";
         let baseURL = `${apiBaseUrl}:${port}/api/v1/customers-dishes/?`;
@@ -383,173 +364,231 @@ export default function SearchDishFlatList({ ...props }) {
             <Animated.View
                 style={{ flex: 1, opacity: fadeAnim, backgroundColor: "white" }}
             >
-                <FlatList
-                    ListHeaderComponent={
-                        <View
-                            style={{
-                                flex: 1,
-                                backgroundColor: "white",
-                            }}
-                        >
-                            {showEmptyAddressDataAlert && (
-                                <CustomAlert
-                                    show={showEmptyAddressDataAlert}
-                                    title={all_constants.search.alert.warning_title}
-                                    message={
-                                        all_constants.search.alert.no_delivery_address_alert_message
-                                    }
-                                    confirmButtonColor="green"
-                                    onConfirmPressed={() => {
-                                        setShowEmptyAddressDataAlert(false);
-                                        props.navigation.openDrawer();
-                                    }}
-                                />
-                            )}
+                {isFetchingData ? (
+                    <View
+                        style={{
+                            flex: 1,
+                            backgroundColor: "white",
+                            alignItems: "center",
+                            marginTop: "5%",
+                        }}
+                    >
+                        <ActivityIndicator size="large" color="tomato" />
+                    </View>
+                ) : (
+                    <FlatList
+                        ListHeaderComponent={
+                            <View
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: "white",
+                                }}
+                            >
+                                {showEmptyAddressDataAlert && (
+                                    <CustomAlert
+                                        show={showEmptyAddressDataAlert}
+                                        title={all_constants.search.alert.warning_title}
+                                        message={
+                                            all_constants.search.alert
+                                                .no_delivery_address_alert_message
+                                        }
+                                        confirmButtonColor="green"
+                                        onConfirmPressed={() => {
+                                            setShowEmptyAddressDataAlert(false);
+                                            props.navigation.openDrawer();
+                                        }}
+                                    />
+                                )}
 
-                            {showAlertMissingAddress && (
-                                <CustomAlert
-                                    show={showAlertMissingAddress}
-                                    title={all_constants.search.alert.title}
-                                    message={all_constants.search.alert.missing_address_message}
-                                    confirmButtonColor="red"
-                                    onConfirmPressed={() => {
-                                        setShowAlertMissingAddress(false);
-                                    }}
-                                />
-                            )}
+                                {showAlertMissingAddress && (
+                                    <CustomAlert
+                                        show={showAlertMissingAddress}
+                                        title={all_constants.search.alert.title}
+                                        message={all_constants.search.alert.missing_address_message}
+                                        confirmButtonColor="red"
+                                        onConfirmPressed={() => {
+                                            setShowAlertMissingAddress(false);
+                                        }}
+                                    />
+                                )}
 
-                            {showAlertUpdateDeliveryMode && (
-                                <CustomAlert
-                                    show={showAlertUpdateDeliveryMode}
-                                    title={all_constants.search.alert.warning_title}
-                                    message={
-                                        all_constants.search.alert.delivery_mode_change_warning
-                                    }
-                                    confirmButtonColor="green"
-                                    cancelButtonColor="red"
-                                    cancelText={all_constants.search.alert.button.label.no}
-                                    confirmText={all_constants.search.alert.button.label.yes}
-                                    showCancelButton={true}
-                                    onConfirmPressed={async () => {
-                                        setShowAlertUpdateDeliveryMode(false);
-                                        await updateDeliveryMode();
-                                    }}
-                                    onCancelPressed={() => {
-                                        setShowAlertUpdateDeliveryMode(false);
-                                    }}
-                                />
-                            )}
+                                {showAlertUpdateDeliveryMode && (
+                                    <CustomAlert
+                                        show={showAlertUpdateDeliveryMode}
+                                        title={all_constants.search.alert.warning_title}
+                                        message={
+                                            all_constants.search.alert.delivery_mode_change_warning
+                                        }
+                                        confirmButtonColor="green"
+                                        cancelButtonColor="red"
+                                        cancelText={all_constants.search.alert.button.label.no}
+                                        confirmText={all_constants.search.alert.button.label.yes}
+                                        showCancelButton={true}
+                                        onConfirmPressed={async () => {
+                                            setShowAlertUpdateDeliveryMode(false);
+                                            await updateDeliveryMode();
+                                        }}
+                                        onCancelPressed={() => {
+                                            setShowAlertUpdateDeliveryMode(false);
+                                        }}
+                                    />
+                                )}
 
-                            {showAlertUpdateDeliveryAddress && (
-                                <CustomAlert
-                                    show={showAlertUpdateDeliveryAddress}
-                                    title={all_constants.search.alert.warning_title}
-                                    message={
-                                        all_constants.search.alert.delivery_address_change_warning
-                                    }
-                                    confirmButtonColor="green"
-                                    cancelButtonColor="red"
-                                    cancelText={all_constants.search.alert.button.label.no}
-                                    confirmText={all_constants.search.alert.button.label.yes}
-                                    showCancelButton={true}
-                                    onConfirmPressed={async () => {
-                                        setShowAlertUpdateDeliveryAddress(false);
-                                        await updateDeliveryAddress();
-                                    }}
-                                    onCancelPressed={() => {
-                                        setShowAlertUpdateDeliveryAddress(false);
-                                        setRefreshKey((prevKey) => prevKey + 1);
-                                    }}
-                                />
-                            )}
+                                {showAlertUpdateDeliveryAddress && (
+                                    <CustomAlert
+                                        show={showAlertUpdateDeliveryAddress}
+                                        title={all_constants.search.alert.warning_title}
+                                        message={
+                                            all_constants.search.alert.delivery_address_change_warning
+                                        }
+                                        confirmButtonColor="green"
+                                        cancelButtonColor="red"
+                                        cancelText={all_constants.search.alert.button.label.no}
+                                        confirmText={all_constants.search.alert.button.label.yes}
+                                        showCancelButton={true}
+                                        onConfirmPressed={async () => {
+                                            setShowAlertUpdateDeliveryAddress(false);
+                                            await updateDeliveryAddress();
+                                        }}
+                                        onCancelPressed={() => {
+                                            setShowAlertUpdateDeliveryAddress(false);
+                                            setRefreshKey((prevKey) => prevKey + 1);
+                                        }}
+                                    />
+                                )}
 
-                            {showAlertMissingDeliveryMode && (
-                                <CustomAlert
-                                    show={showAlertMissingDeliveryMode}
-                                    title={all_constants.search.alert.title}
-                                    message={
-                                        all_constants.search.alert.missing_delivery_mode_message
-                                    }
-                                    confirmButtonColor="red"
-                                    onConfirmPressed={() => {
-                                        setShowAlertMissingDeliveryMode(false);
-                                    }}
-                                />
-                            )}
+                                {showAlertMissingDeliveryMode && (
+                                    <CustomAlert
+                                        show={showAlertMissingDeliveryMode}
+                                        title={all_constants.search.alert.title}
+                                        message={
+                                            all_constants.search.alert.missing_delivery_mode_message
+                                        }
+                                        confirmButtonColor="red"
+                                        onConfirmPressed={() => {
+                                            setShowAlertMissingDeliveryMode(false);
+                                        }}
+                                    />
+                                )}
 
-                            {isSearchFilterModalVisible && (
-                                <SearchFilterModal
-                                    isModalVisible={isSearchFilterModalVisible}
-                                    setDishNameFilter={setDishNameFilter}
-                                    dishNameFilter={dishNameFilter}
-                                    countryNameFilter={countryNameFilter}
-                                    setCountryNameFilter={setCountryNameFilter}
-                                    searchURL={searchURL}
-                                    onPressSearchButton={onPressSearchButton}
-                                    onPressClear={resetFilters}
-                                />
-                            )}
+                                {isSearchFilterModalVisible && (
+                                    <SearchFilterModal
+                                        isModalVisible={isSearchFilterModalVisible}
+                                        setDishNameFilter={setDishNameFilter}
+                                        dishNameFilter={dishNameFilter}
+                                        countryNameFilter={countryNameFilter}
+                                        setCountryNameFilter={setCountryNameFilter}
+                                        searchURL={searchURL}
+                                        onPressSearchButton={onPressSearchButton}
+                                        onPressCloseButton={onPressCloseButton}
+                                        onPressClear={resetFilters}
+                                    />
+                                )}
 
-                            {isFetchingData && (
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        backgroundColor: "white",
-                                        alignItems: "center",
-                                        marginTop: "5%",
-                                    }}
-                                >
-                                    <ActivityIndicator size="large" color="tomato" />
-                                </View>
-                            )}
+                                {addressesData.length === 0 && (
+                                    <TouchableHighlight
+                                        onPress={() => {
+                                            setShowEmptyAddressDataAlert(true);
+                                        }}
+                                        underlayColor="white"
+                                    >
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                                flexDirection: "row",
+                                                marginLeft: "4%",
+                                                marginRight: "4%",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <View style={{ flex: 1 }}>
+                                                <MaterialIcons
+                                                    style={styles_dropdown_for_dishes_search.icon}
+                                                    color="red"
+                                                    name="warning"
+                                                    size={35}
+                                                />
+                                            </View>
+                                            <View style={{ flex: 5 }}>
+                                                <Text
+                                                    style={{
+                                                        fontSize: 16,
+                                                        fontStyle: "italic",
+                                                        textAlign: "center",
+                                                    }}
+                                                >
+                                                    {all_constants.search.alert.no_delivery_address_set}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </TouchableHighlight>
+                                )}
 
-                            {addressesData.length === 0 && (
-                                <TouchableHighlight
-                                    onPress={() => {
-                                        setShowEmptyAddressDataAlert(true);
-                                    }}
-                                    underlayColor="white"
-                                >
+                                {addressesData.length > 0 && (
                                     <View
                                         style={{
                                             flex: 1,
-                                            flexDirection: "row",
-                                            marginLeft: "4%",
-                                            marginRight: "4%",
-                                            alignItems: "center",
                                         }}
                                     >
-                                        <View style={{ flex: 1 }}>
-                                            <MaterialIcons
-                                                style={styles_dropdown_for_dishes_search.icon}
-                                                color="red"
-                                                name="warning"
-                                                size={35}
-                                            />
-                                        </View>
-                                        <View style={{ flex: 5 }}>
-                                            <Text
-                                                style={{
-                                                    fontSize: 16,
-                                                    fontStyle: "italic",
-                                                    textAlign: "center",
-                                                }}
-                                            >
-                                                {all_constants.search.alert.no_delivery_address_set}
-                                            </Text>
-                                        </View>
+                                        <Dropdown
+                                            key={refreshKey} // Use the refreshKey to trigger re-render
+                                            style={styles_dropdown_for_dishes_search.dropdown}
+                                            placeholderStyle={
+                                                styles_dropdown_for_dishes_search.placeholderStyle
+                                            }
+                                            selectedTextStyle={
+                                                styles_dropdown_for_dishes_search.selectedTextStyle
+                                            }
+                                            inputSearchStyle={
+                                                styles_dropdown_for_dishes_search.inputSearchStyle
+                                            }
+                                            iconStyle={styles_dropdown_for_dishes_search.iconStyle}
+                                            data={addressesData}
+                                            search
+                                            maxHeight={300}
+                                            labelField="label"
+                                            valueField="value"
+                                            placeholder={all_constants.search.address.placeholder}
+                                            searchPlaceholder={
+                                                all_constants.search.address.search_placeholder
+                                            }
+                                            value={addressValue}
+                                            onChange={async (item) => {
+                                                const cartResults = await getAllCartItems();
+                                                if (
+                                                    cartResults.data.length > 0 &&
+                          addressValue !== item.value
+                                                ) {
+                                                    setTempAddressValue(item.value);
+                                                    setTempAddressLabel(item.label);
+                                                    setShowAlertUpdateDeliveryAddress(true);
+                                                } else {
+                                                    setAddressValue(item.value);
+                                                    await addToStorage("address_id", item.value);
+                                                    await addToStorage(
+                                                        "full_delivery_address",
+                                                        item.label,
+                                                    );
+                                                }
+                                            }}
+                                            renderLeftIcon={() => (
+                                                <MaterialCommunityIcons
+                                                    style={styles_dropdown_for_dishes_search.icon}
+                                                    color="black"
+                                                    name="google-maps"
+                                                    size={20}
+                                                />
+                                            )}
+                                        />
                                     </View>
-                                </TouchableHighlight>
-                            )}
+                                )}
 
-                            {addressesData.length > 0 && (
                                 <View
                                     style={{
                                         flex: 1,
                                     }}
                                 >
                                     <Dropdown
-                                        key={refreshKey} // Use the refreshKey to trigger re-render
                                         style={styles_dropdown_for_dishes_search.dropdown}
                                         placeholderStyle={
                                             styles_dropdown_for_dishes_search.placeholderStyle
@@ -561,198 +600,146 @@ export default function SearchDishFlatList({ ...props }) {
                                             styles_dropdown_for_dishes_search.inputSearchStyle
                                         }
                                         iconStyle={styles_dropdown_for_dishes_search.iconStyle}
-                                        data={addressesData}
-                                        search
+                                        data={deliveryModeData}
                                         maxHeight={300}
                                         labelField="label"
                                         valueField="value"
-                                        placeholder={all_constants.search.address.placeholder}
-                                        searchPlaceholder={
-                                            all_constants.search.address.search_placeholder
+                                        placeholder={
+                                            all_constants.search.delivery_mode
+                                                .delivery_mode_placeholder
                                         }
-                                        value={addressValue}
+                                        value={deliveryModeValue}
                                         onChange={async (item) => {
                                             const cartResults = await getAllCartItems();
                                             if (
                                                 cartResults.data.length > 0 &&
-                        addressValue !== item.value
+                        deliveryModeValue !== item.value
                                             ) {
-                                                setTempAddressValue(item.value);
-                                                setTempAddressLabel(item.label);
-                                                setShowAlertUpdateDeliveryAddress(true);
+                                                setTempDeliveryMode(item.value);
+                                                setShowAlertUpdateDeliveryMode(true);
                                             } else {
-                                                setAddressValue(item.value);
-                                                await addToStorage("address_id", item.value);
-                                                await addToStorage("full_delivery_address", item.label);
+                                                setDeliveryModeValue(item.value);
+                                                await addToStorage("delivery_mode", item.value);
                                             }
                                         }}
                                         renderLeftIcon={() => (
-                                            <MaterialCommunityIcons
+                                            <MaterialIcons
                                                 style={styles_dropdown_for_dishes_search.icon}
                                                 color="black"
-                                                name="google-maps"
+                                                name="delivery-dining"
                                                 size={20}
                                             />
                                         )}
                                     />
                                 </View>
-                            )}
 
-                            <View
-                                style={{
-                                    flex: 1,
-                                }}
-                            >
-                                <Dropdown
-                                    style={styles_dropdown_for_dishes_search.dropdown}
-                                    placeholderStyle={
-                                        styles_dropdown_for_dishes_search.placeholderStyle
-                                    }
-                                    selectedTextStyle={
-                                        styles_dropdown_for_dishes_search.selectedTextStyle
-                                    }
-                                    inputSearchStyle={
-                                        styles_dropdown_for_dishes_search.inputSearchStyle
-                                    }
-                                    iconStyle={styles_dropdown_for_dishes_search.iconStyle}
-                                    data={deliveryModeData}
-                                    maxHeight={300}
-                                    labelField="label"
-                                    valueField="value"
-                                    placeholder={
-                                        all_constants.search.delivery_mode.delivery_mode_placeholder
-                                    }
-                                    value={deliveryModeValue}
-                                    onChange={async (item) => {
-                                        const cartResults = await getAllCartItems();
-                                        if (
-                                            cartResults.data.length > 0 &&
-                      deliveryModeValue !== item.value
-                                        ) {
-                                            setTempDeliveryMode(item.value);
-                                            setShowAlertUpdateDeliveryMode(true);
-                                        } else {
-                                            setDeliveryModeValue(item.value);
-                                            await addToStorage("delivery_mode", item.value);
-                                        }
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: "row",
+                                        backgroundColor: "white",
+                                        marginLeft: "2%",
+                                        marginRight: "2%",
+                                        marginTop: "2%",
+                                        alignItems: "center",
                                     }}
-                                    renderLeftIcon={() => (
-                                        <MaterialIcons
-                                            style={styles_dropdown_for_dishes_search.icon}
-                                            color="black"
-                                            name="delivery-dining"
-                                            size={20}
+                                >
+                                    <View style={{ flex: 4 }}>
+                                        <CustomButton
+                                            label={all_constants.search.button.label.search_dishes}
+                                            backgroundColor="tomato"
+                                            height={50}
+                                            border_width={3}
+                                            border_radius={30}
+                                            font_size={17}
+                                            button_width="100%"
+                                            label_color="white"
+                                            onPress={onPressSearchButton}
                                         />
-                                    )}
-                                />
-                            </View>
-
-                            <View
-                                style={{
-                                    flex: 1,
-                                    flexDirection: "row",
-                                    backgroundColor: "white",
-                                    marginLeft: "2%",
-                                    marginRight: "2%",
-                                    marginTop: "2%",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <View style={{ flex: 4 }}>
-                                    <CustomButton
-                                        label={all_constants.search.button.label.search_dishes}
-                                        backgroundColor="tomato"
-                                        height={50}
-                                        border_width={3}
-                                        border_radius={30}
-                                        font_size={17}
-                                        button_width="100%"
-                                        label_color="white"
-                                        onPress={onPressSearchButton}
-                                    />
-                                </View>
-                                {addressValue !== null && (
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            alignItems: "center",
-                                        }}
-                                    >
-                                        <TouchableRipple
-                                            onPress={toggleSearchFilterModal}
-                                            rippleColor="rgba(0, 0, 0, .32)"
-                                        >
-                                            <Image
-                                                source={require("../images/filtre.png")}
-                                                style={{ height: 30, width: 30 }}
-                                            />
-                                        </TouchableRipple>
                                     </View>
-                                )}
+                                    {addressValue !== null && (
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <TouchableRipple
+                                                onPress={toggleSearchFilterModal}
+                                                rippleColor="rgba(0, 0, 0, .32)"
+                                            >
+                                                <Image
+                                                    source={require("../images/filtre.png")}
+                                                    style={{ height: 30, width: 30 }}
+                                                />
+                                            </TouchableRipple>
+                                        </View>
+                                    )}
+                                </View>
+                                <View
+                                    style={{
+                                        marginTop: "5%",
+                                        marginLeft: "5%",
+                                        marginRight: "5%",
+                                        borderBottomWidth: 1,
+                                        borderBottomColor: "tomato",
+                                    }}
+                                ></View>
                             </View>
+                        }
+                        data={data}
+                        ItemSeparatorComponent={
                             <View
                                 style={{
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    backgroundColor: "#C8C8C8",
+                                    height: 2.5,
+                                    marginLeft: "10%",
+                                    marginRight: "10%",
+                                }}
+                            />
+                        }
+                        ListEmptyComponent={
+                            <View
+                                style={{
+                                    alignItems: "center",
                                     marginTop: "5%",
-                                    marginLeft: "5%",
-                                    marginRight: "5%",
-                                    borderBottomWidth: 1,
-                                    borderBottomColor: "tomato",
                                 }}
-                            ></View>
-                        </View>
-                    }
-                    data={data}
-                    ItemSeparatorComponent={
-                        <View
-                            style={{
-                                justifyContent: "center",
-                                alignItems: "center",
-                                backgroundColor: "#C8C8C8",
-                                height: 2.5,
-                                marginLeft: "10%",
-                                marginRight: "10%",
-                            }}
-                        />
-                    }
-                    ListEmptyComponent={
-                        <View
-                            style={{
-                                alignItems: "center",
-                                marginTop: "5%",
-                            }}
-                        >
-                            <Text style={{ fontSize: 20 }}>
-                                {oneSearchHasBeenRun
-                                    ? all_constants.search.no_dishes_found
-                                    : ""}
-                            </Text>
-                        </View>
-                    }
-                    renderItem={({ item }) => (
-                        <View style={styles_order.order_button_container}>
-                            <TouchableHighlight
-                                onPress={() => {
-                                    props.navigation.navigate("SearchItemDetailView", {
-                                        item: item,
-                                    });
-                                }}
-                                style={{ flex: 1 }}
-                                underlayColor={all_constants.colors.inputBorderColor}
                             >
-                                <Item
-                                    key={item.id}
-                                    photo={item.photo}
-                                    name={item.name}
-                                    rating={item.rating
-                                        ? item.rating
-                                        : "-/-"}
-                                    price={item.price + all_constants.currency_symbol}
-                                    onPress={item.onPress}
-                                />
-                            </TouchableHighlight>
-                        </View>
-                    )}
-                />
+                                <Text style={{ fontSize: 20 }}>
+                                    {oneSearchHasBeenRun
+                                        ? all_constants.search.no_dishes_found
+                                        : ""}
+                                </Text>
+                            </View>
+                        }
+                        renderItem={({ item }) => (
+                            <View style={styles_order.order_button_container}>
+                                <TouchableHighlight
+                                    onPress={() => {
+                                        props.navigation.navigate("SearchItemDetailView", {
+                                            item: item,
+                                        });
+                                    }}
+                                    style={{ flex: 1 }}
+                                    underlayColor={all_constants.colors.inputBorderColor}
+                                >
+                                    <Item
+                                        key={item.id}
+                                        photo={item.photo}
+                                        name={item.name}
+                                        rating={item.rating
+                                            ? item.rating
+                                            : "-/-"}
+                                        price={item.price + all_constants.currency_symbol}
+                                        onPress={item.onPress}
+                                    />
+                                </TouchableHighlight>
+                            </View>
+                        )}
+                    />
+                )}
             </Animated.View>
         </KeyboardAvoidingView>
     );

@@ -2,6 +2,7 @@
 import { Dimensions } from "react-native";
 
 let all_constants = {
+    merchantDisplayName: "Reats.",
     home: {
         news_feed_title: {
             new: "Nouveautés",
@@ -159,7 +160,7 @@ let all_constants = {
             delivery_fees: "Frais de livraison",
             delivery_infos: "Informations de livraison",
             delivery_date: "Date",
-            estimated_delivery_time: "Heure",
+            estimated_delivery_time: "Heure estimée de livraison",
             delivery_address: "Adresse",
         },
         title: {
@@ -183,6 +184,12 @@ let all_constants = {
         },
         asap: {
             title: "Livraison immédiate",
+        },
+        payment: {
+            success_title: "Paiement réussi",
+            success_message:
+        "Vous recevrez une notification lorsque votre commande sera acceptée par le cuisinier. \n\n" +
+        "Notez que dans le cas où le cuisinier décline la commande, vous serez intégralement remboursé.",
         },
     },
 
@@ -410,6 +417,7 @@ let all_constants = {
         default_button_label: "OK",
         search_button_label: "Filtrer",
         clear_filter_button_label: "Réinitialiser",
+        close_filter_button_label: "Fermer",
         start_date: "Date de début",
         end_date: "Date de fin",
         cancel: "Annuler",

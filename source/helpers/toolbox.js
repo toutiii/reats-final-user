@@ -72,6 +72,18 @@ export async function removeGlobalCookerID() {
     }
 }
 
+export async function removeGlobalOrderID() {
+    try {
+        const objectKey = "orderID";
+        console.log("Removing global order ID with key: ", objectKey);
+        await AsyncStorage.removeItem(objectKey);
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}
+
 export async function getAdditionalItemsKeys(ItemID) {
     const objectKey = `reats_cart_item_${ItemID}`;
     let objectToRemove = JSON.parse(await AsyncStorage.getItem(objectKey));
@@ -210,4 +222,38 @@ export function buildReadableAddress(address) {
 
     readableAddress = readableAddress.replace("null ", "");
     return readableAddress;
+}
+
+async function emptyCartItems() {
+    const result = await removeAllCartItems();
+    console.log("Remove all items from cart: ", result);
+}
+async function emptyGlobalCookerID() {
+    const result = await removeGlobalCookerID();
+    console.log("Remove global cooker ID: ", result);
+}
+async function emptyDeliveryMode() {
+    const result = await AsyncStorage.removeItem("delivery_mode");
+    console.log("Remove delivery mode: ", result);
+}
+async function emptyAddressID() {
+    const result = await AsyncStorage.removeItem("address_id");
+    console.log("Remove address ID: ", result);
+}
+async function emptyFullDeliveryAddress() {
+    const result = await AsyncStorage.removeItem("full_delivery_address");
+    console.log("Remove full delivery address: ", result);
+}
+async function emptyGlobalOrderID() {
+    const result = await removeGlobalOrderID();
+    console.log("Remove global order ID: ", result);
+}
+
+export async function cleanCurrentOrderState() {
+    emptyCartItems();
+    emptyGlobalCookerID();
+    emptyDeliveryMode();
+    emptyAddressID();
+    emptyFullDeliveryAddress();
+    emptyGlobalOrderID();
 }
