@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import all_constants from "../constants";
 import OrdersTopTab from "../toptabs/OrdersToptab";
-import OrderDetailView from "../views/OrderDetailView";
+import OrderView from "../components/OrderView";
 
 const Stack = createStackNavigator();
 
@@ -25,7 +25,7 @@ export default class OrdersStack extends Component {
                 />
                 <Stack.Screen
                     name="OrderDetailView"
-                    component={OrderDetailView}
+                    component={OrderView}
                     options={{
                         headerShown: true,
                         title:

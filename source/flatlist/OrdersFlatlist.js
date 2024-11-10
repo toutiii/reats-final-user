@@ -1,35 +1,37 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import {
+    ActivityIndicator,
     Animated,
     FlatList,
     Text,
     TouchableHighlight,
     View,
 } from "react-native";
+import styles_order from "../styles/styles-order.js";
 import all_constants from "../constants";
-import OrderFlatlistItem from "../components/OrderFlatlistItem";
-import HorizontalLine from "../components/HorizontalLine";
+import Order from "../components/Order";
 import { getItemFromSecureStore } from "../helpers/common_helpers";
 import { apiBaseUrl, port } from "../env";
 import { callBackEnd } from "../api/callBackend";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function OrdersFlatlist(props) {
-    const fadeAnim = useRef(new Animated.Value(1)).current;
+    const fadeAnim = React.useRef(new Animated.Value(1)).current;
     const queryFilter = props.route.params.filter;
     const [
         isFetchingData,
         setIsFetchingData
-    ] = useState(true);
+    ] = React.useState(true);
     const [
         data,
         setData
-    ] = useState([
+    ] = React.useState([
     ]);
 
     const fadeIn = () => {
         Animated.timing(fadeAnim, {
             toValue: 1,
-            duration: 200,
+            duration: 400,
             useNativeDriver: true,
         }).start();
     };
@@ -37,7 +39,7 @@ export default function OrdersFlatlist(props) {
     const fadeOut = () => {
         Animated.timing(fadeAnim, {
             toValue: 0.2,
-            duration: 200,
+            duration: 400,
             useNativeDriver: true,
         }).start();
     };
@@ -51,31 +53,11 @@ export default function OrdersFlatlist(props) {
             access,
         );
 
-        const itemsWithOrderInfo = result.data.flatMap((order) =>
-            order.items.map((item) => {
-                const isDish = !!item.dish;
-                const itemData = isDish
-                    ? item.dish
-                    : item.drink;
-
-                return {
-                    ...item,
-                    ...order, // Add global order info
-                    items: undefined, // Remove 'items' to prevent duplication
-                    order_id: order.id, // Rename order's 'id' to 'order_id'
-                    item_id: itemData.id, // Move item's 'id' to root level as 'id'
-                    isDish, // Flag to indicate if it's a dish or drink
-                    randomKey: Math.random(),
-                };
-            }),
-        );
-
-        console.log(result.data);
-        console.log("\n\nitemsWithOrderInfo: ", itemsWithOrderInfo);
-        setData(itemsWithOrderInfo);
+        setData(result.data);
+        console.log("result.data :", result.data);
     }
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (isFetchingData) {
             fadeOut();
             fetchDataFromBackend();
@@ -86,13 +68,20 @@ export default function OrdersFlatlist(props) {
         isFetchingData
     ]);
 
+    useFocusEffect(
+        React.useCallback(() => {
+            setIsFetchingData(true);
+            fadeOut();
+            fetchDataFromBackend();
+            setIsFetchingData(false);
+            fadeIn();
+        }, [
+        ]),
+    );
+
     return (
         <Animated.View
-            style={{
-                flex: 1,
-                backgroundColor: "white",
-                opacity: fadeAnim,
-            }}
+            style={{ flex: 1, opacity: fadeAnim, backgroundColor: "white" }}
         >
             <View
                 style={{
@@ -100,71 +89,57 @@ export default function OrdersFlatlist(props) {
                     backgroundColor: "white",
                 }}
             >
-                <FlatList
-                    data={data}
-                    keyExtractor={(item) => item.randomKey.toString()}
-                    onRefresh={() => {
-                        setIsFetchingData(true);
-                    }}
-                    refreshing={isFetchingData}
-                    ItemSeparatorComponent={
-                        <HorizontalLine
-                            width={"80%"}
-                            line_color={"tomato"}
-                            margin_left={"10%"}
+                {isFetchingData
+                    ? (
+                        <ActivityIndicator size="large" color="tomato" />
+                    )
+                    : (
+                        <FlatList
+                            data={data}
+                            onRefresh={() => {
+                                setIsFetchingData(true);
+                            }}
+                            refreshing={isFetchingData}
+                            ListEmptyComponent={
+                                <View
+                                    style={{
+                                        alignItems: "center",
+                                        marginTop: "5%",
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 20 }}>
+                                        {
+                                            all_constants.drawercontent.drawer_item.orders_history
+                                                .no_results
+                                        }
+                                    </Text>
+                                </View>
+                            }
+                            renderItem={({ item }) => (
+                                <View style={styles_order.order_button_container}>
+                                    <TouchableHighlight
+                                        onPress={() => {
+                                            props.navigation.navigate("OrderDetailView", {
+                                                item: item,
+                                            });
+                                        }}
+                                        style={{ flex: 1 }}
+                                        underlayColor={all_constants.colors.inputBorderColor}
+                                    >
+                                        <Order
+                                            total_amount={item.total_amount}
+                                            order_number={item.id}
+                                            order_status={item.status}
+                                            order_date={item.created}
+                                            order_processing_date={item.processing_date}
+                                            order_final_state_date={item.modified}
+                                            dishes_number={item.items.length}
+                                        ></Order>
+                                    </TouchableHighlight>
+                                </View>
+                            )}
                         />
-                    }
-                    ListEmptyComponent={
-                        <View
-                            style={{
-                                marginTop: "5%",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Text style={{ fontSize: 18 }}>
-                                {all_constants.pending_orders_view.no_pending_orders}
-                            </Text>
-                        </View>
-                    }
-                    renderItem={({ item }) => (
-                        <View
-                            style={{
-                                alignItems: "center",
-                                margin: "4%",
-                            }}
-                        >
-                            <TouchableHighlight
-                                onPress={() => {
-                                    props.navigation.navigate("OrderDetailView", {
-                                        item: item,
-                                    });
-                                }}
-                                style={{ flex: 1, alignItems: "center", width: "90%" }}
-                                underlayColor={all_constants.colors.inputBorderColor}
-                            >
-                                <OrderFlatlistItem
-                                    itemName={item.dish
-                                        ? item.dish.name
-                                        : item.drink.name}
-                                    itemQuantity={
-                                        item.dish
-                                            ? item.dish_quantity
-                                            : item.drink_quantity
-                                    }
-                                    itemPrice={item.dish
-                                        ? item.dish.price
-                                        : item.drink.price}
-                                    itemPhoto={item.dish
-                                        ? item.dish.photo
-                                        : item.drink.photo}
-                                    isItemADrink={!item.isDish}
-                                    itemOrderDate={item.created}
-                                    itemStatus={item.status}
-                                />
-                            </TouchableHighlight>
-                        </View>
                     )}
-                />
             </View>
         </Animated.View>
     );

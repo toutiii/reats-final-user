@@ -18,7 +18,7 @@ export default function OrdersTopTab() {
                     title: all_constants.pending_orders_view.title.pending,
                     tabBarIcon: () => (
                         <MaterialCommunityIcons
-                            name="timer-outline"
+                            name="timer-sand"
                             size={24}
                             color="orange"
                         />

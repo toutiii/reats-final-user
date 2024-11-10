@@ -108,8 +108,28 @@ let all_constants = {
         },
         title: {
             pending: "En attente",
-            processing: "En cours de préparation",
+            processing: "Acceptée(s",
             completed: "Préparation terminée",
+        },
+        cancel: {
+            title: "ANNULER LA COMMANDE ?",
+            pending_message:
+        "Attention cette action est définitive.\n\n" +
+        "Vous serez remboursé uniquement du montant du panier ainsi que des frais de livraison.",
+            message:
+        "Attention cette action est définitive.\n\n" +
+        "Vous pouvez annuler cette commande, mais celle-ci ayant déjà été acceptée par le cuisinier, vous ne serez pas remboursé.",
+            success: {
+                title: "COMMANDE ANNULÉE",
+                message:
+          "Votre commande a bien été annulée. \n\n" +
+          "Si votre commande était éligible à un remboursement, celui-ci vous parviendra d'ici quelques jours.",
+            },
+            failure: {
+                title: "ÉCHEC",
+                message:
+          "Impossible d'annuler la commande, veuiillez réessayer plus tard.",
+            },
         },
     },
     cart: {
@@ -189,7 +209,7 @@ let all_constants = {
             success_title: "Paiement réussi",
             success_message:
         "Vous recevrez une notification lorsque votre commande sera acceptée par le cuisinier. \n\n" +
-        "Notez que dans le cas où le cuisinier décline la commande, vous serez intégralement remboursé.",
+        "Vous pouvez annuler cette commande, mais selon son statut il est possible que vous ne soyez pas remboursé.",
         },
     },
 
@@ -245,14 +265,18 @@ let all_constants = {
                     canceled: "Annulée",
                     delivered: "Livrée",
                     pending: "En attente de prise en charge",
-                    approved: "Acceptée",
-                    cancelled_by_customer: "Vous avez annulé cette commande",
-                    cancelled_by_cooker: "Le cuisinier a annulé cette commande",
+                    processed: "Acceptée",
+                    cancelled_by_customer: "Annulée par le client ",
+                    cancelled_by_cooker: "Annulée par le cuisinier ",
+                    completed: "Prête pour livraison",
                 },
                 original_status: {
                     cancelled_by_customer: "cancelled_by_customer",
                     cancelled_by_cooker: "cancelled_by_cooker",
                     delivered: "delivered",
+                    pending: "pending",
+                    processed: "processing",
+                    completed: "completed",
                 },
             },
         },
@@ -339,6 +363,8 @@ let all_constants = {
         signup: "CRÉER UN COMPTE",
         send: "ENVOYER",
         send_again: "JE N'AI PAS REÇU DE CODE",
+        understood: "J'AI COMPRIS",
+        quit: "QUITTER",
         errors: {
             title: "Erreur",
         },

@@ -4,7 +4,6 @@ import { Divider } from "react-native-paper";
 import all_constants from "../constants";
 import stylesOrder from "../styles/styles-order";
 import {
-    AntDesign,
     FontAwesome,
     MaterialIcons,
     MaterialCommunityIcons,
@@ -22,12 +21,6 @@ export default function Order({ ...props }) {
                 <Text
                     style={{
                         fontSize: 20,
-                        color:
-              props.order_status ===
-              all_constants.drawercontent.drawer_item.orders_history
-                  .original_status.delivered
-                  ? "green"
-                  : "red",
                     }}
                 >
                     {all_constants.drawercontent.drawer_item.orders_history.infos.number}{" "}
@@ -49,13 +42,32 @@ export default function Order({ ...props }) {
                         paddingLeft: "5%",
                     }}
                 >
+                    <View style={stylesOrder.row_element}>
+                        <View style={stylesOrder.icon_element}>
+                            <MaterialIcons
+                                name="shopping-cart"
+                                size={iconSize}
+                                color="black"
+                            />
+                        </View>
+                        <View style={stylesOrder.order_status_text_style}>
+                            <Text style={stylesOrder.order_text}>
+                                {
+                                    all_constants.drawercontent.drawer_item.orders_history.status
+                                        .ordered
+                                }{" "}
+                                {moment(props.order_date).format("dddd DD MMM à HH[h]mm")}
+                            </Text>
+                        </View>
+                    </View>
+
                     {props.order_status ===
             all_constants.drawercontent.drawer_item.orders_history
-                .original_status.delivered && (
+                .original_status.pending && (
                         <View style={stylesOrder.row_element}>
                             <View style={stylesOrder.icon_element}>
-                                <MaterialIcons
-                                    name="shopping-cart"
+                                <MaterialCommunityIcons
+                                    name="timer-sand"
                                     size={iconSize}
                                     color="black"
                                 />
@@ -64,9 +76,48 @@ export default function Order({ ...props }) {
                                 <Text style={stylesOrder.order_text}>
                                     {
                                         all_constants.drawercontent.drawer_item.orders_history
-                                            .status.ordered
+                                            .status.pending
+                                    }
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+
+                    {props.order_status ===
+            all_constants.drawercontent.drawer_item.orders_history
+                .original_status.processed && (
+                        <View style={stylesOrder.row_element}>
+                            <View style={stylesOrder.icon_element}>
+                                <MaterialCommunityIcons
+                                    name="food-turkey"
+                                    size={iconSize}
+                                    color="black"
+                                />
+                            </View>
+                            <View style={stylesOrder.order_status_text_style}>
+                                <Text style={stylesOrder.order_text}>
+                                    {
+                                        all_constants.drawercontent.drawer_item.orders_history
+                                            .status.processed
                                     }{" "}
-                                    {moment(props.order_date).format("dddd DD MMM à HH[h]mm")}
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+
+                    {props.order_status ===
+            all_constants.drawercontent.drawer_item.orders_history
+                .original_status.completed && (
+                        <View style={stylesOrder.row_element}>
+                            <View style={stylesOrder.icon_element}>
+                                <MaterialIcons name="done" size={24} color="green" />
+                            </View>
+                            <View style={stylesOrder.order_status_text_style}>
+                                <Text style={stylesOrder.order_text}>
+                                    {
+                                        all_constants.drawercontent.drawer_item.orders_history
+                                            .status.completed
+                                    }
                                 </Text>
                             </View>
                         </View>
@@ -84,10 +135,7 @@ export default function Order({ ...props }) {
                                     {
                                         all_constants.drawercontent.drawer_item.orders_history
                                             .status.cancelled_by_cooker
-                                    }{" "}
-                                    {moment(props.order_final_state_date).format(
-                                        "dddd DD MMM à HH[h]mm",
-                                    )}
+                                    }
                                 </Text>
                             </View>
                         </View>
@@ -105,10 +153,7 @@ export default function Order({ ...props }) {
                                     {
                                         all_constants.drawercontent.drawer_item.orders_history
                                             .status.cancelled_by_customer
-                                    }{" "}
-                                    {moment(props.order_final_state_date).format(
-                                        "dddd DD MMM à HH[h]mm",
-                                    )}
+                                    }
                                 </Text>
                             </View>
                         </View>
@@ -119,7 +164,11 @@ export default function Order({ ...props }) {
               all_constants.drawercontent.drawer_item.orders_history
                   .original_status.delivered && (
                             <View style={stylesOrder.icon_element}>
-                                <AntDesign name="checkcircle" size={iconSize} color="green" />
+                                <MaterialIcons
+                                    name="delivery-dining"
+                                    size={iconSize}
+                                    color="green"
+                                />
                             </View>
                         )}
 
@@ -142,13 +191,10 @@ export default function Order({ ...props }) {
 
                     <View style={stylesOrder.row_element}>
                         <View style={stylesOrder.icon_element}>
-                            <FontAwesome name="money" size={iconSize} color="black" />
+                            <FontAwesome name="euro" size={iconSize} color="black" />
                         </View>
                         <View style={stylesOrder.order_status_text_style}>
-                            <Text style={stylesOrder.order_text}>
-                                {props.order_amount}
-                                {all_constants.currency_symbol}
-                            </Text>
+                            <Text style={stylesOrder.order_text}>{props.total_amount}</Text>
                         </View>
                     </View>
                     <View style={stylesOrder.row_element}>

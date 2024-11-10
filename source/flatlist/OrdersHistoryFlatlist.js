@@ -110,7 +110,7 @@ export default function OrdersHistoryFlatList({ ...props }) {
                                 underlayColor={all_constants.colors.inputBorderColor}
                             >
                                 <Order
-                                    order_amount={item.order_amount}
+                                    total_amount={item.total_amount}
                                     order_number={item.id}
                                     order_status={item.status}
                                     order_date={item.created}

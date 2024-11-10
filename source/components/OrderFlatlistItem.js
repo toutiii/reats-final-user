@@ -56,7 +56,7 @@ export default function OrderFlastlistItem({ ...props }) {
                     }}
                 >
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <FontAwesome name="money" size={15} color="black" />
+                        <FontAwesome name="euro" size={15} color="black" />
                     </View>
                     <View style={{ flex: 4 }}>
                         <Text>

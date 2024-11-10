@@ -269,7 +269,7 @@ export default function SearchDishFlatList({ ...props }) {
                 setOneSearchHasBeenRun(true);
                 setSearchURL("");
                 fadeIn();
-            }, 200);
+            }, 1000);
         }
     }, [
         isFetchingData
@@ -708,7 +708,7 @@ export default function SearchDishFlatList({ ...props }) {
                                 }}
                             >
                                 <Text style={{ fontSize: 20 }}>
-                                    {oneSearchHasBeenRun
+                                    {oneSearchHasBeenRun && data.length === 0
                                         ? all_constants.search.no_dishes_found
                                         : ""}
                                 </Text>
