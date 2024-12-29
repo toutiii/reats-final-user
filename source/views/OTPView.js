@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 
-import { Platform, Text, StyleSheet, TextInput, View } from "react-native";
+import {
+    ActivityIndicator,
+    Platform,
+    Text,
+    StyleSheet,
+    TextInput,
+    View,
+} from "react-native";
 
 import CustomButton from "../components/CustomButton";
 import all_constants from "../constants";
@@ -67,13 +74,13 @@ export default function OTPView({ ...props }) {
         tokenData,
         setTokenData
     ] = useState(null);
+    const [
+        isRequesting,
+        setIsRequesting
+    ] = useState(false);
 
     const OTPLength = 6;
-    const OTPAskDelay = 30;
-
-    const sleep = (ms) => {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    };
+    const OTPAskDelay = 60;
 
     const handleLogin = () => {
         const resetAction = CommonActions.reset({
@@ -90,17 +97,20 @@ export default function OTPView({ ...props }) {
         let data = new FormData();
         data.append("otp", OTPValue.join(""));
         data.append("phone", props.route.params.item.phone);
-        const result = await callBackEnd(
-            data,
-            `${apiBaseUrl}:${port}/api/v1/customers/otp-verify/`,
-            "POST",
-            null,
-            true,
-            apiKeyBackend,
-        );
-        console.log(result);
-        setIsOTPValidationRequestSuccessful(result.ok);
-        setShowAlert(true);
+        setTimeout(async () => {
+            const result = await callBackEnd(
+                data,
+                `${apiBaseUrl}:${port}/api/v1/customers/otp-verify/`,
+                "POST",
+                null,
+                true,
+                apiKeyBackend,
+            );
+            console.log(result);
+            setIsOTPValidationRequestSuccessful(result.ok);
+            setIsRequesting(false);
+            setShowAlert(true);
+        }, 2000);
     }
 
     async function saveTokenData() {
@@ -119,23 +129,6 @@ export default function OTPView({ ...props }) {
         );
     }
 
-    async function getTokens() {
-        let data = new FormData();
-        data.append("phone", props.route.params.item.phone);
-        const result = await callBackEnd(
-            data,
-            `${apiBaseUrl}:${port}/api/v1/token/`,
-            "POST",
-            null,
-            true,
-            apiKeyBackend,
-        );
-        setTokenData(result);
-        console.log(result);
-        result.ok
-            ? setShowAlertTokenRequestSuccessful(true)
-            : setShowAlertTokenRequestFailed(true);
-    }
     React.useEffect(() => {
         if (tokenData !== null && tokenData.ok) {
             saveTokenData();
@@ -144,9 +137,31 @@ export default function OTPView({ ...props }) {
         tokenData
     ]);
 
+    async function getTokens() {
+        let data = new FormData();
+        data.append("phone", props.route.params.item.phone);
+        setTimeout(async () => {
+            const result = await callBackEnd(
+                data,
+                `${apiBaseUrl}:${port}/api/v1/token/`,
+                "POST",
+                null,
+                true,
+                apiKeyBackend,
+            );
+            setTokenData(result);
+            setIsRequesting(false);
+            console.log(result);
+            result.ok
+                ? setShowAlertTokenRequestSuccessful(true)
+                : setShowAlertTokenRequestFailed(true);
+        }, 2000);
+    }
+
     React.useEffect(() => {
         if (isOTPValidationRequestSuccessful && props.route.params.auth) {
             console.log("Asking tokens...");
+            setIsRequesting(true);
             getTokens();
         }
     }, [
@@ -180,21 +195,23 @@ export default function OTPView({ ...props }) {
     async function askNewOTP() {
         let data = new FormData();
         data.append("phone", props.route.params.item.phone);
-        await sleep(1000);
-        const result = await callBackEnd(
-            data,
-            `${apiBaseUrl}:${port}/api/v1/customers/otp/ask/`,
-            "POST",
-            null,
-            true,
-            apiKeyBackend,
-        );
-        console.log(result);
-        result.ok
-            ? setIsResendOTPRequestFailed(false)
-            : setIsResendOTPRequestFailed(true);
+        setTimeout(async () => {
+            const result = await callBackEnd(
+                data,
+                `${apiBaseUrl}:${port}/api/v1/customers/otp/ask/`,
+                "POST",
+                null,
+                true,
+                apiKeyBackend,
+            );
+            console.log(result);
+            setIsRequesting(false);
+            result.ok
+                ? setIsResendOTPRequestFailed(false)
+                : setIsResendOTPRequestFailed(true);
 
-        hideResendOTPButton(result);
+            hideResendOTPButton(result);
+        }, 2000);
     }
 
     return (
@@ -206,6 +223,7 @@ export default function OTPView({ ...props }) {
                     message={all_constants.messages.otp.message.send_again_message}
                     confirmButtonColor={"green"}
                     onConfirmPressed={() => {
+                        setIsRequesting(true);
                         setShowResendOTPAlert(false);
                         askNewOTP();
                     }}
@@ -310,105 +328,120 @@ export default function OTPView({ ...props }) {
                 ))}
             </View>
 
-            <View
-                style={{
-                    flex: 3,
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
+            {isRequesting && (
                 <View
                     style={{
                         flex: 1,
+                        justifyContent: "center",
                         alignItems: "center",
-                        justifyContent: "flex-start",
-                        marginTop: "15%",
                     }}
                 >
-                    <CustomButton
-                        label={all_constants.messages.submit}
-                        backgroundColor="green"
-                        height={50}
-                        border_width={3}
-                        border_radius={30}
-                        font_size={17}
-                        label_color="white"
-                        onPress={() => {
-                            verifyOTP();
+                    <ActivityIndicator size="large" color="tomato" />
+                </View>
+            )}
+
+            {!isRequesting && (
+                <View
+                    style={{
+                        flex: 3,
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                            alignItems: "center",
+                            justifyContent: "flex-start",
+                            marginTop: "15%",
                         }}
-                    />
-
-                    <View style={{ height: 40 }}></View>
-
-                    <CustomButton
-                        label={all_constants.messages.clear}
-                        backgroundColor="darkgrey"
-                        height={50}
-                        border_width={3}
-                        border_radius={30}
-                        font_size={17}
-                        label_color="white"
-                        onPress={() => {
-                            setRandomNumber(Math.floor(Math.random() * 10));
-                            setOTPValue([
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                ""
-                            ]);
-                        }}
-                    />
-
-                    <View style={{ height: 40 }}></View>
-
-                    {showResendOTPButton && (
+                    >
                         <CustomButton
-                            label={all_constants.messages.send_again}
-                            backgroundColor="grey"
+                            label={all_constants.messages.submit}
+                            backgroundColor="green"
                             height={50}
                             border_width={3}
                             border_radius={30}
                             font_size={17}
                             label_color="white"
                             onPress={() => {
-                                setShowResendOTPAlert(true);
+                                setIsRequesting(true);
+                                verifyOTP();
                             }}
                         />
-                    )}
 
-                    <View style={{ height: 40 }}></View>
+                        <View style={{ height: 40 }}></View>
 
-                    {showCounterCircle && (
-                        <CountdownCircleTimer
-                            isPlaying
-                            duration={OTPAskDelay}
-                            colors={[
-                                "#004777",
-                                "#F7B801",
-                                "#A30000",
-                                "#A30000"
-                            ]}
-                            colorsTime={[
-                                7,
-                                5,
-                                2,
-                                0
-                            ]}
-                            onComplete={() => {
-                                setShowResendOTpButton(true);
-                                setShowCounterCircle(false);
-                                return { shouldRepeat: false };
+                        <CustomButton
+                            label={all_constants.messages.clear}
+                            backgroundColor="darkgrey"
+                            height={50}
+                            border_width={3}
+                            border_radius={30}
+                            font_size={17}
+                            label_color="white"
+                            onPress={() => {
+                                setRandomNumber(Math.floor(Math.random() * 10));
+                                setOTPValue([
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    ""
+                                ]);
                             }}
-                        >
-                            {({ remainingTime }) => (
-                                <Text style={{ fontSize: 22 }}>{remainingTime}</Text>
-                            )}
-                        </CountdownCircleTimer>
-                    )}
+                        />
+
+                        <View style={{ height: 40 }}></View>
+
+                        {showResendOTPButton && (
+                            <CustomButton
+                                label={all_constants.messages.send_again}
+                                backgroundColor="grey"
+                                height={50}
+                                border_width={3}
+                                border_radius={30}
+                                font_size={17}
+                                label_color="white"
+                                onPress={() => {
+                                    setShowResendOTPAlert(true);
+                                }}
+                            />
+                        )}
+
+                        <View style={{ height: 40 }}></View>
+
+                        {showCounterCircle && (
+                            <CountdownCircleTimer
+                                isPlaying
+                                duration={OTPAskDelay}
+                                colors={[
+                                    "#004777",
+                                    "#F7B801",
+                                    "#A30000",
+                                    "#A30000"
+                                ]}
+                                colorsTime={[
+                                    7,
+                                    5,
+                                    2,
+                                    0
+                                ]}
+                                onComplete={() => {
+                                    setShowResendOTpButton(true);
+                                    setShowCounterCircle(false);
+                                    return { shouldRepeat: false };
+                                }}
+                            >
+                                {({ remainingTime }) => (
+                                    <Text style={{ fontSize: 22 }}>{remainingTime}</Text>
+                                )}
+                            </CountdownCircleTimer>
+                        )}
+                    </View>
                 </View>
-            </View>
+            )}
         </View>
     );
 }
@@ -428,6 +461,5 @@ const styles = StyleSheet.create({
         height: 50,
         margin: "3%",
         textAlign: "center",
-        fontSize: 20,
     },
 });
