@@ -378,7 +378,7 @@ export default function FormField({ ...props }) {
                                 <View style={{ alignItems: "center" }}>
                                     <Image
                                         source={require("../images/photo.png")}
-                                        style={{ height: 30, width: 30 }}
+                                        style={{ height: 30, width: 30, marginLeft: "100%" }}
                                     />
                                 </View>
                             </TouchableHighlight>
@@ -393,7 +393,7 @@ export default function FormField({ ...props }) {
                                 <View style={{ alignItems: "center" }}>
                                     <Image
                                         source={require("../images/galerie.png")}
-                                        style={{ height: 30, width: 30 }}
+                                        style={{ height: 30, width: 30, marginLeft: "100%" }}
                                     />
                                 </View>
                             </TouchableHighlight>

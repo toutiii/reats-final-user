@@ -5,10 +5,6 @@ import SearchStack from "../stack/SearchStack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import OrdersStack from "../stack/OrdersStack";
 import all_constants from "../constants";
-import SettingsAddressForm from "../forms/SettingsAddressForm";
-import SettingsPersonalInformationForm from "../forms/SettingsPersonalInformationForm";
-import AdressesStack from "../stack/AddressesStack";
-import OrdersHistoryStack from "../stack/OrdersHistoryStack";
 import CartStack from "../stack/CartStack";
 
 const Tab = createBottomTabNavigator();
@@ -16,18 +12,14 @@ const Tab = createBottomTabNavigator();
 export default function MainTabNavigator() {
     return (
         <Tab.Navigator
-            initialRouteName="Home"
+            //initialRouteName="Home"
             screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarActiveTintColor: "tomato",
                 tabBarinactiveTintColor: "gray",
                 tabBarIcon: ({ color, size }) => {
                     let iconName;
-                    if (route.name === all_constants.tab.main_tab_navigator.home) {
-                        iconName = "home-outline";
-                    } else if (
-                        route.name === all_constants.tab.main_tab_navigator.order
-                    ) {
+                    if (route.name === all_constants.tab.main_tab_navigator.order) {
                         iconName = "restaurant-outline";
                     } else if (
                         route.name === all_constants.tab.main_tab_navigator.pending
@@ -71,19 +63,11 @@ export default function MainTabNavigator() {
                     })(route),
                 })}
             />
-            <Tab.Screen name="OrdersHistory" component={OrdersHistoryStack} />
 
             <Tab.Screen
                 name={all_constants.tab.main_tab_navigator.cart}
                 component={CartStack}
             />
-
-            <Tab.Screen
-                name="SettingsPersonalInformationForm"
-                component={SettingsPersonalInformationForm}
-            />
-            <Tab.Screen name="SettingsAddressForm" component={SettingsAddressForm} />
-            <Tab.Screen name="AdressesStack" component={AdressesStack} />
         </Tab.Navigator>
     );
 }

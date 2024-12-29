@@ -8,6 +8,11 @@ import SignupForm from "./forms/SignupForm";
 import OTPView from "./views/OTPView";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { stripePublishableKey } from "./env";
+import SettingsAddressForm from "./forms/SettingsAddressForm";
+import SettingsPersonalInformationForm from "./forms/SettingsPersonalInformationForm";
+import AdressesStack from "./stack/AddressesStack";
+import OrdersHistoryStack from "./stack/OrdersHistoryStack";
+import all_constants from "./constants";
 
 const Stack = createStackNavigator();
 
@@ -30,7 +35,9 @@ export default class App extends Component {
                             <Stack.Screen
                                 name="OTPView"
                                 component={OTPView}
-                                options={{ headerShown: false }}
+                                options={{
+                                    headerShown: false,
+                                }}
                             />
                             <Stack.Screen
                                 name="LoginForm"
@@ -41,7 +48,42 @@ export default class App extends Component {
                             <Stack.Screen
                                 name="SignupForm"
                                 component={SignupForm}
-                                options={{ headerShown: true, headerTitle: "" }}
+                                options={{
+                                    headerShown: true,
+                                    headerTitle: all_constants.go_back,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="SettingsPersonalInformationForm"
+                                component={SettingsPersonalInformationForm}
+                                options={{
+                                    headerShown: true,
+                                    headerTitle: all_constants.go_back,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="SettingsAddressForm"
+                                component={SettingsAddressForm}
+                                options={{
+                                    headerShown: true,
+                                    headerTitle: all_constants.go_back,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="AdressesStack"
+                                component={AdressesStack}
+                                options={{
+                                    headerShown: true,
+                                    headerTitle: all_constants.go_back,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="OrdersHistory"
+                                component={OrdersHistoryStack}
+                                options={{
+                                    headerShown: true,
+                                    headerTitle: all_constants.go_back,
+                                }}
                             />
                         </Stack.Navigator>
                     </NavigationContainer>

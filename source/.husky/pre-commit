@@ -1,5 +1,8 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
 
-cd source/
+# Change to the source directory
+cd source || exit 1
+
+# Run lint-staged
 yarn lint-staged

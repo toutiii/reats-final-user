@@ -13,7 +13,7 @@ export default class OrdersStack extends Component {
 
     render() {
         return (
-            <Stack.Navigator initialRouteName="Home">
+            <Stack.Navigator initialRouteName={this.props.route.name + "Home"}>
                 <Stack.Screen
                     name={this.props.route.name + "Home"}
                     component={OrdersTopTab}

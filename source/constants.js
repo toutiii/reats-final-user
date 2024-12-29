@@ -2,6 +2,7 @@
 import { Dimensions } from "react-native";
 
 let all_constants = {
+    go_back: "Retour",
     merchantDisplayName: "Reats.",
     home: {
         news_feed_title: {
