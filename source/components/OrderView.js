@@ -373,40 +373,87 @@ export default function OrderView(props) {
                     </View>
                 </View>
             </View>
-            <View style={{ flex: 1, alignItems: "center" }}>
-                <CustomButton
-                    label={all_constants.modal.dish_modal.show}
-                    backgroundColor="darkgrey"
-                    height={50}
-                    border_width={3}
-                    border_radius={30}
-                    font_size={17}
-                    onPress={onPressShowModal}
-                    label_color="white"
-                />
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        bottom: "2%",
-                    }}
-                >
+            {(item.status ===
+        all_constants.drawercontent.drawer_item.orders_history.original_status
+            .pending ||
+        item.status ===
+          all_constants.drawercontent.drawer_item.orders_history.original_status
+              .processed ||
+        item.status ===
+          all_constants.drawercontent.drawer_item.orders_history.original_status
+              .completed) && (
+                <View style={{ flex: 1, alignItems: "center" }}>
                     <CustomButton
-                        label={all_constants.pending_orders_view.button_label.cancel_order}
+                        label={all_constants.modal.dish_modal.show}
+                        backgroundColor="darkgrey"
                         height={50}
                         border_width={3}
                         border_radius={30}
                         font_size={17}
-                        backgroundColor={"red"}
-                        label_color={"white"}
-                        button_width={all_constants.screen.width - 40}
-                        onPress={() => {
-                            setShowCancelOrderAlert(true);
-                        }}
+                        onPress={onPressShowModal}
+                        label_color="white"
                     />
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            bottom: "2%",
+                        }}
+                    >
+                        <CustomButton
+                            label={
+                                all_constants.pending_orders_view.button_label.cancel_order
+                            }
+                            height={50}
+                            border_width={3}
+                            border_radius={30}
+                            font_size={17}
+                            backgroundColor={"red"}
+                            label_color={"white"}
+                            button_width={all_constants.screen.width - 40}
+                            onPress={() => {
+                                setShowCancelOrderAlert(true);
+                            }}
+                        />
+                    </View>
                 </View>
-            </View>
+            )}
+
+            {(item.status ===
+        all_constants.drawercontent.drawer_item.orders_history.original_status
+            .delivered ||
+        item.status ===
+          all_constants.drawercontent.drawer_item.orders_history.original_status
+              .cancelled_by_cooker ||
+        item.status ===
+          all_constants.drawercontent.drawer_item.orders_history.original_status
+              .cancelled_by_customer ||
+        item.status ===
+          all_constants.drawercontent.drawer_item.orders_history.original_status
+              .delivered) && (
+                <View style={{ flex: 1, alignItems: "center" }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            bottom: "2%",
+                        }}
+                    >
+                        <CustomButton
+                            label={all_constants.modal.dish_modal.show}
+                            backgroundColor="darkgrey"
+                            height={50}
+                            border_width={3}
+                            border_radius={30}
+                            font_size={17}
+                            onPress={onPressShowModal}
+                            label_color="white"
+                        />
+                    </View>
+                </View>
+            )}
         </Animated.View>
     );
 }

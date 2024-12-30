@@ -73,16 +73,14 @@ export default class App extends Component {
                                 name="AdressesStack"
                                 component={AdressesStack}
                                 options={{
-                                    headerShown: true,
-                                    headerTitle: all_constants.go_back,
+                                    headerShown: false,
                                 }}
                             />
                             <Stack.Screen
                                 name="OrdersHistory"
                                 component={OrdersHistoryStack}
                                 options={{
-                                    headerShown: true,
-                                    headerTitle: all_constants.go_back,
+                                    headerShown: false,
                                 }}
                             />
                         </Stack.Navigator>
