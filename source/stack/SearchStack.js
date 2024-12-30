@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import SearchDishFlatList from "../flatlist/SearchDishFlatlist";
 import SearchItemDetailView from "../views/SearchItemDetailView";
+import all_constants from "../constants";
 
 const Stack = createStackNavigator();
 
@@ -20,7 +21,8 @@ export default function SearchStack() {
                 name="SearchItemDetailView"
                 component={SearchItemDetailView}
                 options={{
-                    headerTitle: "",
+                    headerShown: true,
+                    headerTitle: all_constants.go_back,
                 }}
             />
         </Stack.Navigator>

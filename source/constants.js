@@ -153,6 +153,12 @@ let all_constants = {
         "L'ajout de desserts/boissons/entrées n'est possible que si vous commandez un plat. Si vous supprimez cet item, les éléments ci-après seront également supprimés du panier: ",
             not_editable_address_message:
         "Pour modifier l'adresse de livraison, veuillez revenir sur l'écran de recherche.",
+            acceptance_rate: {
+                title: "Information",
+                message:
+          "Ce chiffre représente le taux d'acceptation de ce cuisinier. \n\n" +
+          "Plus il est élevé, plus il est probable que votre commande soit acceptée.",
+            },
         },
         add_item_alert: {
             add_item_success_message: "L'item a bien été ajouté au panier.",

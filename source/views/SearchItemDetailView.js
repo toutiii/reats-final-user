@@ -1,9 +1,19 @@
 import React from "react";
-import { Animated, Image, Text, TextInput, View } from "react-native";
+import {
+    Animated,
+    Image,
+    Text,
+    TextInput,
+    View,
+    TouchableOpacity,
+} from "react-native";
 import all_constants from "../constants";
 import CustomButton from "../components/CustomButton";
-import styles_dish from "../styles/styles-dish";
-import { AntDesign } from "@expo/vector-icons";
+import {
+    AntDesign,
+    MaterialCommunityIcons,
+    MaterialIcons,
+} from "@expo/vector-icons";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import CustomAlert from "../components/CustomAlert.js";
 import {
@@ -30,6 +40,12 @@ export default function SearchItemDetailView({ ...props }) {
     const minDishOrder = 1;
 
     const previousScreenName = props.navigation.getState().routes[0].name;
+
+    const [
+        showAcceptanceRateAlert,
+        setShowAcceptanceRateAlert
+    ] =
+    React.useState(false);
 
     const [
         showAlert,
@@ -233,15 +249,69 @@ export default function SearchItemDetailView({ ...props }) {
                             {props.route.params.item.price + all_constants.currency_symbol}
                         </Text>
                     </View>
-                    <View style={{ flex: 1, alignItems: "flex-end" }}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setShowAcceptanceRateAlert(true);
+                        }}
+                    >
+                        <View
+                            style={{
+                                flex: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                flexDirection: "row",
+                            }}
+                        >
+                            {props.route.params.item.cooker.acceptance_rate >= 75 && (
+                                <MaterialCommunityIcons
+                                    name="checkbox-marked-circle"
+                                    size={24}
+                                    color="green"
+                                />
+                            )}
+                            {props.route.params.item.cooker.acceptance_rate >= 50 &&
+                props.route.params.item.cooker.acceptance_rate < 75 && (
+                                <MaterialIcons
+                                    name="warning-amber"
+                                    size={24}
+                                    color="orange"
+                                />
+                            )}
+                            {props.route.params.item.cooker.acceptance_rate < 50 && (
+                                <MaterialIcons name="dangerous" size={24} color="red" />
+                            )}
+                            <Text
+                                style={[
+                                    {
+                                        color:
+                      props.route.params.item.cooker.acceptance_rate >= 75
+                          ? "green"
+                          : props.route.params.item.cooker.acceptance_rate < 50
+                              ? "red"
+                              : "orange",
+                                    },
+                                    { fontWeight: "bold" },
+                                    { fontSize: 18 },
+                                ]}
+                            >
+                                {props.route.params.item.cooker.acceptance_rate + "%"}
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    <View
+                        style={{
+                            flex: 1,
+                            alignItems: "center",
+                            flexDirection: "row",
+                            justifyContent: "flex-end",
+                        }}
+                    >
+                        <AntDesign name="star" size={24} color="tomato" />
                         <Text style={{ fontSize: 20 }}>
                             {props.route.params.item.rating
                                 ? props.route.params.item.rating
                                 : "-/-"}
-                            <Image
-                                source={{ uri: all_constants.rating_star }}
-                                style={styles_dish.rating_star}
-                            />
                         </Text>
                     </View>
                 </View>
@@ -360,6 +430,18 @@ export default function SearchItemDetailView({ ...props }) {
                         }}
                         onCancelPressed={() => {
                             setShowAlert(false);
+                        }}
+                    />
+                )}
+                {showAcceptanceRateAlert && (
+                    <CustomAlert
+                        show={showAcceptanceRateAlert}
+                        title={all_constants.cart.alert.acceptance_rate.title}
+                        message={all_constants.cart.alert.acceptance_rate.message}
+                        confirmButtonColor="green"
+                        showCancelButton={false}
+                        onConfirmPressed={() => {
+                            setShowAcceptanceRateAlert(false);
                         }}
                     />
                 )}

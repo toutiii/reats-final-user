@@ -1,9 +1,14 @@
 import { Image, Text, View } from "react-native";
 import styles_dish from "../styles/styles-dish";
-import all_constants from "../constants";
 import React from "react";
+import {
+    AntDesign,
+    MaterialCommunityIcons,
+    MaterialIcons,
+} from "@expo/vector-icons";
 
 export default function Item({ ...props }) {
+    console.log("props: ", props);
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flex: 5 }}>
@@ -33,12 +38,47 @@ export default function Item({ ...props }) {
                         <View style={styles_dish.dish_price}>
                             <Text style={{ fontSize: 20 }}> {props.price} </Text>
                         </View>
+                        <View
+                            style={{
+                                flex: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                flexDirection: "row",
+                            }}
+                        >
+                            {props.acceptance_rate >= 75 && (
+                                <MaterialCommunityIcons
+                                    name="checkbox-marked-circle"
+                                    size={24}
+                                    color="green"
+                                />
+                            )}
+                            {props.acceptance_rate >= 50 && props.acceptance_rate < 75 && (
+                                <MaterialIcons name="warning-amber" size={24} color="orange" />
+                            )}
+                            {props.acceptance_rate < 50 && (
+                                <MaterialIcons name="dangerous" size={24} color="red" />
+                            )}
+                            <Text
+                                style={[
+                                    {
+                                        color:
+                      props.acceptance_rate >= 75
+                          ? "green"
+                          : props.acceptance_rate < 50
+                              ? "red"
+                              : "orange",
+                                    },
+                                    { fontWeight: "bold" },
+                                    { fontSize: 18 },
+                                ]}
+                            >
+                                {props.acceptance_rate + "%"}
+                            </Text>
+                        </View>
                         <View style={styles_dish.dish_rating}>
-                            <Image
-                                source={{ uri: all_constants.rating_star }}
-                                style={styles_dish.rating_star}
-                            />
-                            <Text style={{ fontSize: 14 }}> {props.rating} </Text>
+                            <AntDesign name="star" size={24} color="tomato" />
+                            <Text style={{ fontSize: 18 }}> {props.rating} </Text>
                         </View>
                     </View>
                 </View>
