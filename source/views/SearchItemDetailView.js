@@ -75,7 +75,7 @@ export default function SearchItemDetailView({ ...props }) {
     const [
         cookerID,
         setCookerID, // eslint-disable-line no-unused-vars
-    ] = React.useState(props.route.params.item.cooker);
+    ] = React.useState(props.route.params.item.cooker.id);
 
     const [
         isAsyncStorageOperationOk,
@@ -117,7 +117,7 @@ export default function SearchItemDetailView({ ...props }) {
             dish_ordered_quantity: numberOfItem,
         });
         const addCookerIDResult = await storeGlobalCookerID(
-            props.route.params.item.cooker,
+            props.route.params.item.cooker.id,
         );
 
         console.log("Add status: ", addItemResult);
@@ -184,7 +184,7 @@ export default function SearchItemDetailView({ ...props }) {
 
     const goAway = () => {
         if (previousScreenName === "SearchDishFlatList") {
-            props.navigation.navigate(previousScreenName, {
+            props.navigation.popTo(previousScreenName, {
                 cookerID: cookerID,
             });
         } else {
@@ -375,7 +375,9 @@ export default function SearchItemDetailView({ ...props }) {
                         alignItems: "center",
                     }}
                 >
-                    <View style={{ flex: 1, justifyContent: "center" }}>
+                    <View
+                        style={{ flex: 1, justifyContent: "center", marginBottom: "7%" }}
+                    >
                         <CustomButton
                             label={all_constants.search.button.label.add_to_cart}
                             height={50}

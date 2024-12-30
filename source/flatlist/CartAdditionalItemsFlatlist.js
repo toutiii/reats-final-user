@@ -166,6 +166,7 @@ export default function CartAdditionalItemsFlatlist({ ...props }) {
                                             ? item.rating
                                             : "-/-"}
                                         price={item.price + all_constants.currency_symbol}
+                                        acceptance_rate={item.cooker.acceptance_rate}
                                         onPress={item.onPress}
                                     />
                                 </TouchableHighlight>

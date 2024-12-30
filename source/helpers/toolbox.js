@@ -101,7 +101,10 @@ export async function getAdditionalItemsKeys(ItemID) {
             const cartItemsObjects = cartItems.map((item) => JSON.parse(item[1]));
 
             cartItemsObjects.map((item) => {
-                if (item.cooker === objectToRemove.cooker && item.category === "dish") {
+                if (
+                    item.cooker.id === objectToRemove.cooker.id &&
+          item.category === "dish"
+                ) {
                     countCookerDishesInCart += 1;
                 }
             });
@@ -110,7 +113,7 @@ export async function getAdditionalItemsKeys(ItemID) {
 
             if (countCookerDishesInCart === 1) {
                 cartItemsObjects.map((item) => {
-                    if (item.cooker === objectToRemove.cooker) {
+                    if (item.cooker.id === objectToRemove.cooker.id) {
                         if (
                             item.capacity !== undefined ||
               item.category === "dessert" ||

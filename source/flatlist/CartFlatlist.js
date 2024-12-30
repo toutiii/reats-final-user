@@ -113,7 +113,7 @@ export default function CartFlatlist(props) {
         const results = await getAllCartItems();
         setData(results.data);
         setCookerIDs([
-            ...new Set(results.data.map((item) => item.cooker))
+            ...new Set(results.data.map((item) => item.cooker.id))
         ]);
     }
 
