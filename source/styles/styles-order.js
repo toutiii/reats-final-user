@@ -9,8 +9,8 @@ let styles_order = StyleSheet.create({
         flex: 1,
         aspectRatio: 16 / 9,
         paddingTop: "3%",
-        paddingLeft: "2%",
-        paddingRight: "2%",
+        paddingLeft: "5%",
+        paddingRight: "5%",
     },
     order_number: {
         flex: 1,

@@ -20,6 +20,7 @@ import { callBackEnd } from "../api/callBackend";
 
 export default function OrderView(props) {
     // State for modal visibility
+    console.log("props: ", props.route.params.item);
     const [
         modalVisible,
         setModalVisible
@@ -220,7 +221,7 @@ export default function OrderView(props) {
                                 {
                                     all_constants.drawercontent.drawer_item.orders_history.status
                                         .ordered
-                                }{" "}
+                                }
                                 {moment(item.created).format("dddd DD MMM à HH[h]mm")}
                             </Text>
                         </View>
@@ -255,8 +256,8 @@ export default function OrderView(props) {
                                     {
                                         all_constants.drawercontent.drawer_item.orders_history
                                             .status.delivered
-                                    }{" "}
-                                    {moment(item.delivery_date).format("dddd DD MMM à HH[h]mm")}
+                                    }
+                                    {moment(item.delivered_date).format("dddd DD MMM à HH[h]mm")}
                                 </Text>
                             </View>
                         </View>
@@ -295,7 +296,7 @@ export default function OrderView(props) {
                                         all_constants.drawercontent.drawer_item.orders_history
                                             .status.cancelled_by_cooker
                                     }
-                                    {moment(item.modified).format("dddd DD MMM à HH[h]mm")}
+                                    {moment(item.cancelled_date).format("dddd DD MMM à HH[h]mm")}
                                 </Text>
                             </View>
                         </View>
@@ -313,14 +314,14 @@ export default function OrderView(props) {
                                         all_constants.drawercontent.drawer_item.orders_history
                                             .status.cancelled_by_customer
                                     }
-                                    {moment(item.modified).format("dddd DD MMM à HH[h]mm")}
+                                    {moment(item.cancelled_date).format("dddd DD MMM à HH[h]mm")}
                                 </Text>
                             </View>
                         </View>
                     )}
                     {item.status ===
             all_constants.drawercontent.drawer_item.orders_history
-                .original_status.processed && (
+                .original_status.processing && (
                         <View style={styles_order_view.order_item_info}>
                             <View style={{ flex: 1 }}>
                                 <MaterialCommunityIcons
@@ -333,8 +334,8 @@ export default function OrderView(props) {
                                 <Text style={{ fontSize: 17 }}>
                                     {
                                         all_constants.drawercontent.drawer_item.orders_history
-                                            .status.processed
-                                    }{" "}
+                                            .status.processing
+                                    }
                                     {moment(item.processing_date).format("dddd DD MMM à HH[h]mm")}
                                 </Text>
                             </View>
@@ -353,6 +354,7 @@ export default function OrderView(props) {
                                         all_constants.drawercontent.drawer_item.orders_history
                                             .status.completed
                                     }
+                                    {moment(item.completed_date).format("dddd DD MMM à HH[h]mm")}
                                 </Text>
                             </View>
                         </View>
@@ -378,7 +380,7 @@ export default function OrderView(props) {
             .pending ||
         item.status ===
           all_constants.drawercontent.drawer_item.orders_history.original_status
-              .processed ||
+              .processing ||
         item.status ===
           all_constants.drawercontent.drawer_item.orders_history.original_status
               .completed) && (

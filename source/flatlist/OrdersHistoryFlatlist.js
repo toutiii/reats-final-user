@@ -301,9 +301,11 @@ export default function OrdersHistoryFlatList({ ...props }) {
                                     total_amount={item.total_amount}
                                     order_number={item.id}
                                     order_status={item.status}
-                                    order_date={item.created}
+                                    order_creation_date={item.created}
                                     order_processing_date={item.processing_date}
-                                    order_final_state_date={item.modified}
+                                    order_completed_date={item.completed_date}
+                                    order_cancelled_date={item.cancelled_date}
+                                    order_delivered_date={item.delivered_date}
                                     nb_of_items={
                                         item.dishes_items.length + item.drinks_items.length
                                     }

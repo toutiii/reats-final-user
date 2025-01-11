@@ -22,7 +22,7 @@ export default function Order({ ...props }) {
                         fontSize: 20,
                     }}
                 >
-                    {all_constants.drawercontent.drawer_item.orders_history.infos.number}{" "}
+                    {all_constants.drawercontent.drawer_item.orders_history.infos.number}
                     {props.order_number}
                 </Text>
             </View>
@@ -54,8 +54,10 @@ export default function Order({ ...props }) {
                                 {
                                     all_constants.drawercontent.drawer_item.orders_history.status
                                         .ordered
-                                }{" "}
-                                {moment(props.order_date).format("dddd DD MMM à HH[h]mm")}
+                                }
+                                {moment(props.order_creation_date).format(
+                                    "dddd DD MMM à HH[h]mm",
+                                )}
                             </Text>
                         </View>
                     </View>
@@ -84,7 +86,7 @@ export default function Order({ ...props }) {
 
                     {props.order_status ===
             all_constants.drawercontent.drawer_item.orders_history
-                .original_status.processed && (
+                .original_status.processing && (
                         <View style={stylesOrder.row_element}>
                             <View style={stylesOrder.icon_element}>
                                 <MaterialCommunityIcons
@@ -97,8 +99,11 @@ export default function Order({ ...props }) {
                                 <Text style={stylesOrder.order_text}>
                                     {
                                         all_constants.drawercontent.drawer_item.orders_history
-                                            .status.processed
-                                    }{" "}
+                                            .status.processing
+                                    }
+                                    {moment(props.order_processing_date).format(
+                                        "dddd DD MMM à HH[h]mm",
+                                    )}
                                 </Text>
                             </View>
                         </View>
@@ -117,6 +122,9 @@ export default function Order({ ...props }) {
                                         all_constants.drawercontent.drawer_item.orders_history
                                             .status.completed
                                     }
+                                    {moment(props.order_completed_date).format(
+                                        "dddd DD MMM à HH[h]mm",
+                                    )}
                                 </Text>
                             </View>
                         </View>
@@ -135,6 +143,9 @@ export default function Order({ ...props }) {
                                         all_constants.drawercontent.drawer_item.orders_history
                                             .status.cancelled_by_cooker
                                     }
+                                    {moment(props.order_cancelled_date).format(
+                                        "dddd DD MMM à HH[h]mm",
+                                    )}
                                 </Text>
                             </View>
                         </View>
@@ -153,6 +164,9 @@ export default function Order({ ...props }) {
                                         all_constants.drawercontent.drawer_item.orders_history
                                             .status.cancelled_by_customer
                                     }
+                                    {moment(props.order_cancelled_date).format(
+                                        "dddd DD MMM à HH[h]mm",
+                                    )}
                                 </Text>
                             </View>
                         </View>
@@ -179,8 +193,8 @@ export default function Order({ ...props }) {
                                     {
                                         all_constants.drawercontent.drawer_item.orders_history
                                             .status.delivered
-                                    }{" "}
-                                    {moment(props.order_final_state_date).format(
+                                    }
+                                    {moment(props.order_delivered_date).format(
                                         "dddd DD MMM à HH[h]mm",
                                     )}
                                 </Text>
@@ -206,7 +220,7 @@ export default function Order({ ...props }) {
                         </View>
                         <View style={stylesOrder.order_status_text_style}>
                             <Text style={stylesOrder.order_text}>
-                                {props.nb_of_items}{" "}
+                                {props.nb_of_items}
                                 {
                                     all_constants.drawercontent.drawer_item.orders_history.infos
                                         .item
