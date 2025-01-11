@@ -343,6 +343,9 @@ let all_constants = {
         dish_modal: {
             hide: "FERMER",
             show: "AFFICHER LES PLATS",
+            rate: "NOTER LA COMMANDE",
+            submit_rate: "VALIDER",
+            show_rate: "AFFICHER MES NOTES",
         },
     },
     placeholders: {
@@ -486,6 +489,49 @@ let all_constants = {
             address_complement: 100,
             postal_code: 5,
             town: 100,
+        },
+    },
+    order_rate_view: {
+        alert: {
+            submit_rate: {
+                title: "Attention",
+                message: "Une fois validée, votre note ne pourra plus être modifiée.",
+                button: {
+                    label: {
+                        cancel: "ANNULER",
+                    },
+                },
+            },
+            missing_global_order_rating: {
+                title: "Attention",
+                message:
+          "Pour soumettre votre avis, veuillez donner une note globale à la commande.",
+            },
+            success: {
+                title: "Succès",
+                message: "Merci de nous avoir fait part de votre avis !",
+            },
+            failure: {
+                title: "Echec",
+                message:
+          "Une erreur s'est produite lors de la soumission de votre avis. Veuillez réessayer.",
+            },
+        },
+        label: {
+            global_order_rate: "Appréciation globale pour cette commande",
+        },
+        item: {
+            comment: {
+                enabled_rating_placeholder: "Tapez ici pour ajouter un commentaire",
+                disabled_rating_placeholder: "Vous n'avez renseigné aucun commentaire",
+            },
+        },
+        order: {
+            comment: {
+                enabled_rating_placeholder:
+          "Un commentaire général sur cette commande ?",
+                disabled_rating_placeholder: "Vous n'avez renseigné aucun commentaire",
+            },
         },
     },
 };

@@ -206,7 +206,7 @@ export default function Order({ ...props }) {
                         </View>
                         <View style={stylesOrder.order_status_text_style}>
                             <Text style={stylesOrder.order_text}>
-                                {props.dishes_number}{" "}
+                                {props.nb_of_items}{" "}
                                 {
                                     all_constants.drawercontent.drawer_item.orders_history.infos
                                         .item

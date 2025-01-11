@@ -124,7 +124,7 @@ export default function OrderView(props) {
                 <DishModal
                     state={modalVisible}
                     onPressCloseModal={onPressCloseModal}
-                    modal_data={item.items}
+                    modal_data={item.dishes_items.concat(item.drinks_items)}
                 />
             )}
             {isUpdatingOrder && (
@@ -450,6 +450,47 @@ export default function OrderView(props) {
                             font_size={17}
                             onPress={onPressShowModal}
                             label_color="white"
+                        />
+                    </View>
+                </View>
+            )}
+            {item.status ===
+        all_constants.drawercontent.drawer_item.orders_history.original_status
+            .delivered && (
+                <View style={{ flex: 1, alignItems: "center" }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            bottom: "30%",
+                        }}
+                    >
+                        <CustomButton
+                            label={
+                                props.route.params.item.rating === 0
+                                    ? all_constants.modal.dish_modal.rate
+                                    : all_constants.modal.dish_modal.show_rate
+                            }
+                            backgroundColor={all_constants.colors.inputBorderColor}
+                            height={50}
+                            border_width={3}
+                            border_radius={30}
+                            font_size={17}
+                            onPress={() => {
+                                props.navigation.navigate("OrderRateView", {
+                                    data: item.dishes_items.concat(item.drinks_items),
+                                    customerID: item.address.customer,
+                                    orderID: item.id,
+                                    orderRate: props.route.params.item.rating,
+                                    orderComment: props.route.params.item.comment,
+                                    disableRating:
+                    props.route.params.item.rating !== 0
+                        ? true
+                        : false,
+                                });
+                            }}
+                            label_color="black"
                         />
                     </View>
                 </View>

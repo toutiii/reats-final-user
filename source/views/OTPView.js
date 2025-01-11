@@ -110,7 +110,7 @@ export default function OTPView({ ...props }) {
             setIsOTPValidationRequestSuccessful(result.ok);
             setIsRequesting(false);
             setShowAlert(true);
-        }, 2000);
+        }, 1000);
     }
 
     async function saveTokenData() {
@@ -155,7 +155,7 @@ export default function OTPView({ ...props }) {
             result.ok
                 ? setShowAlertTokenRequestSuccessful(true)
                 : setShowAlertTokenRequestFailed(true);
-        }, 2000);
+        }, 1000);
     }
 
     React.useEffect(() => {

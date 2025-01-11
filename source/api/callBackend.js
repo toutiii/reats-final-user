@@ -85,21 +85,16 @@ export async function callBackEnd(
         ) {
             await renewAccessToken();
             const newAccessToken = await getItemFromSecureStore("accessToken");
+            headers["Authorization"] = newAccessToken;
             if (method === "GET") {
                 response = await fetch(url, {
                     method: method,
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: newAccessToken,
-                    },
+                    headers: headers,
                 });
             } else {
                 response = await fetch(url, {
                     method: method,
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: newAccessToken,
-                    },
+                    headers: headers,
                     body: body,
                 });
             }
@@ -115,21 +110,16 @@ export async function callBackEnd(
                 await renewTokenPair();
                 const accessTokenFromNewPair =
           await getItemFromSecureStore("accessToken");
+                headers["Authorization"] = accessTokenFromNewPair;
                 if (method === "GET") {
                     response = await fetch(url, {
                         method: method,
-                        headers: {
-                            Accept: "application/json",
-                            Authorization: accessTokenFromNewPair,
-                        },
+                        headers: headers,
                     });
                 } else {
                     response = await fetch(url, {
                         method: method,
-                        headers: {
-                            Accept: "application/json",
-                            Authorization: accessTokenFromNewPair,
-                        },
+                        headers: headers,
                         body: body,
                     });
                 }

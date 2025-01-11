@@ -133,7 +133,9 @@ export default function OrdersFlatlist(props) {
                                             order_date={item.created}
                                             order_processing_date={item.processing_date}
                                             order_final_state_date={item.modified}
-                                            dishes_number={item.items.length}
+                                            nb_of_items={
+                                                item.dishes_items.length + item.drinks_items.length
+                                            }
                                         ></Order>
                                     </TouchableHighlight>
                                 </View>

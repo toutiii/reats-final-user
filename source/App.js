@@ -13,6 +13,7 @@ import SettingsPersonalInformationForm from "./forms/SettingsPersonalInformation
 import AdressesStack from "./stack/AddressesStack";
 import OrdersHistoryStack from "./stack/OrdersHistoryStack";
 import all_constants from "./constants";
+import OrderRateView from "./views/OrderRateView";
 
 const Stack = createStackNavigator();
 
@@ -81,6 +82,14 @@ export default class App extends Component {
                                 component={OrdersHistoryStack}
                                 options={{
                                     headerShown: false,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="OrderRateView"
+                                component={OrderRateView}
+                                options={{
+                                    headerShown: true,
+                                    headerTitle: all_constants.go_back,
                                 }}
                             />
                         </Stack.Navigator>
