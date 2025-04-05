@@ -2,6 +2,7 @@
 import { Dimensions } from "react-native";
 
 let all_constants = {
+    test: "test",
     go_back: "Retour",
     merchantDisplayName: "Reats.",
     home: {
