@@ -1,0 +1,110 @@
+name: Deploy to Production
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers only on version tags like v1.0.0-build or v1.0.0-ota
+
+permissions:
+  contents: read
+
+jobs:
+  validate_tag_suffix:
+    name: Validate Tag Format
+    runs-on: ubuntu-latest
+    outputs:
+      deployment_type: ${{ steps.check_tag.outputs.deployment_type }}
+    steps:
+      - name: Get tag suffix
+        id: check_tag
+        run: |
+          TAG_NAME="${GITHUB_REF##*/}"
+          echo "Tag: $TAG_NAME"
+
+          if [[ "$TAG_NAME" == *-ota ]]; then
+            echo "deployment_type=ota" >> $GITHUB_OUTPUT
+          elif [[ "$TAG_NAME" == *-build ]]; then
+            echo "deployment_type=build" >> $GITHUB_OUTPUT
+          else
+            echo "ERROR: Tag must end with '-ota' or '-build'"
+            exit 1
+          fi
+
+  ios_production_deploy:
+    name: Deploy iOS to App Store Connect
+    needs: validate_tag_suffix
+    if: needs.validate_tag_suffix.outputs.deployment_type == 'build'
+    runs-on: ubuntu-latest
+    env:
+      ENV: "production"
+      EXPO_PUBLIC_PRODUCTION_API_BASE_URL: "https://api.reats.net"
+      EXPO_PUBLIC_PRODUCTION_API_KEY: ${{ secrets.EXPO_PUBLIC_PRODUCTION_API_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: source/yarn.lock
+
+      - name: Install dependencies
+        working-directory: source
+        run: yarn install --frozen-lockfile
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build iOS App for Production
+        working-directory: source
+        run: |
+          echo "Starting iOS production build..."
+          eas build --platform ios --profile production --non-interactive --json > ios_build.json
+          echo "IOS_BUILD_ID=$(jq -r '.[0].id' ios_build.json)" >> $GITHUB_ENV
+
+      - name: Submit iOS App to App Store Connect
+        working-directory: source
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas submit --platform ios --profile production --non-interactive --id $IOS_BUILD_ID
+
+  deploy_ota:
+    name: Deploy OTA Update to Production Channel
+    needs: validate_tag_suffix
+    if: needs.validate_tag_suffix.outputs.deployment_type == 'ota'
+    runs-on: ubuntu-latest
+    env:
+      ENV: "production"
+      EXPO_PUBLIC_PRODUCTION_API_BASE_URL: "https://api.reats.net"
+      EXPO_PUBLIC_PRODUCTION_API_KEY: ${{ secrets.EXPO_PUBLIC_PRODUCTION_API_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: source/yarn.lock
+
+      - name: Install dependencies
+        working-directory: source
+        run: yarn install --frozen-lockfile
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Deploy OTA Update to production channel
+        working-directory: source
+        run: eas update --auto --branch production

@@ -1,0 +1,125 @@
+name: Merge CI
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write  # Needed for tagging commits if needed
+
+jobs:
+  detect_deployment_type:
+    name: Detect Deployment Type
+    runs-on: ubuntu-latest
+    outputs:
+      deployment_type: ${{ steps.extract_deployment_type.outputs.deployment_type }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Extract Commit Message
+        id: extract_commit_message
+        run: |
+          COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
+          echo "Commit message: $COMMIT_MESSAGE"
+          echo "commit_message=$COMMIT_MESSAGE" >> $GITHUB_ENV
+
+      - name: Determine Deployment Type
+        id: extract_deployment_type
+        run: |
+          if [[ "${{ env.commit_message }}" == "[OTA]"* ]]; then
+            echo "Detected OTA Update"
+            echo "deployment_type=ota" >> $GITHUB_ENV
+            echo "deployment_type=ota" >> $GITHUB_OUTPUT
+          elif [[ "${{ env.commit_message }}" == "[BUILD]"* ]]; then
+            echo "Detected Full Build"
+            echo "deployment_type=build" >> $GITHUB_ENV
+            echo "deployment_type=build" >> $GITHUB_OUTPUT
+          else
+            echo "No deployment required"
+            echo "deployment_type=none" >> $GITHUB_ENV
+            echo "deployment_type=none" >> $GITHUB_OUTPUT
+          fi
+
+  deploy_ota:
+    name: Deploy OTA Update
+    needs: detect_deployment_type
+    runs-on: ubuntu-latest
+    env:
+      ENV: "staging"
+      EXPO_PUBLIC_STAGING_API_BASE_URL: "https://api-staging.reats.net"
+      EXPO_PUBLIC_STAGING_API_KEY: ${{ secrets.EXPO_PUBLIC_STAGING_API_KEY }}
+    if: needs.detect_deployment_type.outputs.deployment_type == 'ota'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: source/yarn.lock
+
+      - name: Install dependencies
+        working-directory: source
+        run: yarn install --frozen-lockfile
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Deploy OTA Update
+        working-directory: source
+        run: eas update --auto --branch staging
+
+  deploy_ios:
+    name: Deploy iOS Build
+    needs: detect_deployment_type
+    runs-on: ubuntu-latest
+    env:
+      ENV: "staging"
+      EXPO_PUBLIC_STAGING_API_BASE_URL: "https://api-staging.reats.net"
+      EXPO_PUBLIC_STAGING_API_KEY: ${{ secrets.EXPO_PUBLIC_STAGING_API_KEY }}
+    if: needs.detect_deployment_type.outputs.deployment_type == 'build'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: source/yarn.lock
+
+      - name: Install dependencies
+        working-directory: source
+        run: yarn install --frozen-lockfile
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build iOS App
+        working-directory: source
+        run: |
+          eas build --platform ios --profile testflight --non-interactive --json > ios_build.json
+          echo "IOS_BUILD_ID=$(jq -r '.[0].id' ios_build.json)" >> $GITHUB_ENV
+
+      - name: Submit iOS App to TestFlight
+        working-directory: source
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas submit --platform ios --profile testflight --non-interactive --id $IOS_BUILD_ID
