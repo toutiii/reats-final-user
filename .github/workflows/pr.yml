@@ -1,0 +1,73 @@
+name: PR CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read  # Allows reading repo contents
+
+jobs:
+  lint:
+    name: Run ESLint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: source/yarn.lock
+
+      - name: Install dependencies
+        working-directory: source
+        run: yarn install --frozen-lockfile
+
+      - name: Run ESLint
+        working-directory: source
+        run: yarn eslint .
+
+  auto_prefix_pr_title:
+    name: Auto Prefix PR Title
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write  # Required to edit PR title
+
+    steps:
+      - name: Get PR Details
+        id: pr_details
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          SOURCE_BRANCH="${{ github.head_ref }}"
+
+          echo "PR Number: $PR_NUMBER"
+          echo "PR Title: $PR_TITLE"
+          echo "Source Branch: $SOURCE_BRANCH"
+
+          # Determine Prefix
+          if [[ "$SOURCE_BRANCH" == feature/ota/* ]]; then
+            PREFIX="[OTA] "
+          elif [[ "$SOURCE_BRANCH" == feature/build/* ]]; then
+            PREFIX="[BUILD] "
+          else
+            PREFIX=""
+          fi
+
+          # Update PR Title if Needed
+          if [[ -n "$PREFIX" && "$PR_TITLE" != "$PREFIX"* ]]; then
+            NEW_TITLE="${PREFIX}${PR_TITLE}"
+            echo "Updating PR title to: $NEW_TITLE"
+
+            gh pr edit $PR_NUMBER --title "$NEW_TITLE" --repo ${{ github.repository }}
+          else
+            echo "No title update needed."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+
