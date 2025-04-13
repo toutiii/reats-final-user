@@ -2,7 +2,7 @@ export default {
     expo: {
         name: "reats-final-users",
         slug: "reats-final-users",
-        version: "1.0.0",
+        version: "0.1.0",
         orientation: "portrait",
         icon: "./assets/icon.png",
         splash: {

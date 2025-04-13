@@ -33,7 +33,7 @@ jobs:
   ios_production_deploy:
     name: Deploy iOS to App Store Connect
     needs: validate_tag_suffix
-    if: needs.validate_tag_suffix.outputs.deployment_type == 'build'
+    if: needs.validate_tag_suffix.outputs.deployment_type == 'false'
     runs-on: ubuntu-latest
     env:
       ENV: "production"
@@ -73,6 +73,54 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: eas submit --platform ios --profile production --non-interactive --id $IOS_BUILD_ID
+
+  android_production_deploy:
+    name: Deploy Android to Play Store (Production)
+    needs: validate_tag_suffix
+    if: needs.validate_tag_suffix.outputs.deployment_type == 'false'
+    runs-on: ubuntu-latest
+    env:
+      ENV: "production"
+      EXPO_PUBLIC_PRODUCTION_API_BASE_URL: "https://api.reats.net"
+      EXPO_PUBLIC_PRODUCTION_API_KEY: ${{ secrets.EXPO_PUBLIC_PRODUCTION_API_KEY }}
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: source/yarn.lock
+
+      - name: Install dependencies
+        working-directory: source
+        run: yarn install --frozen-lockfile
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build Android App for Production
+        working-directory: source
+        run: |
+          eas build --platform android --profile production --non-interactive --json > android_build.json
+          echo "ANDROID_BUILD_ID=$(jq -r '.[0].id' android_build.json)" >> $GITHUB_ENV
+
+      - name: Submit Android App to Play Store (Production)
+        working-directory: source
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: eas submit --platform android --profile production --non-interactive --id $ANDROID_BUILD_ID
 
   deploy_ota:
     name: Deploy OTA Update to Production Channel

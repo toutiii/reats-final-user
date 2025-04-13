@@ -6,11 +6,18 @@
   "build": {
     "preview": {
       "distribution": "internal",
-      "channel": "staging"
+      "autoIncrement": true,
+      "channel": "staging",
+      "android": {
+        "buildType": "app-bundle"
+      }
     },
     "production": {
       "autoIncrement": true,
-      "channel": "production"
+      "channel": "production",
+      "android": {
+        "buildType": "app-bundle"
+      }
     },
     "testflight": {
       "distribution": "store",
@@ -23,6 +30,9 @@
   },
   "submit": {
     "production": {
+      "android": {
+        "track": "production"
+      },
       "ios": {
         "ascAppId": "6744277075"
       }
@@ -33,6 +43,9 @@
       }
     },
     "preview": {
+      "android": {
+        "track": "alpha"
+      },
       "ios": {
         "ascAppId": "6744277075"
       }
