@@ -6,13 +6,15 @@ import {
     Text,
     TouchableHighlight,
     View,
+    Alert,
+    Platform,
+    ToastAndroid,
 } from "react-native";
 import styles_order from "../styles/styles-order.js";
 import all_constants from "../constants";
 import Order from "../components/Order";
 import { TouchableRipple } from "react-native-paper";
 import SearchFilterModalForOrdersHistory from "../modals/SearchFilterModalForOrdersHistory.js";
-import CustomAlert from "../components/CustomAlert.js";
 import { apiBaseUrl, port } from "../env";
 import { callBackEnd } from "../api/callBackend";
 import { getItemFromSecureStore } from "../helpers/common_helpers.js";
@@ -49,10 +51,58 @@ export default function OrdersHistoryFlatList({ ...props }) {
         dateCheckingOk,
         setIsDateCheckingOk
     ] = React.useState(true);
-    const [
-        showAlert,
-        setShowAlert
-    ] = React.useState(false);
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message, onConfirm = null, onCancel = null, confirmText = "OK", cancelText = null) => {
+        if (Platform.OS === "android") {
+            if (onCancel) {
+                // Pour Android avec bouton d'annulation, utiliser Alert au lieu de Toast
+                Alert.alert(
+                    title,
+                    message,
+                    [
+                        {
+                            text: cancelText || all_constants.messages.cancel,
+                            onPress: onCancel,
+                            style: "cancel"
+                        },
+                        {
+                            text: confirmText || "OK",
+                            onPress: onConfirm || (() => {})
+                        }
+                    ]
+                );
+            } else {
+                // Pour Android sans bouton d'annulation, utiliser Toast
+                ToastAndroid.show(message || title, ToastAndroid.SHORT);
+                if (onConfirm) {
+                    setTimeout(onConfirm, 1000);
+                }
+            }
+        } else {
+            // Sur iOS, utiliser Alert au lieu de CustomAlert
+            const buttons = [
+            ];
+
+            if (cancelText && onCancel) {
+                buttons.push({
+                    text: cancelText,
+                    onPress: onCancel,
+                    style: "cancel"
+                });
+            }
+
+            buttons.push({
+                text: confirmText || "OK",
+                onPress: onConfirm || (() => {})
+            });
+
+            Alert.alert(
+                title,
+                message,
+                buttons
+            );
+        }
+    };
     const [
         selectedOrderState,
         setSelectedOrderState
@@ -158,17 +208,33 @@ export default function OrdersHistoryFlatList({ ...props }) {
     ]);
 
     const checkDates = () => {
-        if (startDate !== null && endDate !== null && startDate > endDate) {
-            setShowAlert(true);
-            setIsDateCheckingOk(false);
-        } else {
-            setIsDateCheckingOk(true);
+        if (startDate !== null && endDate !== null) {
+            if (startDate > endDate) {
+                setIsDateCheckingOk(false);
+                return false;
+            }
         }
+        return true;
     };
 
     const onPressFilter = () => {
-        checkDates();
-        toggleSearchFilterModal();
+        if (!checkDates()) {
+            Alert.alert(
+                all_constants.search_modal.alert.date.title,
+                all_constants.search_modal.alert.date.message,
+                [
+                    {
+                        text: "OK",
+                        onPress: () => {
+                            setIsDateCheckingOk(true);
+                            setIsFetchingData(false);
+                        }
+                    }
+                ]
+            );
+        } else {
+            toggleSearchFilterModal();
+        }
         console.log(startDate);
         console.log(endDate);
         console.log(selectedOrderState);
@@ -235,19 +301,7 @@ export default function OrdersHistoryFlatList({ ...props }) {
                     backgroundColor: "white",
                 }}
             >
-                {!dateCheckingOk && (
-                    <CustomAlert
-                        show={showAlert}
-                        title={all_constants.search_modal.alert.date.title}
-                        message={all_constants.search_modal.alert.date.message}
-                        confirmButtonColor="red"
-                        onConfirmPressed={() => {
-                            setShowAlert(false);
-                            setIsDateCheckingOk(true);
-                            setIsFetchingData(false);
-                        }}
-                    />
-                )}
+                {/* L'alerte est maintenant affichée via la fonction checkDates */}
 
                 <FlatList
                     data={data}

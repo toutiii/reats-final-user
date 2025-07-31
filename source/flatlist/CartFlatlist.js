@@ -6,10 +6,12 @@ import {
     Text,
     TouchableHighlight,
     View,
+    Alert,
+    Platform,
+    ToastAndroid,
 } from "react-native";
 import all_constants from "../constants";
 import CartFlatlistItem from "../components/CartFlatlistItem.js";
-import CustomAlert from "../components/CustomAlert.js";
 import { useFocusEffect } from "@react-navigation/native";
 import {
     getAllCartItems,
@@ -25,21 +27,44 @@ export default function CartFlatlist(props) {
     const cartSummaryView = "CartSummaryView";
 
     const [
-        showAlert,
-        setShowAlert
-    ] = useState(false);
-
-    const [
-        showRemoveAllItemResponseAlert,
-        setShowRemoveAllItemResponseAlert
-    ] =
-    useState(false);
-
-    const [
         data,
         setData
-    ] = useState([
-    ]);
+    ] = useState(
+        [
+        ]
+    );
+
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message, onConfirm = null, onCancel = null, confirmText = "OK", cancelText = null) => {
+        if (Platform.OS === "android") {
+            ToastAndroid.show(message || title, ToastAndroid.SHORT);
+            if (onConfirm) {
+                setTimeout(onConfirm, 1000);
+            }
+        } else {
+            // Sur iOS, utiliser Alert au lieu de CustomAlert
+            const buttons = [];
+
+            if (cancelText && onCancel) {
+                buttons.push({
+                    text: cancelText,
+                    onPress: onCancel,
+                    style: "cancel"
+                });
+            }
+            
+            buttons.push({
+                text: confirmText,
+                onPress: onConfirm || (() => {})
+            });
+            
+            Alert.alert(
+                title,
+                message,
+                buttons
+            );
+        }
+    };
 
     const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -59,11 +84,11 @@ export default function CartFlatlist(props) {
         }).start();
     };
 
-    const [
-        isAsyncStorageOperationOk,
-        setIsAsyncStorageOperationOk
-    ] =
-    React.useState(false);
+    // Cette variable n'est plus nécessaire car nous utilisons directement showMessage
+    // const [
+    //    isAsyncStorageOperationOk,
+    //    setIsAsyncStorageOperationOk
+    // ] = React.useState(false);
 
     const [
         clearCart,
@@ -123,10 +148,19 @@ export default function CartFlatlist(props) {
         console.log("Remove global cooker ID: ", resultCookerID);
         console.log("Remove all items from cart: ", result);
         if (result && resultCookerID) {
-            setIsAsyncStorageOperationOk(true);
-            setShowRemoveAllItemResponseAlert(true);
+            // Nous n'avons plus besoin de cette variable car nous utilisons directement showMessage
+            // setIsAsyncStorageOperationOk(true);
+            showMessage(
+                "",
+                all_constants.cart.clear_cart_alert.clear_cart_success_message,
+                () => props.navigation.goBack()
+            );
         } else {
-            setIsAsyncStorageOperationOk(false);
+            // setIsAsyncStorageOperationOk(false);
+            showMessage(
+                "",
+                all_constants.cart.clear_cart_alert.clear_cart_error_message
+            );
         }
     };
 
@@ -370,7 +404,14 @@ export default function CartFlatlist(props) {
                         <View style={{ flex: 1, alignItems: "center" }}>
                             <TouchableHighlight
                                 onPress={() => {
-                                    setShowAlert(true);
+                                    showMessage(
+                                        all_constants.cart.alert.title,
+                                        all_constants.cart.alert.drop_cart_message,
+                                        () => setClearCart(true),
+                                        () => {},
+                                        "Supprimer",
+                                        all_constants.messages.cancel
+                                    );
                                 }}
                                 underlayColor={all_constants.colors.inputBorderColor}
                             >
@@ -398,45 +439,7 @@ export default function CartFlatlist(props) {
                 </View>
             )}
 
-            {showAlert && (
-                <CustomAlert
-                    show={showAlert}
-                    title={all_constants.cart.alert.title}
-                    message={all_constants.cart.alert.drop_cart_message}
-                    confirmButtonColor="red"
-                    showCancelButton={true}
-                    cancelButtonColor="green"
-                    cancelText={all_constants.messages.cancel}
-                    onConfirmPressed={() => {
-                        setShowAlert(false);
-                        setClearCart(true);
-                    }}
-                    onCancelPressed={() => {
-                        setShowAlert(false);
-                    }}
-                />
-            )}
-
-            {showRemoveAllItemResponseAlert && (
-                <CustomAlert
-                    show={showRemoveAllItemResponseAlert}
-                    message={
-                        isAsyncStorageOperationOk
-                            ? all_constants.cart.clear_cart_alert.clear_cart_success_message
-                            : all_constants.cart.clear_cart_alert.clear_cart_error_message
-                    }
-                    confirmButtonColor={isAsyncStorageOperationOk
-                        ? "green"
-                        : "red"}
-                    showCancelButton={false}
-                    onConfirmPressed={() => {
-                        setShowRemoveAllItemResponseAlert(false);
-                        if (isAsyncStorageOperationOk) {
-                            props.navigation.goBack();
-                        }
-                    }}
-                />
-            )}
+            {/* Les CustomAlert ont été remplacés par des appels à la fonction showMessage */}
         </Animated.View>
     );
 }

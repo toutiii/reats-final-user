@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
+    Alert,
     Image,
     Platform,
     Text,
     TextInput,
+    ToastAndroid,
     TouchableHighlight,
     TouchableWithoutFeedback,
     View,
@@ -17,15 +19,35 @@ import { MultipleSelectList } from "react-native-dropdown-select-list";
 import { getDaysOfWeek } from "../helpers/common_helpers";
 import CustomButton from "../components/CustomButton";
 import FormLabelModal from "../modals/FormLabelModal";
-import CustomAlert from "./CustomAlert";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 
 export default function FormField({ ...props }) {
-    const [
-        showAlert,
-        setStateShowAlert
-    ] = useState(false);
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message, onConfirm = null, onCancel = null, confirmText = "OK", cancelText = null) => {
+        if (Platform.OS === "android") {
+            if (onCancel) {
+                Alert.alert(
+                    title,
+                    message,
+                    [
+                        { text: cancelText || all_constants.messages.cancel, onPress: onCancel, style: "cancel" },
+                        { text: confirmText || "OK", onPress: onConfirm || (() => {}) }
+                    ]
+                );
+            } else {
+                ToastAndroid.show(message || title, ToastAndroid.SHORT);
+                if (onConfirm) setTimeout(onConfirm, 1000);
+            }
+        } else {
+            const buttons = [];
+            if (cancelText && onCancel) {
+                buttons.push({ text: cancelText, onPress: onCancel, style: "cancel" });
+            }
+            buttons.push({ text: confirmText || "OK", onPress: onConfirm || (() => {}) });
+            Alert.alert(title, message, buttons);
+        }
+    };
     const [
         picUri,
         setPicUri
@@ -88,6 +110,17 @@ export default function FormField({ ...props }) {
         }
     };
 
+    // Afficher l'erreur via une alerte native si props.error existe
+    useEffect(() => {
+        if (props.error && props.showAlert) {
+            showMessage(
+                all_constants.messages.errors.title,
+                props.error,
+                props.onConfirmPressed
+            );
+        }
+    }, [props.error, props.showAlert, props.onConfirmPressed]);
+
     useEffect(() => {
         setPicUri(props.newItem["photo"]);
     }, [
@@ -99,8 +132,7 @@ export default function FormField({ ...props }) {
             setTown(props.newItem["town"]);
             props.getTownFromPostalCode(props.newItem["postal_code"]);
         }
-    }, [
-    ]);
+    }, [props.fieldName, props.newItem, props.getTownFromPostalCode]);
 
     useEffect(() => {
         console.log(postalCodehasBeenUpdated);
@@ -132,7 +164,11 @@ export default function FormField({ ...props }) {
             const statusObject =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
             if (statusObject.status !== "granted") {
-                setStateShowAlert(true);
+                showMessage(
+                    all_constants.permissions.error,
+                    all_constants.permissions.gallery,
+                    props.onConfirmPressed
+                );
             } else {
                 let result = await ImagePicker.launchImageLibraryAsync({ options });
 
@@ -148,9 +184,14 @@ export default function FormField({ ...props }) {
         if (Platform.OS !== "web") {
             const statusObject = await ImagePicker.requestCameraPermissionsAsync();
             if (statusObject.status !== "granted") {
-                setStateShowAlert(true);
+                showMessage(
+                    all_constants.permissions.error,
+                    all_constants.permissions.gallery,
+                    props.onConfirmPressed
+                );
             } else {
                 let result = await ImagePicker.launchCameraAsync({ options });
+
                 if (!result.canceled) {
                     setPicUri(result.assets[0].uri);
                     props.newItem["photo"] = result.assets[0].uri;
@@ -424,32 +465,7 @@ export default function FormField({ ...props }) {
                     onChange={onChange}
                 />
             )}
-            {showAlert
-                ? (
-                    <CustomAlert
-                        show={showAlert}
-                        title={all_constants.permissions.error}
-                        message={all_constants.permissions.gallery}
-                        confirmButtonColor="red"
-                        onConfirmPressed={props.onConfirmPressed}
-                    />
-                )
-                : (
-                    <View></View>
-                )}
-            {props.error
-                ? (
-                    <CustomAlert
-                        show={props.showAlert}
-                        title={all_constants.messages.errors.title}
-                        message={props.error}
-                        confirmButtonColor="red"
-                        onConfirmPressed={props.onConfirmPressed}
-                    />
-                )
-                : (
-                    <View></View>
-                )}
+            {/* Les alertes sont maintenant gérées par useEffect */}
         </View>
     );
 }

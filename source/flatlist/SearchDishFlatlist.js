@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     Animated,
     FlatList,
     Image,
     KeyboardAvoidingView,
     Platform,
     Text,
+    ToastAndroid,
     TouchableHighlight,
     View,
 } from "react-native";
@@ -23,7 +25,6 @@ import { Dropdown } from "react-native-element-dropdown";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { buildReadableAddress } from "../helpers/toolbox";
 import CustomButton from "../components/CustomButton";
-import CustomAlert from "../components/CustomAlert";
 import { getGlobalCookerID } from "../helpers/toolbox.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -37,43 +38,41 @@ export default function SearchDishFlatList({ ...props }) {
     const [
         cookerID,
         setCookerID
-    ] = React.useState(null);
+    ] = useState(null);
 
     async function getCookerIDFromAsyncStorage() {
         const cookerIDValue = await getGlobalCookerID();
         setCookerID(cookerIDValue);
     }
 
-    getCookerIDFromAsyncStorage();
+    useEffect(() => {
+        getCookerIDFromAsyncStorage();
+    }, []);
 
     const [
         isSearchFilterModalVisible,
         setSearchFilterModalVisible
-    ] =
-    React.useState(false);
+    ] = useState(false);
 
-    const [
-        countryNameFilter,
-        setCountryNameFilter
-    ] = React.useState(null);
+    // État pour le filtre de pays (utilisé dans SearchFilterModal)
+    const [countryNameFilter, setCountryNameFilter] = useState("");
 
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
 
     const [
         isFetchingData,
         setIsFetchingData
-    ] = React.useState(false);
+    ] = useState(false);
 
     const [
         data,
         setData
-    ] = React.useState([
-    ]);
+    ] = useState([]);
 
     const [
         oneSearchHasBeenRun,
         setOneSearchHasBeenRun
-    ] = React.useState(false);
+    ] = useState(false);
 
     const toggleSearchFilterModal = () => {
         setSearchFilterModalVisible(!isSearchFilterModalVisible);
@@ -82,78 +81,125 @@ export default function SearchDishFlatList({ ...props }) {
     const [
         searchURL,
         setSearchURL
-    ] = React.useState("");
+    ] = useState("");
 
     const [
         addressesData,
         setAddressesData
-    ] = React.useState([
-    ]);
+    ] = useState([]);
 
     const [
         dishNameFilter,
         setDishNameFilter
-    ] = React.useState(null);
+    ] = useState(null);
 
     const [
         addressValue,
         setAddressValue
-    ] = React.useState(null);
-
-    const [
-        showAlertMissingAddress,
-        setShowAlertMissingAddress
-    ] =
-    React.useState(false);
-
-    const [
-        showAlertMissingDeliveryMode,
-        setShowAlertMissingDeliveryMode
-    ] =
-    React.useState(false);
-
-    const [
-        showAlertUpdateDeliveryAddress,
-        setShowAlertUpdateDeliveryAddress
-    ] =
-    React.useState(false);
-
-    const [
-        showAlertUpdateDeliveryMode,
-        setShowAlertUpdateDeliveryMode
-    ] =
-    React.useState(false);
+    ] = useState(null);
 
     const [
         deliveryModeValue,
         setDeliveryModeValue
-    ] = React.useState(null);
+    ] = useState(null);
 
     const [
         tempDeliveryMode,
         setTempDeliveryMode
-    ] = React.useState(null);
+    ] = useState(null);
 
     const [
         tempAddressValue,
         setTempAddressValue
-    ] = React.useState(null);
+    ] = useState(null);
 
     const [
         tempAddressLabel,
         setTempAddressLabel
-    ] = React.useState(null);
-
-    const [
-        showEmptyAddressDataAlert,
-        setShowEmptyAddressDataAlert
-    ] =
-    React.useState(false);
+    ] = useState(null);
 
     const [
         refreshKey,
         setRefreshKey
-    ] = React.useState(0); // Add a refresh state
+    ] = useState(0);
+
+    const showMessage = (title, message, onConfirm = null, onCancel = null, confirmText = "OK", cancelText = null) => {
+        if (Platform.OS === "android") {
+            if (onCancel) {
+                Alert.alert(
+                    title,
+                    message,
+                    [
+                        {
+                            text: cancelText || all_constants.messages.cancel,
+                            onPress: onCancel,
+                            style: "cancel"
+                        },
+                        {
+                            text: confirmText || "OK",
+                            onPress: onConfirm || (() => {})
+                        }
+                    ]
+                );
+            } else {
+                ToastAndroid.show(message || title, ToastAndroid.SHORT);
+                if (onConfirm) {
+                    setTimeout(onConfirm, 1000);
+                }
+            }
+        } else {
+            const buttons = [];
+
+            if (cancelText && onCancel) {
+                buttons.push({
+                    text: cancelText,
+                    onPress: onCancel,
+                    style: "cancel"
+                });
+            }
+
+            buttons.push({
+                text: confirmText || "OK",
+                onPress: onConfirm || (() => {})
+            });
+
+            Alert.alert(
+                title,
+                message,
+                buttons
+            );
+        }
+    };
+
+    const addToStorage = async (key, value) => {
+        try {
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem(key, jsonValue);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    const updateDeliveryMode = async () => {
+        await removeAllCartItems();
+        await cleanCurrentOrderState();
+        await removeGlobalCookerID();
+        setCookerID(null);
+        setDeliveryModeValue(tempDeliveryMode);
+        await addToStorage("delivery_mode", tempDeliveryMode);
+        setRefreshKey((prevKey) => prevKey + 1);
+    };
+
+    const updateDeliveryAddress = async () => {
+        await removeAllCartItems();
+        await cleanCurrentOrderState();
+        await removeGlobalCookerID();
+        setCookerID(null);
+        setAddressValue(tempAddressValue);
+        await addToStorage("address_id", tempAddressValue);
+        await addToStorage("full_delivery_address", tempAddressLabel);
+        setRefreshKey((prevKey) => prevKey + 1);
+    };
 
     const deliveryModeData = [
         {
@@ -182,14 +228,17 @@ export default function SearchDishFlatList({ ...props }) {
         }).start();
     };
 
+    // Fonction pour réinitialiser les filtres
     const resetFilters = () => {
         setDishNameFilter(null);
-        setCountryNameFilter(null);
+        // countryNameFilter est utilisé dans SearchFilterModal
+        setCountryNameFilter("");
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         cleanCurrentOrderState();
     }, [
+        // Pas de dépendances
     ]);
 
     async function getCustomersAddresses() {
@@ -203,13 +252,11 @@ export default function SearchDishFlatList({ ...props }) {
             null,
         );
         console.log("result: ", result);
-        let readableAddresses = [
-        ];
+        let readableAddresses = [];
         for (let i = 0; i < result.data.length; i++) {
             readableAddresses.push(buildReadableAddress(result.data[i]));
         }
-        let addressesDataForDropdown = [
-        ];
+        let addressesDataForDropdown = [];
         for (let i = 0; i < readableAddresses.length; i++) {
             addressesDataForDropdown.push({
                 label: readableAddresses[i],
@@ -220,69 +267,71 @@ export default function SearchDishFlatList({ ...props }) {
         console.log("addressesData: ", addressesDataForDropdown);
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (addressValue !== null) {
             if (cookerID !== null) {
                 console.log("Filtering by cookerID", cookerID);
-                buildSearchUrl();
-                setIsFetchingData(true);
-            } else {
                 setTimeout(() => {
-                    console.log("cookerID is null");
-                    console.log("Filtering by default");
                     buildSearchUrl();
-                    setIsFetchingData(true);
+                    onPressSearchButton();
                 }, 500);
             }
         }
     }, [
-        cookerID
+        cookerID,
+        addressValue
     ]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         console.log("Fetching customer addresses...");
         getCustomersAddresses();
-    }, [
-    ]);
+    }, []);
 
-    React.useEffect(() => {
+    // Fonction pour récupérer les données depuis l'API
+    const fetchData = async () => {
+        try {
+            const access = await getItemFromSecureStore("accessToken");
+            const results = await callBackEnd(
+                new FormData(),
+                searchURL,
+                "GET",
+                access,
+                false,
+                null
+            );
+            setData(results.data);
+            setOneSearchHasBeenRun(true);
+            setIsFetchingData(false);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setIsFetchingData(false);
+        }
+    };
+
+    useEffect(() => {
         if (isFetchingData) {
+            console.log("Fetching data...");
             fadeOut();
+            fetchData();
+        } else {
+            console.log("Not fetching data...");
             setTimeout(() => {
-                async function fetchDataFromBackend() {
-                    console.log(searchURL);
-                    const access = await getItemFromSecureStore("accessToken");
-                    const results = await callBackEnd(
-                        new FormData(),
-                        searchURL,
-                        "GET",
-                        access,
-                        false,
-                        null,
-                    );
-                    console.log(results);
-                    setData(results.data);
-                }
-                fetchDataFromBackend();
-                setIsFetchingData(false);
-                resetFilters();
-                setOneSearchHasBeenRun(true);
-                setSearchURL("");
                 fadeIn();
             }, 1000);
         }
     }, [
-        isFetchingData
+        isFetchingData,
+        searchURL
     ]);
 
     const onPressSearchButton = async () => {
         if (addressValue === null) {
-            setShowAlertMissingAddress(true);
+            showMessage(all_constants.search.alert.title, all_constants.search.alert.missing_address_message);
             return;
         }
 
         if (deliveryModeValue === null) {
-            setShowAlertMissingDeliveryMode(true);
+            showMessage(all_constants.search.alert.title, all_constants.search.alert.missing_delivery_mode_message);
             return;
         }
         setSearchFilterModalVisible(false);
@@ -302,10 +351,6 @@ export default function SearchDishFlatList({ ...props }) {
             queryParams += `name=${dishNameFilter}`;
         }
 
-        if (countryNameFilter !== null) {
-            queryParams += `&country=${countryNameFilter}`;
-        }
-
         if (addressValue !== null) {
             queryParams += `&search_address_id=${addressValue}`;
         }
@@ -320,38 +365,51 @@ export default function SearchDishFlatList({ ...props }) {
 
         localSearchURL = localSearchURL.replace("?&", "?");
 
-        console.log("localSearchURL: ", localSearchURL);
-
         setSearchURL(localSearchURL);
     };
 
-    const addToStorage = async (key, value) => {
-        try {
-            const jsonValue = JSON.stringify(value);
-            console.log(`Storing ${key} with value ${value}`);
-            await AsyncStorage.setItem(key, jsonValue);
-        } catch (e) {
-            console.error(e);
+    const handleAddressChange = (value, label) => {
+        const cartResults = getAllCartItems();
+        if (cartResults.data.length > 0 && addressValue !== value) {
+            setTempAddressValue(value);
+            setTempAddressLabel(label);
+            showMessage(
+                all_constants.search.alert.warning_title,
+                all_constants.search.alert.delivery_address_change_warning,
+                async () => {
+                    await updateDeliveryAddress();
+                },
+                () => {
+                    setRefreshKey((prevKey) => prevKey + 1);
+                },
+                all_constants.search.alert.button.label.yes,
+                all_constants.search.alert.button.label.no
+            );
+        } else {
+            setAddressValue(value);
+            addToStorage("address_id", value);
+            addToStorage("full_delivery_address", label);
         }
     };
 
-    const updateDeliveryMode = async () => {
-        const result = await removeAllCartItems();
-        const resultCookerID = await removeGlobalCookerID();
-        console.log("Remove global cooker ID: ", resultCookerID);
-        console.log("Remove all items from cart: ", result);
-        setDeliveryModeValue(tempDeliveryMode);
-        await addToStorage("delivery_mode", tempDeliveryMode);
-    };
-
-    const updateDeliveryAddress = async () => {
-        const result = await removeAllCartItems();
-        const resultCookerID = await removeGlobalCookerID();
-        console.log("Remove global cooker ID: ", resultCookerID);
-        console.log("Remove all items from cart: ", result);
-        setAddressValue(tempAddressValue);
-        await addToStorage("address_id", tempAddressValue);
-        await addToStorage("full_delivery_address", tempAddressLabel);
+    const handleDeliveryModeChange = (value) => {
+        const cartResults = getAllCartItems();
+        if (cartResults.data.length > 0 && deliveryModeValue !== value) {
+            setTempDeliveryMode(value);
+            showMessage(
+                all_constants.search.alert.warning_title,
+                all_constants.search.alert.delivery_mode_change_warning,
+                async () => {
+                    await updateDeliveryMode();
+                },
+                () => {},
+                all_constants.search.alert.button.label.yes,
+                all_constants.search.alert.button.label.no
+            );
+        } else {
+            setDeliveryModeValue(value);
+            addToStorage("delivery_mode", value);
+        }
     };
 
     return (
@@ -359,7 +417,8 @@ export default function SearchDishFlatList({ ...props }) {
             style={{ flex: 1 }}
             behavior={Platform.OS === "ios"
                 ? "padding"
-                : "height"}
+                : "height"
+            }
         >
             <Animated.View
                 style={{ flex: 1, opacity: fadeAnim, backgroundColor: "white" }}
@@ -384,100 +443,11 @@ export default function SearchDishFlatList({ ...props }) {
                                     backgroundColor: "white",
                                 }}
                             >
-                                {showEmptyAddressDataAlert && (
-                                    <CustomAlert
-                                        show={showEmptyAddressDataAlert}
-                                        title={all_constants.search.alert.warning_title}
-                                        message={
-                                            all_constants.search.alert
-                                                .no_delivery_address_alert_message
-                                        }
-                                        confirmButtonColor="green"
-                                        onConfirmPressed={() => {
-                                            setShowEmptyAddressDataAlert(false);
-                                            props.navigation.openDrawer();
-                                        }}
-                                    />
-                                )}
-
-                                {showAlertMissingAddress && (
-                                    <CustomAlert
-                                        show={showAlertMissingAddress}
-                                        title={all_constants.search.alert.title}
-                                        message={all_constants.search.alert.missing_address_message}
-                                        confirmButtonColor="red"
-                                        onConfirmPressed={() => {
-                                            setShowAlertMissingAddress(false);
-                                        }}
-                                    />
-                                )}
-
-                                {showAlertUpdateDeliveryMode && (
-                                    <CustomAlert
-                                        show={showAlertUpdateDeliveryMode}
-                                        title={all_constants.search.alert.warning_title}
-                                        message={
-                                            all_constants.search.alert.delivery_mode_change_warning
-                                        }
-                                        confirmButtonColor="green"
-                                        cancelButtonColor="red"
-                                        cancelText={all_constants.search.alert.button.label.no}
-                                        confirmText={all_constants.search.alert.button.label.yes}
-                                        showCancelButton={true}
-                                        onConfirmPressed={async () => {
-                                            setShowAlertUpdateDeliveryMode(false);
-                                            await updateDeliveryMode();
-                                        }}
-                                        onCancelPressed={() => {
-                                            setShowAlertUpdateDeliveryMode(false);
-                                        }}
-                                    />
-                                )}
-
-                                {showAlertUpdateDeliveryAddress && (
-                                    <CustomAlert
-                                        show={showAlertUpdateDeliveryAddress}
-                                        title={all_constants.search.alert.warning_title}
-                                        message={
-                                            all_constants.search.alert.delivery_address_change_warning
-                                        }
-                                        confirmButtonColor="green"
-                                        cancelButtonColor="red"
-                                        cancelText={all_constants.search.alert.button.label.no}
-                                        confirmText={all_constants.search.alert.button.label.yes}
-                                        showCancelButton={true}
-                                        onConfirmPressed={async () => {
-                                            setShowAlertUpdateDeliveryAddress(false);
-                                            await updateDeliveryAddress();
-                                        }}
-                                        onCancelPressed={() => {
-                                            setShowAlertUpdateDeliveryAddress(false);
-                                            setRefreshKey((prevKey) => prevKey + 1);
-                                        }}
-                                    />
-                                )}
-
-                                {showAlertMissingDeliveryMode && (
-                                    <CustomAlert
-                                        show={showAlertMissingDeliveryMode}
-                                        title={all_constants.search.alert.title}
-                                        message={
-                                            all_constants.search.alert.missing_delivery_mode_message
-                                        }
-                                        confirmButtonColor="red"
-                                        onConfirmPressed={() => {
-                                            setShowAlertMissingDeliveryMode(false);
-                                        }}
-                                    />
-                                )}
-
                                 {isSearchFilterModalVisible && (
                                     <SearchFilterModal
                                         isModalVisible={isSearchFilterModalVisible}
                                         setDishNameFilter={setDishNameFilter}
                                         dishNameFilter={dishNameFilter}
-                                        countryNameFilter={countryNameFilter}
-                                        setCountryNameFilter={setCountryNameFilter}
                                         searchURL={searchURL}
                                         onPressSearchButton={onPressSearchButton}
                                         onPressCloseButton={onPressCloseButton}
@@ -488,7 +458,10 @@ export default function SearchDishFlatList({ ...props }) {
                                 {addressesData.length === 0 && (
                                     <TouchableHighlight
                                         onPress={() => {
-                                            setShowEmptyAddressDataAlert(true);
+                                            showMessage(
+                                                all_constants.search.alert.title,
+                                                all_constants.search.alert.no_address_message
+                                            );
                                         }}
                                         underlayColor="white"
                                     >
@@ -531,7 +504,7 @@ export default function SearchDishFlatList({ ...props }) {
                                         }}
                                     >
                                         <Dropdown
-                                            key={refreshKey} // Use the refreshKey to trigger re-render
+                                            key={refreshKey}
                                             style={styles_dropdown_for_dishes_search.dropdown}
                                             placeholderStyle={
                                                 styles_dropdown_for_dishes_search.placeholderStyle
@@ -548,28 +521,15 @@ export default function SearchDishFlatList({ ...props }) {
                                             maxHeight={300}
                                             labelField="label"
                                             valueField="value"
-                                            placeholder={all_constants.search.address.placeholder}
+                                            placeholder={
+                                                all_constants.search.address.placeholder
+                                            }
                                             searchPlaceholder={
                                                 all_constants.search.address.search_placeholder
                                             }
                                             value={addressValue}
-                                            onChange={async (item) => {
-                                                const cartResults = await getAllCartItems();
-                                                if (
-                                                    cartResults.data.length > 0 &&
-                          addressValue !== item.value
-                                                ) {
-                                                    setTempAddressValue(item.value);
-                                                    setTempAddressLabel(item.label);
-                                                    setShowAlertUpdateDeliveryAddress(true);
-                                                } else {
-                                                    setAddressValue(item.value);
-                                                    await addToStorage("address_id", item.value);
-                                                    await addToStorage(
-                                                        "full_delivery_address",
-                                                        item.label,
-                                                    );
-                                                }
+                                            onChange={(item) => {
+                                                handleAddressChange(item.value, item.label);
                                             }}
                                             renderLeftIcon={() => (
                                                 <MaterialCommunityIcons
@@ -601,26 +561,19 @@ export default function SearchDishFlatList({ ...props }) {
                                         }
                                         iconStyle={styles_dropdown_for_dishes_search.iconStyle}
                                         data={deliveryModeData}
+                                        search
                                         maxHeight={300}
                                         labelField="label"
                                         valueField="value"
                                         placeholder={
-                                            all_constants.search.delivery_mode
-                                                .delivery_mode_placeholder
+                                            all_constants.search.delivery_mode.delivery_mode_placeholder
+                                        }
+                                        searchPlaceholder={
+                                            "Rechercher un mode de livraison"
                                         }
                                         value={deliveryModeValue}
-                                        onChange={async (item) => {
-                                            const cartResults = await getAllCartItems();
-                                            if (
-                                                cartResults.data.length > 0 &&
-                        deliveryModeValue !== item.value
-                                            ) {
-                                                setTempDeliveryMode(item.value);
-                                                setShowAlertUpdateDeliveryMode(true);
-                                            } else {
-                                                setDeliveryModeValue(item.value);
-                                                await addToStorage("delivery_mode", item.value);
-                                            }
+                                        onChange={(item) => {
+                                            handleDeliveryModeChange(item.value);
                                         }}
                                         renderLeftIcon={() => (
                                             <MaterialIcons
@@ -710,7 +663,8 @@ export default function SearchDishFlatList({ ...props }) {
                                 <Text style={{ fontSize: 20 }}>
                                     {oneSearchHasBeenRun && data.length === 0
                                         ? all_constants.search.no_dishes_found
-                                        : ""}
+                                        : ""
+                                    }
                                 </Text>
                             </View>
                         }

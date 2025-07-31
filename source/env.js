@@ -15,3 +15,5 @@ export const apiKeyBackend =
           : process.env.EXPO_PUBLIC_DEVELOPMENT_API_KEY;
 
 export const appOriginHeader = "customer";
+
+export const port = process.env.EXPO_PUBLIC_DEVELOPMENT_API_PORT;

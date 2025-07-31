@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Animated, View, Text } from "react-native";
+import { ActivityIndicator, Animated, View, Text, Alert, Platform, ToastAndroid } from "react-native";
 import styles_order_view from "../styles/styles-order-view";
 import all_constants from "../constants";
 import CustomButton from "../components/CustomButton";
@@ -13,7 +13,6 @@ import {
 import moment from "moment";
 import "moment/locale/fr"; // Import French locale
 import { buildReadableAddress } from "../helpers/toolbox";
-import CustomAlert from "./CustomAlert";
 import { getItemFromSecureStore } from "../helpers/common_helpers";
 import { apiBaseUrl, port } from "../env";
 import { callBackEnd } from "../api/callBackend";
@@ -42,22 +41,58 @@ export default function OrderView(props) {
 
     const onPressCloseModal = () => setModalVisible(false);
 
-    const [
-        showCancelOrderAlert,
-        setShowCancelOrderAlert
-    ] = useState(false);
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message, onConfirm = null, onCancel = null, confirmText = "OK", cancelText = null) => {
+        if (Platform.OS === "android") {
+            if (onCancel) {
+                // Pour Android avec bouton d'annulation, utiliser Alert au lieu de Toast
+                Alert.alert(
+                    title,
+                    message,
+                    [
+                        {
+                            text: cancelText || all_constants.messages.cancel,
+                            onPress: onCancel,
+                            style: "cancel"
+                        },
+                        {
+                            text: confirmText || "OK",
+                            onPress: onConfirm || (() => {})
+                        }
+                    ]
+                );
+            } else {
+                // Pour Android sans bouton d'annulation, utiliser Toast
+                ToastAndroid.show(message || title, ToastAndroid.SHORT);
+                if (onConfirm) {
+                    setTimeout(onConfirm, 1000);
+                }
+            }
+        } else {
+            // Sur iOS, utiliser Alert au lieu de CustomAlert
+            const buttons = [
+            ];
 
-    const [
-        showCancelOrderSuccessAlert,
-        setShowCancelOrderSuccessAlert
-    ] =
-    useState(false);
+            if (cancelText && onCancel) {
+                buttons.push({
+                    text: cancelText,
+                    onPress: onCancel,
+                    style: "cancel"
+                });
+            }
 
-    const [
-        showCancelOrderFailureAlert,
-        setShowCancelOrderFailureAlert
-    ] =
-    useState(false);
+            buttons.push({
+                text: confirmText || "OK",
+                onPress: onConfirm || (() => {})
+            });
+
+            Alert.alert(
+                title,
+                message,
+                buttons
+            );
+        }
+    };
 
     const [
         isUpdatingOrder,
@@ -98,9 +133,19 @@ export default function OrderView(props) {
         );
 
         if (result) {
-            setShowCancelOrderSuccessAlert(true);
+            // Afficher l'alerte de succès et retourner à l'écran précédent
+            showMessage(
+                all_constants.pending_orders_view.cancel.success.title,
+                all_constants.pending_orders_view.cancel.success.message,
+                () => props.navigation.goBack()
+            );
         } else {
-            setShowCancelOrderFailureAlert(true);
+            // Afficher l'alerte d'échec et retourner à l'écran précédent
+            showMessage(
+                all_constants.pending_orders_view.cancel.failure.title,
+                all_constants.pending_orders_view.cancel.failure.message,
+                () => props.navigation.goBack()
+            );
         }
     }
 
@@ -141,55 +186,9 @@ export default function OrderView(props) {
                 </View>
             )}
 
-            {showCancelOrderAlert && (
-                <CustomAlert
-                    show={showCancelOrderAlert}
-                    title={all_constants.pending_orders_view.cancel.title}
-                    message={
-                        item.status ===
-            all_constants.drawercontent.drawer_item.orders_history
-                .original_status.pending
-                            ? all_constants.pending_orders_view.cancel.pending_message
-                            : all_constants.pending_orders_view.cancel.message
-                    }
-                    showCancelButton={true}
-                    confirmButtonColor={"red"}
-                    cancelButtonColor={"green"}
-                    confirmText={all_constants.messages.understood}
-                    cancelText={all_constants.messages.quit}
-                    onConfirmPressed={() => {
-                        setShowCancelOrderAlert(false);
-                        setIsUpdatingOrder(true);
-                    }}
-                    onCancelPressed={() => {
-                        setShowCancelOrderAlert(false);
-                    }}
-                />
-            )}
-            {showCancelOrderSuccessAlert && (
-                <CustomAlert
-                    show={showCancelOrderSuccessAlert}
-                    title={all_constants.pending_orders_view.cancel.success.title}
-                    message={all_constants.pending_orders_view.cancel.success.message}
-                    confirmButtonColor={"green"}
-                    onConfirmPressed={() => {
-                        setShowCancelOrderSuccessAlert(false);
-                        props.navigation.goBack();
-                    }}
-                />
-            )}
-            {showCancelOrderFailureAlert && (
-                <CustomAlert
-                    show={showCancelOrderFailureAlert}
-                    title={all_constants.pending_orders_view.cancel.failure.title}
-                    message={all_constants.pending_orders_view.cancel.failure.message}
-                    confirmButtonColor={"red"}
-                    onConfirmPressed={() => {
-                        setShowCancelOrderFailureAlert(false);
-                        props.navigation.goBack();
-                    }}
-                />
-            )}
+            {/* Le CustomAlert a été remplacé par un appel à la fonction showMessage */}
+            {/* Le CustomAlert a été remplacé par un appel à la fonction showMessage */}
+            {/* Le CustomAlert a été remplacé par un appel à la fonction showMessage */}
             <View style={{ flex: 3, backgroundColor: "white" }}>
                 <View style={{ flex: 1, alignItems: "center" }}>
                     <View style={{ flex: 1 }}>
@@ -415,7 +414,17 @@ export default function OrderView(props) {
                             label_color={"white"}
                             button_width={all_constants.screen.width - 40}
                             onPress={() => {
-                                setShowCancelOrderAlert(true);
+                                const message = item.status === all_constants.drawercontent.drawer_item.orders_history.original_status.pending
+                                    ? all_constants.pending_orders_view.cancel.pending_message
+                                    : all_constants.pending_orders_view.cancel.message;
+                                showMessage(
+                                    all_constants.pending_orders_view.cancel.title,
+                                    message,
+                                    () => setIsUpdatingOrder(true),
+                                    () => {},
+                                    all_constants.messages.understood,
+                                    all_constants.messages.quit
+                                );
                             }}
                         />
                     </View>

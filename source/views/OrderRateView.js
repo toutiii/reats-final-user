@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList, View, TextInput, Text } from "react-native";
+import { FlatList, View, TextInput, Text, Alert, Platform, ToastAndroid } from "react-native";
 import RatingItem from "../components/RatingItem";
 import { callBackEnd } from "../api/callBackend";
 import { apiBaseUrl, port } from "../env";
@@ -7,7 +7,6 @@ import { getItemFromSecureStore } from "../helpers/common_helpers";
 import { Rating } from "react-native-ratings";
 import CustomButton from "../components/CustomButton";
 import all_constants from "../constants";
-import CustomAlert from "../components/CustomAlert";
 
 export default function OrderRateView({ ...props }) {
     const data = props.route.params.data;
@@ -52,17 +51,38 @@ export default function OrderRateView({ ...props }) {
         order_id: orderID,
     });
 
-    const [
-        showSuccessRatingMessageAlert,
-        setShowSuccessRatingMessageAlert
-    ] =
-    useState(false);
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message, onConfirm = null, onCancel = null, confirmText = "OK", cancelText = null) => {
+        if (Platform.OS === "android") {
+            ToastAndroid.show(message || title, ToastAndroid.SHORT);
+            if (onConfirm) {
+                setTimeout(onConfirm, 1000);
+            }
+        } else {
+            // Sur iOS, utiliser Alert au lieu de CustomAlert
+            const buttons = [
+            ];
 
-    const [
-        showFailureRatingMessageAlert,
-        setShowFailureRatingMessageAlert
-    ] =
-    useState(false);
+            if (cancelText && onCancel) {
+                buttons.push({
+                    text: cancelText,
+                    onPress: onCancel,
+                    style: "cancel"
+                });
+            }
+
+            buttons.push({
+                text: confirmText,
+                onPress: onConfirm || (() => {})
+            });
+
+            Alert.alert(
+                title,
+                message,
+                buttons
+            );
+        }
+    };
 
     const updateItemData = (item, type, key, value) => {
         const isDish = type === "dish";
@@ -169,9 +189,18 @@ export default function OrderRateView({ ...props }) {
         const orderSubmitResult = await submitOrderRating();
 
         if (dishSubmitResult.ok && drinkSubmitResult.ok && orderSubmitResult.ok) {
-            setShowSuccessRatingMessageAlert(true);
+            showMessage(
+                all_constants.order_rate_view.alert.success.title,
+                all_constants.order_rate_view.alert.success.message,
+                () => props.navigation.popToTop(),
+                null,
+                "OK"
+            );
         } else {
-            setShowFailureRatingMessageAlert(true);
+            showMessage(
+                all_constants.order_rate_view.alert.failure.title,
+                all_constants.order_rate_view.alert.failure.message
+            );
         }
     }
 
@@ -223,29 +252,7 @@ export default function OrderRateView({ ...props }) {
                 backgroundColor: "white",
             }}
         >
-            {showSuccessRatingMessageAlert && (
-                <CustomAlert
-                    show={showSuccessRatingMessageAlert}
-                    title={all_constants.order_rate_view.alert.success.title}
-                    message={all_constants.order_rate_view.alert.success.message}
-                    confirmButtonColor={"green"}
-                    onConfirmPressed={() => {
-                        setShowSuccessRatingMessageAlert(false);
-                        props.navigation.popToTop();
-                    }}
-                />
-            )}
-            {showFailureRatingMessageAlert && (
-                <CustomAlert
-                    show={showFailureRatingMessageAlert}
-                    title={all_constants.order_rate_view.alert.failure.title}
-                    message={all_constants.order_rate_view.alert.failure.message}
-                    confirmButtonColor={"red"}
-                    onConfirmPressed={() => {
-                        setShowFailureRatingMessageAlert(false);
-                    }}
-                />
-            )}
+            {/* Les CustomAlert ont été remplacés par des appels à la fonction showMessage dans submitRatings */}
             <View style={{ flex: 1, margin: "3%" }}>
                 <FlatList
                     data={data}

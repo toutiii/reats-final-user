@@ -1,9 +1,8 @@
 import React from "react";
-import { TextInput, TouchableHighlight, View } from "react-native";
+import { TextInput, TouchableHighlight, View, Alert, ToastAndroid, Platform } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import all_constants from "../constants";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import CustomAlert from "../components/CustomAlert";
 import CustomButton from "../components/CustomButton";
 import { formatDateToFrench } from "../helpers/toolbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -44,34 +43,15 @@ export default function CartDeliveryInfosView({ ...props }) {
         setShowTimeMode
     ] = React.useState(false);
 
-    const [
-        showCustomAlert,
-        setShowCustomAlert
-    ] = React.useState(false);
-
-    const [
-        showPastTimeCustomAlert,
-        setShowPastTimeCustomAlert
-    ] =
-    React.useState(false);
-
-    const [
-        showTooSoonOrderCustomAlert,
-        setShowTooSoonOrderCustomAlert
-    ] =
-    React.useState(false);
-
-    const [
-        showNotEditableAddressAlert,
-        setShowNotEditableAddressAlert
-    ] =
-    React.useState(false);
-
-    const [
-        showAlertMissingDeliveryInfos,
-        setShowAlertMissingDeliveryInfos
-    ] =
-    React.useState(false);
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message) => {
+        if (Platform.OS === "android") {
+            ToastAndroid.show(message, ToastAndroid.SHORT);
+        } else {
+            // Sur iOS, utiliser Alert au lieu de CustomAlert
+            Alert.alert(title, message);
+        }
+    };
 
     const onChangeDate = (event, selectedDate) => {
         console.log("event: ", event);
@@ -106,7 +86,7 @@ export default function CartDeliveryInfosView({ ...props }) {
         console.log("hours: ", hours);
 
         if (hours < 8 || hours > 22) {
-            setShowCustomAlert(true);
+            showMessage(all_constants.messages.failed.title, all_constants.cart.delivery.wrong_delivery_hours);
             setDeliveryTime("");
             return;
         }
@@ -164,17 +144,17 @@ export default function CartDeliveryInfosView({ ...props }) {
 
     const navigateToCartSummary = () => {
         if (deliveryDate.length === 0 || deliveryTime.length === 0) {
-            setShowAlertMissingDeliveryInfos(true);
+            showMessage(all_constants.messages.failed.title, all_constants.cart.delivery.missing_delivery_infos);
             return;
         }
 
         if (isTimeInPast(deliveryTime)) {
-            setShowPastTimeCustomAlert(true);
+            showMessage(all_constants.messages.failed.title, all_constants.cart.delivery.past_time);
             return;
         }
 
         if (!isTimeAtLeastOneHourInFuture(deliveryTime)) {
-            setShowTooSoonOrderCustomAlert(true);
+            showMessage(all_constants.messages.failed.title, all_constants.cart.delivery.too_soon);
             return;
         }
 
@@ -198,69 +178,6 @@ export default function CartDeliveryInfosView({ ...props }) {
                 backgroundColor: "white",
             }}
         >
-            {showCustomAlert && (
-                <CustomAlert
-                    show={showCustomAlert}
-                    title={all_constants.messages.failed.title}
-                    message={all_constants.cart.delivery.wrong_delivery_hours}
-                    confirmButtonColor={"red"}
-                    onConfirmPressed={() => {
-                        setShowCustomAlert(false);
-                    }}
-                />
-            )}
-
-            {showPastTimeCustomAlert && (
-                <CustomAlert
-                    show={showPastTimeCustomAlert}
-                    title={all_constants.messages.failed.title}
-                    message={all_constants.cart.delivery.past_time}
-                    confirmButtonColor={"red"}
-                    onConfirmPressed={() => {
-                        setShowPastTimeCustomAlert(false);
-                    }}
-                />
-            )}
-
-            {showTooSoonOrderCustomAlert && (
-                <CustomAlert
-                    show={showTooSoonOrderCustomAlert}
-                    title={all_constants.messages.failed.title}
-                    message={all_constants.cart.delivery.too_soon}
-                    confirmButtonColor={"red"}
-                    onConfirmPressed={() => {
-                        setShowTooSoonOrderCustomAlert(false);
-                    }}
-                />
-            )}
-
-            {showAlertMissingDeliveryInfos && (
-                <CustomAlert
-                    show={showAlertMissingDeliveryInfos}
-                    title={all_constants.messages.failed.title}
-                    message={all_constants.cart.delivery.missing_delivery_infos}
-                    confirmButtonColor={"red"}
-                    onConfirmPressed={() => {
-                        setShowAlertMissingDeliveryInfos(false);
-                    }}
-                />
-            )}
-
-            {showNotEditableAddressAlert && (
-                <CustomAlert
-                    show={showNotEditableAddressAlert}
-                    title={all_constants.cart.alert.title}
-                    message={all_constants.cart.alert.not_editable_address_message}
-                    confirmButtonColor={"green"}
-                    onConfirmPressed={() => {
-                        setShowNotEditableAddressAlert(false);
-                    }}
-                    style={{
-                        flex: 1,
-                    }}
-                />
-            )}
-
             {showDateMode && (
                 <DateTimePicker
                     testID="datePicker"
@@ -407,7 +324,7 @@ export default function CartDeliveryInfosView({ ...props }) {
                 >
                     <TouchableHighlight
                         onPress={() => {
-                            setShowNotEditableAddressAlert(true);
+                            showMessage(all_constants.messages.failed.title, all_constants.cart.delivery.not_editable_address);
                         }}
                     >
                         <MaterialCommunityIcons
@@ -427,7 +344,7 @@ export default function CartDeliveryInfosView({ ...props }) {
                 >
                     <TouchableHighlight
                         onPress={() => {
-                            setShowNotEditableAddressAlert(true);
+                            showMessage(all_constants.messages.failed.title, all_constants.cart.delivery.not_editable_address);
                         }}
                     >
                         <TextInput

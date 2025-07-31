@@ -6,6 +6,9 @@ import {
     TextInput,
     ScrollView,
     View,
+    Alert,
+    Platform,
+    ToastAndroid,
 } from "react-native";
 import all_constants from "../constants";
 import CustomButton from "../components/CustomButton";
@@ -14,7 +17,6 @@ import { apiBaseUrl, port } from "../env";
 import { callBackEnd } from "../api/callBackend";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useStripe } from "@stripe/stripe-react-native";
-import CustomAlert from "../components/CustomAlert";
 import { cleanCurrentOrderState } from "../helpers/toolbox.js";
 
 export default function CartSummaryView({ ...props }) {
@@ -36,11 +38,38 @@ export default function CartSummaryView({ ...props }) {
         }).start();
     };
 
-    const [
-        showPaymentSuccessAlert,
-        setShowPaymentSuccessAlert
-    ] =
-    React.useState(false);
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message, onConfirm = null, onCancel = null, confirmText = "OK", cancelText = null) => {
+        if (Platform.OS === "android") {
+            ToastAndroid.show(message || title, ToastAndroid.SHORT);
+            if (onConfirm) {
+                setTimeout(onConfirm, 1000);
+            }
+        } else {
+            // Sur iOS, utiliser Alert au lieu de CustomAlert
+            const buttons = [
+            ];
+
+            if (cancelText && onCancel) {
+                buttons.push({
+                    text: cancelText,
+                    onPress: onCancel,
+                    style: "cancel"
+                });
+            }
+
+            buttons.push({
+                text: confirmText,
+                onPress: onConfirm || (() => {})
+            });
+
+            Alert.alert(
+                title,
+                message,
+                buttons
+            );
+        }
+    };
 
     const [
         isFetchingData,
@@ -122,7 +151,17 @@ export default function CartSummaryView({ ...props }) {
             const { error } = await presentPaymentSheet();
 
             if (!error) {
-                setShowPaymentSuccessAlert(true);
+                showMessage(
+                    all_constants.cart.payment.success_title,
+                    all_constants.cart.payment.success_message,
+                    () => {
+                        props.navigation.popToTop();
+                        props.navigation.navigate("SearchDishFlatList");
+                        cleanCurrentOrderState();
+                    },
+                    null,
+                    "OK"
+                );
             }
         } catch (e) {
             console.log("Error in openPaymentSheet: ", e);
@@ -227,20 +266,7 @@ export default function CartSummaryView({ ...props }) {
                 )
                 : (
                     <ScrollView>
-                        {showPaymentSuccessAlert && (
-                            <CustomAlert
-                                show={showPaymentSuccessAlert}
-                                title={all_constants.cart.payment.success_title}
-                                message={all_constants.cart.payment.success_message}
-                                confirmButtonColor={"green"}
-                                onConfirmPressed={() => {
-                                    setShowPaymentSuccessAlert(false);
-                                    props.navigation.popToTop();
-                                    props.navigation.navigate("SearchDishFlatList");
-                                    cleanCurrentOrderState();
-                                }}
-                            />
-                        )}
+                        {/* Le CustomAlert a été remplacé par un appel à la fonction showMessage dans openPaymentSheet */}
 
                         <View>
                             <View style={{ height: 30, alignItems: "center" }}>
@@ -378,7 +404,10 @@ export default function CartSummaryView({ ...props }) {
                                     }}
                                 >
                                     <View style={{ flex: 1 }}>
-                                        <Text style={{ fontStyle: "italic", fontSize: 18 }}>
+                                        <Text style={{ 
+                                            fontStyle: "italic", 
+                                            fontSize: 18 
+                                        }}>
                                             {all_constants.cart.summary.estimated_delivery_time}
                                         </Text>
                                     </View>

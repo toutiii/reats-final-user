@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import React from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View, Alert, Platform, ToastAndroid } from "react-native";
 import {
     ActivityIndicator,
     Drawer,
@@ -15,7 +15,6 @@ import { getItemFromSecureStore } from "../helpers/common_helpers";
 import { apiBaseUrl, port } from "../env";
 import { callBackEnd } from "../api/callBackend";
 import { CommonActions } from "@react-navigation/native";
-import CustomAlert from "../components/CustomAlert";
 
 export default function DrawerContent(props) {
     const paperTheme = useTheme();
@@ -32,10 +31,58 @@ export default function DrawerContent(props) {
         setRefreshData
     ] = React.useState(false);
 
-    const [
-        showSignOutAlert,
-        setShowSignOutAlert
-    ] = React.useState(false);
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message, onConfirm = null, onCancel = null, confirmText = "OK", cancelText = null) => {
+        if (Platform.OS === "android") {
+            if (onCancel) {
+                // Pour Android avec bouton d'annulation, utiliser Alert au lieu de Toast
+                Alert.alert(
+                    title,
+                    message,
+                    [
+                        {
+                            text: cancelText || all_constants.messages.cancel,
+                            onPress: onCancel,
+                            style: "cancel"
+                        },
+                        {
+                            text: confirmText || "OK",
+                            onPress: onConfirm || (() => {})
+                        }
+                    ]
+                );
+            } else {
+                // Pour Android sans bouton d'annulation, utiliser Toast
+                ToastAndroid.show(message || title, ToastAndroid.SHORT);
+                if (onConfirm) {
+                    setTimeout(onConfirm, 1000);
+                }
+            }
+        } else {
+            // Sur iOS, utiliser Alert au lieu de CustomAlert
+            const buttons = [
+            ];
+
+            if (cancelText && onCancel) {
+                buttons.push({
+                    text: cancelText,
+                    onPress: onCancel,
+                    style: "cancel"
+                });
+            }
+
+            buttons.push({
+                text: confirmText || "OK",
+                onPress: onConfirm || (() => {})
+            });
+
+            Alert.alert(
+                title,
+                message,
+                buttons
+            );
+        }
+    };
 
     const resetNavigationStackToLoginView = () => {
         const resetAction = CommonActions.reset({
@@ -93,25 +140,7 @@ export default function DrawerContent(props) {
                         <Animated.View style={[
                             styles.drawerContent
                         ]}>
-                            {showSignOutAlert && (
-                                <CustomAlert
-                                    show={showSignOutAlert}
-                                    title={all_constants.custom_alert.sign_out_title}
-                                    message={all_constants.custom_alert.sign_out_message}
-                                    confirmButtonColor="green"
-                                    showCancelButton={true}
-                                    cancelButtonColor="red"
-                                    confirmText={all_constants.custom_alert.sign_out_confirm_text}
-                                    cancelText={all_constants.custom_alert.sign_out_cancel_text}
-                                    onConfirmPressed={() => {
-                                        setShowSignOutAlert(false);
-                                        resetNavigationStackToLoginView();
-                                    }}
-                                    onCancelPressed={() => {
-                                        setShowSignOutAlert(false);
-                                    }}
-                                />
-                            )}
+                            {/* Le CustomAlert a été remplacé par un appel à la fonction showMessage */}
                             <View style={styles.userInfoSection}>
                                 <TouchableOpacity
                                     style={{ marginLeft: 10 }}
@@ -207,7 +236,14 @@ export default function DrawerContent(props) {
                                         </Text>
                                     )}
                                     onPress={() => {
-                                        setShowSignOutAlert(true);
+                                        showMessage(
+                                            all_constants.custom_alert.sign_out_title,
+                                            all_constants.custom_alert.sign_out_message,
+                                            () => resetNavigationStackToLoginView(),
+                                            () => {},
+                                            all_constants.custom_alert.sign_out_confirm_text,
+                                            all_constants.custom_alert.sign_out_cancel_text
+                                        );
                                     }}
                                 />
                             </Drawer.Section>

@@ -6,6 +6,9 @@ import {
     TextInput,
     View,
     TouchableOpacity,
+    Alert,
+    Platform,
+    ToastAndroid,
 } from "react-native";
 import all_constants from "../constants";
 import CustomButton from "../components/CustomButton";
@@ -15,7 +18,6 @@ import {
     MaterialIcons,
 } from "@expo/vector-icons";
 import { TouchableHighlight } from "react-native-gesture-handler";
-import CustomAlert from "../components/CustomAlert.js";
 import {
     storeCartItem,
     storeGlobalCookerID,
@@ -42,29 +44,6 @@ export default function SearchItemDetailView({ ...props }) {
     const previousScreenName = props.navigation.getState().routes[0].name;
 
     const [
-        showAcceptanceRateAlert,
-        setShowAcceptanceRateAlert
-    ] =
-    React.useState(false);
-
-    const [
-        showAlert,
-        setShowAlert
-    ] = React.useState(false);
-
-    const [
-        showAddItemResponseAlert,
-        setShowAddItemResponseAlert
-    ] =
-    React.useState(false);
-
-    const [
-        showRemoveItemResponseAlert,
-        setShowRemoveItemResponseAlert
-    ] =
-    React.useState(false);
-
-    const [
         cartItemObject,
         setCartItemObject, // eslint-disable-line no-unused-vars
     ] = React.useState({
@@ -84,18 +63,44 @@ export default function SearchItemDetailView({ ...props }) {
     React.useState(false);
 
     const [
-        showAlertWithAdditionalItems,
-        setShowAlertWithAdditionalItems
-    ] =
-    React.useState(false);
-
-    const [
         itemsWhichWillBeRemoved,
         setItemsWhichWillBeRemoved
     ] = React.useState(
         [
-        ],
+        ]
     );
+
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message, onConfirm = null, onCancel = null, confirmText = "OK", cancelText = null) => {
+        if (Platform.OS === "android") {
+            ToastAndroid.show(message || title, ToastAndroid.SHORT);
+            if (onConfirm) {
+                setTimeout(onConfirm, 1000);
+            }
+        } else {
+            // Sur iOS, utiliser Alert au lieu de CustomAlert
+            const buttons = [];
+            
+            if (cancelText && onCancel) {
+                buttons.push({
+                    text: cancelText,
+                    onPress: onCancel,
+                    style: "cancel"
+                });
+            }
+
+            buttons.push({
+                text: confirmText,
+                onPress: onConfirm || (() => {})
+            });
+            
+            Alert.alert(
+                title,
+                message,
+                buttons
+            );
+        }
+    };
 
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
 
@@ -125,9 +130,19 @@ export default function SearchItemDetailView({ ...props }) {
 
         if (addItemResult && addCookerIDResult) {
             setIsAsyncStorageOperationOk(true);
-            setShowAddItemResponseAlert(true);
+            showMessage(
+                "",
+                getItemAddedToCartMessage(),
+                () => {
+                    goAway();
+                }
+            );
         } else {
             setIsAsyncStorageOperationOk(false);
+            showMessage(
+                all_constants.messages.failed.title,
+                "Erreur lors de l'ajout au panier"
+            );
         }
     };
 
@@ -135,7 +150,19 @@ export default function SearchItemDetailView({ ...props }) {
         const result = await removeCartItem(props.route.params.item.id);
         console.log("Remove status: ", result);
         setIsAsyncStorageOperationOk(result);
-        setShowRemoveItemResponseAlert(result);
+
+        if (result) {
+            showMessage(
+                "",
+                all_constants.cart.remove_item_alert.remove_item_success_message,
+                () => goAway()
+            );
+        } else {
+            showMessage(
+                all_constants.messages.failed.title,
+                all_constants.cart.remove_item_alert.remove_item_error_message
+            );
+        }
     };
 
     const removeCurrentItemAndRelatedAdditionalItemsFromCart = async () => {
@@ -147,26 +174,65 @@ export default function SearchItemDetailView({ ...props }) {
         });
         const result = await removeMultipleItemsFromCart(keysToRemove);
         console.log("Remove status: ", result);
-        setShowRemoveItemResponseAlert(result);
         setIsAsyncStorageOperationOk(result);
+
+        if (result) {
+            showMessage(
+                "",
+                all_constants.cart.remove_item_alert.remove_item_success_message,
+                () => goAway()
+            );
+        } else {
+            showMessage(
+                all_constants.messages.failed.title,
+                all_constants.cart.remove_item_alert.remove_item_error_message
+            );
+        }
     };
 
     const handleAlert = async () => {
-        const keysToRemove = await getAdditionalItemsKeys(
+        const additionalItemsKeys = await getAdditionalItemsKeys(
             props.route.params.item.id,
         );
-
-        if (keysToRemove.length > 0) {
-            let itemsToRemove = [
-            ];
-            for (let i = 0; i < keysToRemove.length; i++) {
-                const itemObject = await getCartItem(keysToRemove[i]);
-                itemsToRemove.push(itemObject);
+        if (additionalItemsKeys.length > 0) {
+            const additionalItemsObjects = [];
+            for (const key of additionalItemsKeys) {
+                const item = await getCartItem(key);
+                additionalItemsObjects.push(item);
             }
-            setItemsWhichWillBeRemoved(itemsToRemove);
-            setShowAlertWithAdditionalItems(true);
+            setItemsWhichWillBeRemoved(additionalItemsObjects);
+
+            // Afficher l'alerte pour les éléments supplémentaires
+            Alert.alert(
+                all_constants.cart.alert.title,
+                buildAlertMessageForAdditionalItemsDeletion(),
+                [
+                    {
+                        text: all_constants.messages.cancel,
+                        onPress: () => {}, // Confirmer (annuler la suppression)
+                    },
+                    {
+                        text: all_constants.messages.delete,
+                        onPress: () => removeCurrentItemAndRelatedAdditionalItemsFromCart(), // Annuler (confirmer la suppression)
+                    },
+                ]
+            );
         } else {
-            setShowAlert(true);
+            // Afficher l'alerte simple pour supprimer l'élément
+            Alert.alert(
+                all_constants.cart.alert.title,
+                all_constants.cart.alert.remove_item_from_cart_message,
+                [
+                    {
+                        text: all_constants.messages.cancel,
+                        onPress: () => {}, // Ne rien faire si on confirme
+                    },
+                    {
+                        text: "Supprimer",
+                        onPress: () => removeItemFromCart(), // Supprimer si on annule
+                    },
+                ]
+            );
         }
     };
 
@@ -417,92 +483,7 @@ export default function SearchItemDetailView({ ...props }) {
                     )}
                 </View>
 
-                {showAlert && (
-                    <CustomAlert
-                        show={showAlert}
-                        title={all_constants.cart.alert.title}
-                        message={all_constants.cart.alert.remove_item_from_cart_message}
-                        confirmButtonColor="red"
-                        showCancelButton={true}
-                        cancelButtonColor="green"
-                        cancelText={all_constants.messages.cancel}
-                        onConfirmPressed={() => {
-                            setShowAlert(false);
-                            removeItemFromCart();
-                        }}
-                        onCancelPressed={() => {
-                            setShowAlert(false);
-                        }}
-                    />
-                )}
-                {showAcceptanceRateAlert && (
-                    <CustomAlert
-                        show={showAcceptanceRateAlert}
-                        title={all_constants.cart.alert.acceptance_rate.title}
-                        message={all_constants.cart.alert.acceptance_rate.message}
-                        confirmButtonColor="green"
-                        showCancelButton={false}
-                        onConfirmPressed={() => {
-                            setShowAcceptanceRateAlert(false);
-                        }}
-                    />
-                )}
-                {showAddItemResponseAlert && (
-                    <CustomAlert
-                        show={showAddItemResponseAlert}
-                        message={getItemAddedToCartMessage()}
-                        confirmButtonColor={isAsyncStorageOperationOk
-                            ? "green"
-                            : "red"}
-                        showCancelButton={false}
-                        onConfirmPressed={() => {
-                            setShowAddItemResponseAlert(false);
-                            if (isAsyncStorageOperationOk) {
-                                goAway();
-                            }
-                        }}
-                    />
-                )}
-                {showRemoveItemResponseAlert && (
-                    <CustomAlert
-                        show={showRemoveItemResponseAlert}
-                        message={
-                            isAsyncStorageOperationOk
-                                ? all_constants.cart.remove_item_alert
-                                    .remove_item_success_message
-                                : all_constants.cart.remove_item_alert.remove_item_error_message
-                        }
-                        confirmButtonColor={isAsyncStorageOperationOk
-                            ? "green"
-                            : "red"}
-                        showCancelButton={false}
-                        onConfirmPressed={() => {
-                            setShowRemoveItemResponseAlert(false);
-                            if (isAsyncStorageOperationOk) {
-                                goAway();
-                            }
-                        }}
-                    />
-                )}
-                {showAlertWithAdditionalItems && (
-                    <CustomAlert
-                        show={showAlertWithAdditionalItems}
-                        title={all_constants.cart.alert.title}
-                        message={buildAlertMessageForAdditionalItemsDeletion()}
-                        confirmButtonColor="green"
-                        showCancelButton={true}
-                        cancelButtonColor="red"
-                        confirmText={all_constants.messages.cancel}
-                        cancelText={all_constants.messages.delete}
-                        onCancelPressed={() => {
-                            setShowAlertWithAdditionalItems(false);
-                            removeCurrentItemAndRelatedAdditionalItemsFromCart();
-                        }}
-                        onConfirmPressed={() => {
-                            setShowAlertWithAdditionalItems(false);
-                        }}
-                    />
-                )}
+                {/* Toutes les alertes CustomAlert ont été remplacées par des appels à la fonction showMessage */}
             </View>
         </Animated.View>
     );

@@ -5,13 +5,15 @@ import {
     KeyboardAvoidingView,
     ScrollView,
     View,
+    Alert,
+    ToastAndroid,
+    Platform,
 } from "react-native";
 import CustomButton from "../components/CustomButton";
 import all_constants from "../constants";
 import { validateFields } from "../validators/common_validators";
 import FormField from "../components/FormField";
 import styles_form from "../styles/styles-form";
-import CustomAlert from "../components/CustomAlert";
 import { apiKeyBackend } from "../env";
 import {
     deleteItemFromSecureStore,
@@ -37,6 +39,9 @@ export default function Form({ ...props }) {
         newItem,
         setValues
     ] = useState(props.item);
+
+    // eslint-disable-next-line no-unused-vars
+    const newItemCopy = props.item;
 
     //To be sure to reset form initial content when we press on a flatlist item.
     useEffect(() => {
@@ -148,7 +153,7 @@ export default function Form({ ...props }) {
         redirectTologinView
     ]);
 
-    const newItemCopy = props.item;
+    // Variable déjà déclarée plus haut
 
     const onChangeValue = (key, value) => {
         const newState = { ...newItem, [key]: value };
@@ -315,161 +320,209 @@ export default function Form({ ...props }) {
         reloadScreen
     ]);
 
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message, onConfirm = null, onCancel = null, confirmText = "OK", cancelText = null) => {
+        if (Platform.OS === "android") {
+            if (onCancel) {
+                Alert.alert(
+                    title,
+                    message,
+                    [
+                        { text: cancelText || all_constants.messages.cancel, onPress: onCancel, style: "cancel" },
+                        { text: confirmText || "OK", onPress: onConfirm || (() => {}) }
+                    ]
+                );
+            } else {
+                ToastAndroid.show(message || title, ToastAndroid.SHORT);
+                if (onConfirm) setTimeout(onConfirm, 1000);
+            }
+        } else {
+            const buttons = [];
+            if (cancelText && onCancel) {
+                buttons.push({ text: cancelText, onPress: onCancel, style: "cancel" });
+            }
+            buttons.push({ text: confirmText || "OK", onPress: onConfirm || (() => {}) });
+            Alert.alert(title, message, buttons);
+        }
+    };
+    
+    // Effets pour afficher les alertes quand leur état change
+    useEffect(() => {
+        if (showAlertCancel) {
+            showMessage(
+                all_constants.custom_alert.form.title,
+                all_constants.custom_alert.form.message,
+                () => {
+                    setShowAlertCancel(false);
+                    props.navigation.goBack();
+                },
+                () => {
+                    setShowAlertCancel(false);
+                },
+                "OK",
+                all_constants.custom_alert.cancel_text
+            );
+            setShowAlertCancel(false);
+        }
+    }, [
+        showAlertCancel
+    ]);
+    
+    useEffect(() => {
+        if (showAlert && !isSubmitting && noErrorsFound && apiOkResponse) {
+            showMessage(
+                all_constants.messages.success.title,
+                "",
+                () => {
+                    console.log("New item: ", newItem);
+                    setStateShowAlert(false);
+                    if (props.refreshDataStateChanger !== undefined) {
+                        props.refreshDataStateChanger(true);
+                    }
+                    if (forceRefreshData) {
+                        console.log("Force refresh data");
+                        props.refreshDataStateChanger(true);
+                    }
+                    props.navigation.goBack(null);
+                }
+            );
+        }
+    }, [
+        showAlert,
+        isSubmitting,
+        noErrorsFound,
+        apiOkResponse,
+        newItem,
+        props.navigation,
+        props.refreshDataStateChanger,
+        forceRefreshData
+    ]);
+    
+    useEffect(() => {
+        if (showAlert && wantToGoBack) {
+            showMessage(
+                all_constants.custom_alert.form.title,
+                all_constants.custom_alert.form.message,
+                () => {
+                    setStateShowAlert(false);
+                    setWantToGoBack(false);
+                    props.navigation.goBack();
+                },
+                () => {
+                    setStateShowAlert(false);
+                    setWantToGoBack(false);
+                },
+                "OK",
+                all_constants.messages.cancel
+            );
+        }
+    }, [
+        showAlert,
+        wantToGoBack,
+        props.navigation
+    ]);
+    
+    useEffect(() => {
+        if (showAlertDeleteAccount) {
+            showMessage(
+                all_constants.custom_alert.form.delete_account_title,
+                all_constants.custom_alert.form.delete_account_message,
+                () => {
+                    setShowAlertDeleteAccount(false);
+                },
+                () => {
+                    setShowAlertDeleteAccount(false);
+                    deleteAccountAction();
+                },
+                all_constants.custom_alert.keep_account,
+                all_constants.custom_alert.delete_account
+            );
+        }
+    }, [
+        showAlertDeleteAccount
+    ]);
+    
+    useEffect(() => {
+        if (showAlertDeleteAccountSuccess) {
+            showMessage(
+                all_constants.messages.success.title,
+                all_constants.custom_alert.form.success,
+                () => {
+                    deleteItemFromSecureStore("accessToken");
+                    deleteItemFromSecureStore("userID");
+                    setRedirectTologinView(true);
+                    setShowAlertDeleteAccountSuccess(false);
+                }
+            );
+        }
+    }, [
+        showAlertDeleteAccountSuccess
+    ]);
+    
+    useEffect(() => {
+        if (showAlertDeleteAddressFailed) {
+            showMessage(
+                all_constants.messages.failed.title,
+                "",
+                () => {
+                    setShowAlertDeleteAddressFailed(false);
+                    props.navigation.goBack(null);
+                }
+            );
+        }
+    }, [
+        showAlertDeleteAddressFailed,
+        props.navigation
+    ]);
+    
+    useEffect(() => {
+        if (showAlertDeleteAddress) {
+            showMessage(
+                all_constants.custom_alert.form.delete_address_title,
+                all_constants.custom_alert.form.delete_address_message,
+                () => {
+                    setShowAlertDeleteAddress(false);
+                },
+                () => {
+                    setShowAlertDeleteAddress(false);
+                    deleteAddressAction();
+                },
+                all_constants.messages.cancel,
+                all_constants.custom_alert.delete_account
+            );
+        }
+    }, [
+        showAlertDeleteAddress
+    ]);
+    
+    useEffect(() => {
+        if (showAlert && !isSubmitting && noErrorsFound && !apiOkResponse && !wantToGoBack) {
+            showMessage(
+                all_constants.messages.failed.title,
+                "",
+                () => {
+                    setStateShowAlert(false);
+                }
+            );
+        }
+    }, [
+        showAlert,
+        isSubmitting,
+        noErrorsFound,
+        apiOkResponse,
+        wantToGoBack
+    ]);
+    
     return (
         <KeyboardAvoidingView>
             <ScrollView>
-                {showAlertCancel && (
-                    <CustomAlert
-                        show={showAlertCancel}
-                        title={all_constants.custom_alert.form.title}
-                        message={all_constants.custom_alert.form.message}
-                        confirmButtonColor="green"
-                        showCancelButton={true}
-                        cancelButtonColor="red"
-                        cancelText={all_constants.custom_alert.cancel_text}
-                        onConfirmPressed={() => {
-                            setShowAlertCancel(false);
-                            props.navigation.goBack();
-                        }}
-                        onCancelPressed={() => {
-                            setShowAlertCancel(false);
-                        }}
-                    />
-                )}
                 <View style={styles_form.container}>
                     {isSubmitting && (
                         <View style={styles_form.activityIndicatorContainer}>
                             <ActivityIndicator size="large" color="tomato" />
                         </View>
                     )}
-                    {!isSubmitting && noErrorsFound && apiOkResponse && (
-                        <CustomAlert
-                            show={showAlert}
-                            title={all_constants.messages.success.title}
-                            confirmButtonColor="green"
-                            onConfirmPressed={() => {
-                                console.log("New item: ", newItem);
-                                console.log("New item copy: ", newItemCopy.current);
-                                setStateShowAlert(false);
-                                if (
-                                    JSON.stringify(newItem) !==
-                  JSON.stringify(newItemCopy.current)
-                                ) {
-                                    if (props.refreshDataStateChanger !== undefined) {
-                                        props.refreshDataStateChanger(true);
-                                    }
-                                }
-                                if (forceRefreshData) {
-                                    console.log("Force refresh data");
-                                    props.refreshDataStateChanger(true);
-                                }
-
-                                props.navigation.goBack(null);
-                            }}
-                        />
-                    )}
-                    {showAlert && wantToGoBack && (
-                        <CustomAlert
-                            show={showAlert}
-                            title={all_constants.custom_alert.form.title}
-                            message={all_constants.custom_alert.form.message}
-                            confirmButtonColor="green"
-                            showCancelButton={true}
-                            cancelButtonColor="red"
-                            cancelText={all_constants.messages.cancel}
-                            onConfirmPressed={() => {
-                                setStateShowAlert(false);
-                                setWantToGoBack(false);
-                                props.navigation.goBack();
-                            }}
-                            onCancelPressed={() => {
-                                setStateShowAlert(false);
-                                setWantToGoBack(false);
-                            }}
-                        />
-                    )}
-
-                    {showAlertDeleteAccount && (
-                        <CustomAlert
-                            show={showAlertDeleteAccount}
-                            title={all_constants.custom_alert.form.delete_account_title}
-                            message={all_constants.custom_alert.form.delete_account_message}
-                            confirmButtonColor="green"
-                            showCancelButton={true}
-                            cancelButtonColor="red"
-                            confirmText={all_constants.custom_alert.keep_account}
-                            cancelText={all_constants.custom_alert.delete_account}
-                            onConfirmPressed={() => {
-                                setShowAlertDeleteAccount(false);
-                            }}
-                            onCancelPressed={() => {
-                                setShowAlertDeleteAccount(false);
-                                deleteAccountAction();
-                            }}
-                        />
-                    )}
-
-                    {showAlertDeleteAccountSuccess && (
-                        <CustomAlert
-                            show={showAlertDeleteAccountSuccess}
-                            title={all_constants.messages.success.title}
-                            message={all_constants.custom_alert.form.success}
-                            confirmButtonColor="green"
-                            cancelText={all_constants.custom_alert.delete_account}
-                            onConfirmPressed={() => {
-                                deleteItemFromSecureStore("accessToken");
-                                deleteItemFromSecureStore("userID");
-                                setRedirectTologinView(true);
-                                setShowAlertDeleteAccountSuccess(false);
-                            }}
-                        />
-                    )}
-
-                    {showAlertDeleteAddressFailed && (
-                        <CustomAlert
-                            show={showAlertDeleteAddressFailed}
-                            title={all_constants.messages.failed.title}
-                            confirmButtonColor="red"
-                            onConfirmPressed={() => {
-                                setShowAlertDeleteAddressFailed(false);
-                                props.navigation.goBack(null);
-                            }}
-                        />
-                    )}
-
-                    {showAlertDeleteAddress && (
-                        <CustomAlert
-                            show={showAlertDeleteAddress}
-                            title={all_constants.custom_alert.form.delete_address_title}
-                            message={all_constants.custom_alert.form.delete_address_message}
-                            confirmButtonColor="green"
-                            showCancelButton={true}
-                            cancelButtonColor="red"
-                            confirmText={all_constants.messages.cancel}
-                            cancelText={all_constants.custom_alert.delete_account}
-                            onConfirmPressed={() => {
-                                setShowAlertDeleteAddress(false);
-                            }}
-                            onCancelPressed={() => {
-                                setShowAlertDeleteAddress(false);
-                                deleteAddressAction();
-                            }}
-                        />
-                    )}
-
-                    {!isSubmitting &&
-            noErrorsFound &&
-            !apiOkResponse &&
-            !wantToGoBack && (
-                        <CustomAlert
-                            show={showAlert}
-                            title={all_constants.messages.failed.title}
-                            confirmButtonColor="red"
-                            onConfirmPressed={() => {
-                                setStateShowAlert(false);
-                            }}
-                        />
-                    )}
+                    {/* Les alertes sont maintenant gérées par useEffect */}
                     <Animated.View style={{ flex: 1, opacity, width: "100%" }}>
                         {fieldKeys.map((key) => {
                             return (

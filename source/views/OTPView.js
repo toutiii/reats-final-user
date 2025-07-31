@@ -7,12 +7,13 @@ import {
     StyleSheet,
     TextInput,
     View,
+    Alert,
+    ToastAndroid,
 } from "react-native";
 
 import CustomButton from "../components/CustomButton";
 import all_constants from "../constants";
 import { callBackEnd } from "../api/callBackend";
-import CustomAlert from "../components/CustomAlert";
 import { CommonActions } from "@react-navigation/native";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import * as SecureStore from "expo-secure-store";
@@ -31,18 +32,9 @@ export default function OTPView({ ...props }) {
         ""
     ]);
     const [
-        showAlert,
-        setShowAlert
-    ] = useState(false);
-    const [
         isOTPValidationRequestSuccessful,
         setIsOTPValidationRequestSuccessful,
     ] = useState(false);
-    const [
-        showAlertTokenRequestSuccessful,
-        setShowAlertTokenRequestSuccessful
-    ] =
-    useState(false);
 
     const [
         randomNumber,
@@ -57,20 +49,6 @@ export default function OTPView({ ...props }) {
         setShowCounterCircle
     ] = useState(true);
     const [
-        showResendOTPAlert,
-        setShowResendOTPAlert
-    ] = useState(false);
-    const [
-        isResendOTPRequestFailed,
-        setIsResendOTPRequestFailed
-    ] =
-    useState(false);
-    const [
-        showAlertTokenRequestFailed,
-        setShowAlertTokenRequestFailed
-    ] =
-    useState(false);
-    const [
         tokenData,
         setTokenData
     ] = useState(null);
@@ -78,6 +56,28 @@ export default function OTPView({ ...props }) {
         isRequesting,
         setIsRequesting
     ] = useState(false);
+
+    // Fonction pour afficher un message selon la plateforme
+    const showMessage = (title, message, onConfirm = null) => {
+        if (Platform.OS === "android") {
+            ToastAndroid.show(message || title, ToastAndroid.SHORT);
+            if (onConfirm) {
+                setTimeout(onConfirm, 1000);
+            }
+        } else {
+            // Sur iOS, utiliser Alert au lieu de CustomAlert
+            Alert.alert(
+                title,
+                message,
+                [
+                    {
+                        text: "OK",
+                        onPress: onConfirm || (() => {})
+                    }
+                ]
+            );
+        }
+    };
 
     const OTPLength = 6;
     const OTPAskDelay = 60;
@@ -109,7 +109,23 @@ export default function OTPView({ ...props }) {
             console.log(result);
             setIsOTPValidationRequestSuccessful(result.ok);
             setIsRequesting(false);
-            setShowAlert(true);
+
+            if (result.ok) {
+                if (!props.route.params.auth) {
+                    // Cas de succès pour l'inscription
+                    showMessage(
+                        all_constants.messages.success.title,
+                        all_constants.messages.success.signup_message,
+                        () => props.navigation.navigate("LoginForm")
+                    );
+                }
+            } else {
+                // Cas d'échec pour la validation OTP
+                showMessage(
+                    all_constants.messages.failed.title,
+                    all_constants.messages.otp.message.invalid_code
+                );
+            }
         }, 1000);
     }
 
@@ -152,9 +168,18 @@ export default function OTPView({ ...props }) {
             setTokenData(result);
             setIsRequesting(false);
             console.log(result);
-            result.ok
-                ? setShowAlertTokenRequestSuccessful(true)
-                : setShowAlertTokenRequestFailed(true);
+            if (result.ok) {
+                showMessage(
+                    all_constants.messages.success.title,
+                    all_constants.messages.success.login_message,
+                    handleLogin
+                );
+            } else {
+                showMessage(
+                    all_constants.messages.failed.title,
+                    "La demande de token a échoué."
+                );
+            }
         }, 1000);
     }
 
@@ -207,8 +232,8 @@ export default function OTPView({ ...props }) {
             console.log(result);
             setIsRequesting(false);
             result.ok
-                ? setIsResendOTPRequestFailed(false)
-                : setIsResendOTPRequestFailed(true);
+                ? hideResendOTPButton(result)
+                : showMessage(all_constants.messages.failed.title, "La demande de nouveau code OTP a échoué.");
 
             hideResendOTPButton(result);
         }, 2000);
@@ -217,81 +242,127 @@ export default function OTPView({ ...props }) {
     return (
         <View style={{ flex: 1, backgroundColor: "white" }}>
             <View>
-                <CustomAlert
-                    show={showResendOTPAlert}
-                    title={all_constants.messages.otp.title.send_again_title}
-                    message={all_constants.messages.otp.message.send_again_message}
-                    confirmButtonColor={"green"}
-                    onConfirmPressed={() => {
-                        setIsRequesting(true);
-                        setShowResendOTPAlert(false);
-                        askNewOTP();
-                    }}
-                />
-                <CustomAlert
-                    show={isResendOTPRequestFailed}
-                    title={all_constants.messages.failed.title}
-                    confirmButtonColor={"red"}
-                    onConfirmPressed={() => {
-                        setIsResendOTPRequestFailed(false);
-                    }}
-                />
-                <CustomAlert
-                    show={showAlertTokenRequestFailed}
-                    title={all_constants.messages.failed.title}
-                    confirmButtonColor={"red"}
-                    onConfirmPressed={() => {
-                        setShowAlertTokenRequestFailed(false);
-                    }}
-                />
-                <CustomAlert
-                    show={showAlertTokenRequestSuccessful}
-                    title={all_constants.messages.success.title}
-                    message={all_constants.messages.success.login_message}
-                    confirmButtonColor={"green"}
-                    onConfirmPressed={() => {
-                        setShowAlertTokenRequestSuccessful(false);
-                        handleLogin();
-                    }}
-                />
-                {!props.route.params.auth && isOTPValidationRequestSuccessful && (
-                    <CustomAlert
-                        show={showAlert}
-                        title={all_constants.messages.success.title}
-                        message={all_constants.messages.success.signup_message}
-                        confirmButtonColor={"green"}
-                        onConfirmPressed={() => {
-                            setShowAlert(false);
-                            if (
-                                !props.route.params.auth &&
-                isOTPValidationRequestSuccessful
-                            ) {
-                                props.navigation.navigate("LoginForm");
-                            }
+                {/* Toutes les alertes ont été remplacées par des appels à showMessage */}
+                {isRequesting && (
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
                         }}
-                    />
+                    >
+                        <ActivityIndicator size="large" color="tomato" />
+                    </View>
                 )}
-                {!props.route.params.auth && !isOTPValidationRequestSuccessful && (
-                    <CustomAlert
-                        show={showAlert}
-                        title={all_constants.messages.failed.title}
-                        message={all_constants.messages.otp.message.invalid_code}
-                        confirmButtonColor={"red"}
-                        onConfirmPressed={() => {
-                            setShowAlert(false);
+
+                {!isRequesting && (
+                    <View
+                        style={{
+                            flex: 3,
+                            justifyContent: "center",
+                            alignItems: "center",
                         }}
-                    />
-                )}
-                {props.route.params.auth && !isOTPValidationRequestSuccessful && (
-                    <CustomAlert
-                        show={showAlert}
-                        title={all_constants.messages.failed.title}
-                        message={all_constants.messages.otp.message.invalid_code}
-                        confirmButtonColor={"red"}
-                        onConfirmPressed={() => {
-                            setShowAlert(false);
-                        }}
-                    />
+                    >
+                        <View
+                            style={{
+                                flex: 1,
+                                alignItems: "center",
+                                justifyContent: "flex-start",
+                                marginTop: "15%",
+                            }}
+                        >
+                            <CustomButton
+                                label={all_constants.messages.submit}
+                                backgroundColor="green"
+                                height={50}
+                                border_width={3}
+                                border_radius={30}
+                                font_size={17}
+                                label_color="white"
+                                onPress={() => {
+                                    setIsRequesting(true);
+                                    verifyOTP();
+                                }}
+                            />
+
+                            <View style={{ height: 40 }}></View>
+
+                            <CustomButton
+                                label={all_constants.messages.clear}
+                                backgroundColor="darkgrey"
+                                height={50}
+                                border_width={3}
+                                border_radius={30}
+                                font_size={17}
+                                label_color="white"
+                                onPress={() => {
+                                    setRandomNumber(Math.floor(Math.random() * 10));
+                                    setOTPValue([
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        ""
+                                    ]);
+                                }}
+                            />
+
+                            <View style={{ height: 40 }}></View>
+
+                            {showResendOTPButton && (
+                                <CustomButton
+                                    label={all_constants.messages.send_again}
+                                    backgroundColor="grey"
+                                    height={50}
+                                    border_width={3}
+                                    border_radius={30}
+                                    font_size={17}
+                                    label_color="white"
+                                    onPress={() => {
+                                        showMessage(
+                                            all_constants.messages.otp.title.send_again_title,
+                                            all_constants.messages.otp.message.send_again_message,
+                                            () => {
+                                                setIsRequesting(true);
+                                                askNewOTP();
+                                            }
+                                        );
+                                    }}
+                                />
+                            )}
+
+                            <View style={{ height: 40 }}></View>
+
+                            {showCounterCircle && (
+                                <CountdownCircleTimer
+                                    isPlaying
+                                    duration={OTPAskDelay}
+                                    colors={[
+                                        "#004777",
+                                        "#F7B801",
+                                        "#A30000",
+                                        "#A30000"
+                                    ]}
+                                    colorsTime={[
+                                        7,
+                                        5,
+                                        2,
+                                        0
+                                    ]}
+                                    onComplete={() => {
+                                        setShowResendOTpButton(true);
+                                        setShowCounterCircle(false);
+                                        return { shouldRepeat: false };
+                                    }}
+                                >
+                                    {({ remainingTime }) => (
+                                        <Text style={{ fontSize: 22 }}>{remainingTime}</Text>
+                                    )}
+                                </CountdownCircleTimer>
+                            )}
+                        </View>
+                    </View>
                 )}
             </View>
             <View style={styles.container} key={randomNumber}>
@@ -405,7 +476,14 @@ export default function OTPView({ ...props }) {
                                 font_size={17}
                                 label_color="white"
                                 onPress={() => {
-                                    setShowResendOTPAlert(true);
+                                    showMessage(
+                                        all_constants.messages.otp.title.send_again_title,
+                                        all_constants.messages.otp.message.send_again_message,
+                                        () => {
+                                            setIsRequesting(true);
+                                            askNewOTP();
+                                        }
+                                    );
                                 }}
                             />
                         )}
