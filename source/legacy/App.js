@@ -1,19 +1,21 @@
 import React, { Component } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { MainDrawerNavigator } from "./drawer/MainDrawerNavigator";
+
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StripeProvider } from "@stripe/stripe-react-native";
+import { stripePublishableKey } from "../env";
+import { MainDrawerNavigator } from "./drawer/MainDrawerNavigator";
+import OTPView from "./views/OTPView";
 import LoginForm from "./forms/LoginForm";
 import SignupForm from "./forms/SignupForm";
-import OTPView from "./views/OTPView";
-import { StripeProvider } from "@stripe/stripe-react-native";
-import { stripePublishableKey } from "./env";
-import SettingsAddressForm from "./forms/SettingsAddressForm";
+
 import SettingsPersonalInformationForm from "./forms/SettingsPersonalInformationForm";
+import SettingsAddressForm from "./forms/SettingsAddressForm";
 import AdressesStack from "./stack/AddressesStack";
 import OrdersHistoryStack from "./stack/OrdersHistoryStack";
-import all_constants from "./constants";
 import OrderRateView from "./views/OrderRateView";
+import all_constants from "../constants";
 
 const Stack = createStackNavigator();
 
