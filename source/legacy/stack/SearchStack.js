@@ -1,8 +1,8 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import SearchDishFlatList from "../flatlist/SearchDishFlatlist";
-import SearchItemDetailView from "../views/SearchItemDetailView";
-import all_constants from "../constants";
+import SearchDishFlatList from "../../flatlist/SearchDishFlatlist";
+import SearchItemDetailView from "../../views/SearchItemDetailView";
+import all_constants from "../../constants";
 
 const Stack = createStackNavigator();
 

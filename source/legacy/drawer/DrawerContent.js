@@ -10,12 +10,12 @@ import {
     useTheme,
 } from "react-native-paper";
 import Animated from "react-native-reanimated";
-import all_constants from "../constants";
+import all_constants from "../../constants";
 import { getItemFromSecureStore } from "../helpers/common_helpers";
-import { apiBaseUrl, port } from "../env";
-import { callBackEnd } from "../api/callBackend";
+import { apiBaseUrl, port } from "../../env";
+import { callBackEnd } from "../../api/callBackend";
 import { CommonActions } from "@react-navigation/native";
-import CustomAlert from "../components/CustomAlert";
+import CustomAlert from "../../components/CustomAlert";
 
 export default function DrawerContent(props) {
     const paperTheme = useTheme();

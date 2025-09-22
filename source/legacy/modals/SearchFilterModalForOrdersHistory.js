@@ -11,7 +11,7 @@ import { TextInput } from "react-native-paper";
 import { TouchableRipple } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
-import all_constants from "../constants";
+import all_constants from "../../constants";
 
 export default function SearchFilterModalForOrdersHistory(props) {
     const activeFilterData = [

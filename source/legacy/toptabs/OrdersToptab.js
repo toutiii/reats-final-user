@@ -1,7 +1,7 @@
 import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import OrdersFlatList from "../flatlist/OrdersFlatlist";
-import all_constants from "../constants";
+import OrdersFlatList from "../../flatlist/OrdersFlatlist";
+import all_constants from "../../constants";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 

@@ -6,19 +6,19 @@ import {
     ScrollView,
     View,
 } from "react-native";
-import CustomButton from "../components/CustomButton";
-import all_constants from "../constants";
-import { validateFields } from "../validators/common_validators";
-import FormField from "../components/FormField";
-import styles_form from "../styles/styles-form";
-import CustomAlert from "../components/CustomAlert";
-import { apiKeyBackend } from "../env";
+import CustomButton from "../../components/CustomButton";
+import all_constants from "../../constants";
+import { validateFields } from "../../validators/common_validators";
+import FormField from "../../components/FormField";
+import styles_form from "../../styles/styles-form";
+import CustomAlert from "../../components/CustomAlert";
+import { apiKeyBackend } from "../../env";
 import {
     deleteItemFromSecureStore,
     getItemFromSecureStore,
 } from "../helpers/common_helpers";
 import { CommonActions } from "@react-navigation/native";
-import { callBackEnd } from "../api/callBackend";
+import { callBackEnd } from "../../api/callBackend";
 
 const getInitialErrorsState = (fieldKeys) => {
     const errors_state = {};

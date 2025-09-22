@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchStack from "../stack/SearchStack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import OrdersStack from "../stack/OrdersStack";
-import all_constants from "../constants";
+import all_constants from "../../constants";
 import CartStack from "../stack/CartStack";
 
 const Tab = createBottomTabNavigator();
