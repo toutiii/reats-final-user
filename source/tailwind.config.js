@@ -178,6 +178,7 @@ module.exports = {
       fontFamily: {
         heading: "Montserrat_700Bold",
         body: "Montserrat_400Regular",
+        button: "Montserrat_600SemiBold",
         mono: "Montserrat_400Regular",
         jakarta: ["var(--font-plus-jakarta-sans)"],
         roboto: ["var(--font-roboto)"],
