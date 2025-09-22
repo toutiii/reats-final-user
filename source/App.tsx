@@ -1,11 +1,18 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import '@/global.css';
+
 const App: React.FC = () => {
     return (
-        <View style={styles.container}>
+        
+    <GluestackUIProvider mode="dark">
+      <View style={styles.container}>
             <Text>App</Text>
         </View>
+    </GluestackUIProvider>
+  
     );
 };
 
