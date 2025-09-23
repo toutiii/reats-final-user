@@ -3,6 +3,7 @@ module.exports = {
   darkMode: process.env.DARK_MODE ? process.env.DARK_MODE : "class",
   content: [
     "./App.{tsx,jsx,ts,js}",
+    "./screens/**/*.{tsx,jsx,ts,js}",
     "./app/**/*.{html,js,jsx,ts,tsx,mdx}",
     "./components/**/*.{html,js,jsx,ts,tsx,mdx}",
     "./utils/**/*.{html,js,jsx,ts,tsx,mdx}",
