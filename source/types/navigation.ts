@@ -1,33 +1,48 @@
-import type { RouteProp } from "@react-navigation/native";
+import type { RouteProp, NavigatorScreenParams } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 
-// Définition des paramètres pour toutes les routes de l'application
-export type RootStackParamList = {
+export type TabParamList = {
+  Home: undefined;
+  Search: undefined;
+  Cart: { paddingBottom?: boolean };
+  Profile: undefined;
+};
+
+export type MainStackParamList = {
+  Tabs: NavigatorScreenParams<TabParamList>;
+  CategoriesDetails: undefined;
+  FoodDetails: undefined;
+  RestaurantDetails: undefined;
+  Cart: { paddingBottom: boolean };
+  Search: undefined;
+  AllRestaurants: undefined;
+  AllCategories: undefined;
+  Order: undefined;
+  OrderTracking: { orderId: string };
+  Notifications: undefined;
+  PersonalInfo: undefined;
+  PaymentMethods: undefined;
+  Addresses: undefined;
+  Favourites: undefined;
+  Settings: undefined;
+  FAQs: undefined;
+  UserReviews: undefined;
+};
+
+export type AuthStackParamList = {
+  Auth: NavigatorScreenParams<MainStackParamList>;
   Onboarding: undefined;
-  TermsAndConditions: undefined;
   LoginScreen: undefined;
   RegisterScreen: undefined;
   LoginForm: undefined;
   SignupForm: undefined;
   OTPScreen: undefined;
-  DocumentsScreen: undefined;
-  PersonalDocumentsScreen: undefined;
-  UploadDocumentsScreen: undefined;
-  InformationVerificationScreen: undefined;
-  HomeScreen: undefined;
-  MainApp: undefined;
-  OrdersScreen: undefined;
-  OrderDetailsScreen: undefined;
-  DeliveryMapScreen: { id?: string };
-  MainDrawerNavigator: undefined;
-  MainNavigator: undefined;
-  PersonalInfoScreen: undefined;
-  PaymentMethodsScreen: undefined;
-  DeliveryZoneScreen: undefined;
-  DeliveryConfirmation: undefined;
-  HelpSupportScreen: undefined;
-  LanguageScreen: undefined;
-  DashboardScreen: undefined;
+};
+
+// Main app stack
+export type RootStackParamList = {
+  Auth: NavigatorScreenParams<AuthStackParamList>;
+  Main: NavigatorScreenParams<MainStackParamList>;
 };
 
 // Type pour la navigation avec Stack

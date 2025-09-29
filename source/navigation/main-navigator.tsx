@@ -1,59 +1,109 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Home, Search, ClipboardList, User } from "lucide-react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import CategoriesDetailsScreen from "@/screens/main/categories-details";
+import FoodDetailsScreen from "@/screens/main/food-details";
+import TabsNavigator from "./tabs-navigator";
+import { MainStackParamList } from "@/types/navigation";
+import RestaurantDetailsScreen from "@/screens/main/restaurant-details";
+import CartScreen from "@/screens/main/cart";
+import OrderScreen from "@/screens/main/order";
+import OrderTrackingScreen from "@/screens/main/order-tracking";
+import NotificationsScreen from "@/screens/main/notifications";
+import PersonalInfoScreen from "@/screens/main/personal-info";
+import AddressesScreen from "@/screens/main/addresses";
+import FavouritesScreen from "@/screens/main/favourites";
+import PaymentMethodsScreen from "@/screens/main/payment-methods";
+import FAQsScreen from "@/screens/main/faqs";
+import UserReviewsScreen from "@/screens/main/user-reviews";
+import SettingsScreen from "@/screens/main/settings";
+import SearchScreen from "@/screens/main/search";
+import AllCategoriesScreen from "@/screens/main/all-categories";
+import AllRestaurantsScreen from "@/screens/main/all-restaurants";
 
-import HomeScreen from "@/screens/main/home";
-import BrowseScreen from "@/screens/main/browse";
-import OrdersScreen from "@/screens/main/orders";
-import ProfileScreen from "@/screens/main/profile";
+const Stack = createStackNavigator<MainStackParamList>();
 
-import { Colors } from "@/theme/theme";
-
-const Tab = createBottomTabNavigator();
 const MainNavigator = () => {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.textSecondary,
-        tabBarStyle: {
-          backgroundColor: Colors.surface,
-          borderTopWidth: 0,
-          shadowOpacity: 0.1,
-          shadowRadius: 10,
-        },
-        tabBarShowLabel: false,
-        headerShown: false,
-      }}
+    <Stack.Navigator
+      initialRouteName="Tabs"
+      screenOptions={{ headerShown: false }}
     >
-      <Tab.Screen
-        name="HomeScreen"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
-        }}
+      <Stack.Screen name="Tabs" component={TabsNavigator} />
+      <Stack.Screen
+        name="CategoriesDetails"
+        component={CategoriesDetailsScreen}
       />
-      <Tab.Screen
-        name="BrowseScreen"
-        component={BrowseScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => <Search color={color} size={size} />,
-        }}
+      <Stack.Screen
+        name="FoodDetails"
+        component={FoodDetailsScreen}
       />
-      <Tab.Screen
-        name="OrdersScreen"
-        component={OrdersScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => <ClipboardList color={color} size={size} />,
-        }}
+      <Stack.Screen
+        name="RestaurantDetails"
+        component={RestaurantDetailsScreen}
       />
-      <Tab.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
-        }}
+      <Stack.Screen
+        name="Cart"
+        component={CartScreen}
       />
-    </Tab.Navigator>
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
+      />
+      <Stack.Screen
+        name="AllCategories"
+        component={AllCategoriesScreen}
+      />
+      <Stack.Screen
+        name="AllRestaurants"
+        component={AllRestaurantsScreen}
+      />
+      <Stack.Screen
+        name="Order"
+        component={OrderScreen}
+      />
+      <Stack.Screen
+        name="OrderTracking"
+        component={OrderTrackingScreen}
+      />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+      />
+      
+      <Stack.Screen
+        name='PersonalInfo'
+        component={PersonalInfoScreen}
+      />
+
+      <Stack.Screen
+        name='Addresses'
+        component={AddressesScreen}
+      />
+     
+      <Stack.Screen
+        name='Favourites'
+        component={FavouritesScreen}
+      />
+     
+     <Stack.Screen
+        name='PaymentMethods'
+        component={PaymentMethodsScreen}
+      />
+
+      <Stack.Screen
+        name='FAQs'
+        component={FAQsScreen}
+      />
+
+      <Stack.Screen
+        name='UserReviews'
+        component={UserReviewsScreen}
+      />
+
+      <Stack.Screen
+        name='Settings'
+        component={SettingsScreen}
+      />
+    </Stack.Navigator>
   );
 };
 

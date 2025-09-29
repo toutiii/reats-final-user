@@ -52,6 +52,7 @@
     "react-native-element-dropdown": "^2.12.1",
     "react-native-flatlist-slider": "^1.0.5",
     "react-native-gesture-handler": "~2.28.0",
+    "react-native-maps": "1.20.1",
     "react-native-modal": "13.0.1",
     "react-native-otp-entry": "^1.8.5",
     "react-native-pager-view": "6.9.1",
