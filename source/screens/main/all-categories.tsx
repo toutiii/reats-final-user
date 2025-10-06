@@ -34,12 +34,6 @@ import { Text } from '@/components/ui/text';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigation } from '@/types/navigation';
 
-type RootStackParamList = {
-  AllCategories: undefined;
-  CategoryDetails: { categoryId: number; categoryName: string };
-};
-
-
 interface Category {
   id: number;
   name: string;
@@ -52,7 +46,7 @@ interface Category {
 }
 
 const AllCategoriesScreen: React.FC = () => {
-    const navigation = useNavigation<StackNavigation>();
+  const navigation = useNavigation<StackNavigation>();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 

@@ -1,6 +1,3 @@
-import { Box } from "@/components/ui/box";
-import { Button, ButtonText } from "@/components/ui/button";
-import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
@@ -9,11 +6,9 @@ import { StackNavigation } from "@/types/navigation";
 
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Image, SafeAreaView, View, Dimensions, TouchableOpacity, StatusBar } from "react-native";
+import { SafeAreaView, View, TouchableOpacity, StatusBar } from "react-native";
 import Animated, { 
   Easing, 
-  interpolate, 
-  runOnJS, 
   useAnimatedStyle, 
   useSharedValue, 
   withDelay, 
@@ -21,6 +16,7 @@ import Animated, {
   withSpring, 
   withTiming,
   interpolateColor,
+  withRepeat,
   SharedValue
 } from "react-native-reanimated";
 
@@ -40,6 +36,7 @@ type FeatureDotProps = {
   feature: string;
   delay: number;
   accentColor: string;
+  index: number;
 };
 
 type IconIllustrationProps = {
@@ -48,15 +45,23 @@ type IconIllustrationProps = {
   secondaryColor: string;
 };
 
+type FloatingParticleProps = {
+  accentColor: string;
+  delay: number;
+  size: number;
+  startX: number;
+  startY: number;
+};
+
 const onboardingData: OnboardingSlide[] = [
   {
     id: 1,
     title: "Réservez\ninstantanément",
     description: "Trouvez un chauffeur en quelques secondes, où que vous soyez dans la ville.",
-    backgroundColor: "#0F0F23",
-    gradientColors: ["#0F0F23", "#1A1A3A"],
-    accentColor: "#6366F1",
-    secondaryColor: "#818CF8",
+    backgroundColor: "#1A1A1A",
+    gradientColors: ["#1A1A1A", "#2D1810"],
+    accentColor: "#FF7622",
+    secondaryColor: "#FF9854",
     icon: "🚗",
     features: ["Géolocalisation précise", "Temps d'attente minimal", "Confirmation instantanée"]
   },
@@ -64,10 +69,10 @@ const onboardingData: OnboardingSlide[] = [
     id: 2,
     title: "Suivez votre\ntrajet en direct",
     description: "Voyez votre chauffeur arriver et suivez chaque étape de votre course.",
-    backgroundColor: "#0A2A2A",
-    gradientColors: ["#0A2A2A", "#134E4A"],
-    accentColor: "#10B981",
-    secondaryColor: "#34D399",
+    backgroundColor: "#1A1A1A",
+    gradientColors: ["#1A1A1A", "#1A2520"],
+    accentColor: "#00D9A3",
+    secondaryColor: "#4DFFCD",
     icon: "📍",
     features: ["Suivi GPS temps réel", "Localisation du chauffeur", "Temps d'arrivée précis"]
   },
@@ -75,10 +80,10 @@ const onboardingData: OnboardingSlide[] = [
     id: 3,
     title: "Paiement\nautomatique",
     description: "Réglez votre course automatiquement et en toute sécurité.",
-    backgroundColor: "#2A1A0A",
-    gradientColors: ["#2A1A0A", "#4A2A1A"],
-    accentColor: "#F59E0B",
-    secondaryColor: "#FCD34D",
+    backgroundColor: "#1A1A1A",
+    gradientColors: ["#1A1A1A", "#2D2410"],
+    accentColor: "#FFB700",
+    secondaryColor: "#FFCE3D",
     icon: "💳",
     features: ["Paiement sécurisé", "Sans contact", "Reçu automatique"]
   },
@@ -86,95 +91,210 @@ const onboardingData: OnboardingSlide[] = [
     id: 4,
     title: "Voyagez en\ntout confort",
     description: "Des véhicules propres avec des chauffeurs professionnels évalués.",
-    backgroundColor: "#2A0A1A",
-    gradientColors: ["#2A0A1A", "#4A1A2A"],
-    accentColor: "#EC4899",
-    secondaryColor: "#F472B6",
+    backgroundColor: "#1A1A1A",
+    gradientColors: ["#1A1A1A", "#2D1824"],
+    accentColor: "#FF4D94",
+    secondaryColor: "#FF7BB3",
     icon: "⭐",
     features: ["Véhicules premium", "Chauffeurs vérifiés", "Évaluation 5 étoiles"]
   }
 ];
 
-const FeatureDot: React.FC<FeatureDotProps> = ({ feature, delay, accentColor }) => {
+const FloatingParticle: React.FC<FloatingParticleProps> = ({ 
+  accentColor, 
+  delay, 
+  size,
+  startX,
+  startY 
+}) => {
+  const translateY: SharedValue<number> = useSharedValue(0);
   const opacity: SharedValue<number> = useSharedValue(0);
-  const translateY: SharedValue<number> = useSharedValue(20);
+  const scale: SharedValue<number> = useSharedValue(0.5);
 
   useEffect(() => {
-    opacity.value = withDelay(delay, withTiming(1, { duration: 600 }));
-    translateY.value = withDelay(delay, withTiming(0, { duration: 600, easing: Easing.out(Easing.cubic) }));
+    translateY.value = withDelay(
+      delay,
+      withRepeat(
+        withSequence(
+          withTiming(-30, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
+          withTiming(0, { duration: 2000, easing: Easing.inOut(Easing.ease) })
+        ),
+        -1,
+        true
+      )
+    );
+    
+    opacity.value = withDelay(
+      delay,
+      withRepeat(
+        withSequence(
+          withTiming(0.6, { duration: 2000 }),
+          withTiming(0.2, { duration: 2000 })
+        ),
+        -1,
+        true
+      )
+    );
+
+    scale.value = withDelay(delay, withSpring(1, { damping: 15, stiffness: 100 }));
   }, [delay]);
 
   const animatedStyle = useAnimatedStyle((): any => ({
     opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
+    transform: [
+      { translateY: translateY.value },
+      { scale: scale.value }
+    ],
   }));
 
   return (
-    <Animated.View style={[animatedStyle]} className="flex-row items-center mb-3">
+    <Animated.View
+      style={[
+        animatedStyle,
+        {
+          position: 'absolute',
+          left: startX,
+          top: startY,
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: accentColor,
+        }
+      ]}
+    />
+  );
+};
+
+const FeatureDot: React.FC<FeatureDotProps> = ({ feature, delay, accentColor, index }) => {
+  const opacity: SharedValue<number> = useSharedValue(0);
+  const translateX: SharedValue<number> = useSharedValue(-30);
+  const scale: SharedValue<number> = useSharedValue(0.8);
+
+  useEffect(() => {
+    opacity.value = withDelay(delay, withTiming(1, { duration: 500 }));
+    translateX.value = withDelay(delay, withSpring(0, { damping: 15, stiffness: 150 }));
+    scale.value = withDelay(delay, withSpring(1, { damping: 12, stiffness: 120 }));
+  }, [delay]);
+
+  const animatedStyle = useAnimatedStyle((): any => ({
+    opacity: opacity.value,
+    transform: [
+      { translateX: translateX.value },
+      { scale: scale.value }
+    ],
+  }));
+
+  return (
+    <Animated.View style={[animatedStyle]} className="flex-row items-center mb-4">
       <View 
-        className="w-2 h-2 rounded-full mr-3"
-        style={{ backgroundColor: accentColor }}
-      />
-      <Text className="text-white/80 text-sm font-medium">{feature}</Text>
+        className="w-8 h-8 rounded-xl mr-3 items-center justify-center shadow-lg"
+        style={{ 
+          backgroundColor: `${accentColor}20`,
+        }}
+      >
+        <View 
+          className="w-2.5 h-2.5 rounded-full"
+          style={{ backgroundColor: accentColor }}
+        />
+      </View>
+      <Text className="text-white/90 text-base font-medium flex-1">{feature}</Text>
     </Animated.View>
   );
 };
 
 const IconIllustration: React.FC<IconIllustrationProps> = ({ icon, accentColor, secondaryColor }) => {
-  const scale: SharedValue<number> = useSharedValue(0.8);
-  const rotate: SharedValue<number> = useSharedValue(0);
+  const scale: SharedValue<number> = useSharedValue(0);
+  const rotate: SharedValue<number> = useSharedValue(-180);
+  const pulseScale: SharedValue<number> = useSharedValue(1);
 
   useEffect(() => {
-    scale.value = withSpring(1, { damping: 15, stiffness: 200 });
-    rotate.value = withSequence(
-      withDelay(500, withTiming(5, { duration: 200 })),
-      withTiming(-5, { duration: 400 }),
-      withTiming(0, { duration: 200 })
+    scale.value = withSpring(1, { damping: 15, stiffness: 100 });
+    rotate.value = withSpring(0, { damping: 20, stiffness: 80 });
+    
+    // Pulse animation
+    pulseScale.value = withRepeat(
+      withSequence(
+        withTiming(1.05, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      true
     );
   }, [icon]);
 
-  const animatedStyle = useAnimatedStyle((): any => ({
+  const containerStyle = useAnimatedStyle((): any => ({
     transform: [
       { scale: scale.value },
       { rotate: `${rotate.value}deg` }
     ],
   }));
 
+  const pulseStyle = useAnimatedStyle((): any => ({
+    transform: [{ scale: pulseScale.value }],
+  }));
+
   return (
-    <Animated.View 
-      style={[animatedStyle]}
-      className="w-32 h-32 rounded-full items-center justify-center relative"
-    >
-      {/* Gradient background */}
+    <Animated.View style={[containerStyle]} className="items-center justify-center">
+      {/* Animated outer glow ring */}
+      <Animated.View 
+        style={[pulseStyle]}
+        className="absolute w-48 h-48 rounded-full"
+      >
+        <View 
+          className="w-full h-full rounded-full"
+          style={{
+            backgroundColor: accentColor,
+            opacity: 0.1,
+          }}
+        />
+      </Animated.View>
+
+      {/* Middle ring */}
       <View 
-        className="absolute inset-0 rounded-full"
+        className="absolute w-40 h-40 rounded-full"
         style={{
           backgroundColor: accentColor,
-          opacity: 0.2,
+          opacity: 0.15,
         }}
       />
-      
-      {/* Outer ring */}
+
+      {/* Main icon container with glassmorphism */}
       <View 
-        className="absolute inset-2 rounded-full border-2"
+        className="w-32 h-32 rounded-3xl items-center justify-center relative"
         style={{
-          borderColor: accentColor,
-          opacity: 0.3,
+          backgroundColor: `${accentColor}30`,
         }}
-      />
-      
-      {/* Icon */}
-      <Text className="text-6xl">{icon}</Text>
-      
-      {/* Floating elements */}
-      <View 
-        className="absolute -top-2 -right-2 w-4 h-4 rounded-full"
-        style={{ backgroundColor: secondaryColor }}
-      />
-      <View 
-        className="absolute -bottom-2 -left-2 w-3 h-3 rounded-full"
-        style={{ backgroundColor: accentColor }}
-      />
+      >
+        {/* Border glow */}
+        <View 
+          className="absolute inset-0 rounded-3xl border-2"
+          style={{
+            borderColor: accentColor,
+            opacity: 0.4,
+          }}
+        />
+        
+        {/* Icon with shadow */}
+        <View className="items-center justify-center">
+          <Text className="text-6xl" style={{ textShadowColor: 'rgba(0,0,0,0.3)', textShadowOffset: {width: 0, height: 4}, textShadowRadius: 8 }}>
+            {icon}
+          </Text>
+        </View>
+        
+        {/* Decorative corner dots */}
+        <View 
+          className="absolute -top-3 -right-3 w-6 h-6 rounded-full shadow-lg"
+          style={{ backgroundColor: secondaryColor }}
+        />
+        <View 
+          className="absolute -bottom-3 -left-3 w-5 h-5 rounded-full shadow-lg"
+          style={{ backgroundColor: accentColor }}
+        />
+        <View 
+          className="absolute -top-2 -left-3 w-3 h-3 rounded-full shadow-lg"
+          style={{ backgroundColor: secondaryColor, opacity: 0.6 }}
+        />
+      </View>
     </Animated.View>
   );
 };
@@ -187,7 +307,12 @@ const StartPage: React.FC = () => {
   const containerOpacity: SharedValue<number> = useSharedValue(0);
   const bgProgress: SharedValue<number> = useSharedValue(0);
   const contentOpacity: SharedValue<number> = useSharedValue(0);
-  const contentTranslateY: SharedValue<number> = useSharedValue(40);
+  const contentTranslateY: SharedValue<number> = useSharedValue(60);
+  const headerOpacity: SharedValue<number> = useSharedValue(0);
+  const titleOpacity: SharedValue<number> = useSharedValue(0);
+  const titleScale: SharedValue<number> = useSharedValue(0.9);
+  const buttonOpacity: SharedValue<number> = useSharedValue(0);
+  const buttonTranslateY: SharedValue<number> = useSharedValue(40);
 
   const goToNext = () => {
     if (currentIndex < onboardingData.length - 1) {
@@ -203,21 +328,33 @@ const StartPage: React.FC = () => {
 
   const performTransition = (callback: () => void) => {
     contentOpacity.value = withTiming(0, { duration: 200 });
-    contentTranslateY.value = withTiming(20, { duration: 200 });
+    contentTranslateY.value = withTiming(30, { duration: 200 });
+    titleOpacity.value = withTiming(0, { duration: 200 });
+    titleScale.value = withTiming(0.9, { duration: 200 });
+    buttonOpacity.value = withTiming(0, { duration: 200 });
+    buttonTranslateY.value = withTiming(40, { duration: 200 });
     
     setTimeout(() => {
       callback();
-      contentOpacity.value = withTiming(1, { duration: 400 });
-      contentTranslateY.value = withTiming(0, { duration: 400, easing: Easing.out(Easing.cubic) });
+      contentOpacity.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.cubic) });
+      contentTranslateY.value = withTiming(0, { duration: 500, easing: Easing.out(Easing.cubic) });
+      titleOpacity.value = withDelay(200, withTiming(1, { duration: 600, easing: Easing.out(Easing.cubic) }));
+      titleScale.value = withDelay(200, withSpring(1, { damping: 15, stiffness: 120 }));
+      buttonOpacity.value = withDelay(400, withTiming(1, { duration: 500 }));
+      buttonTranslateY.value = withDelay(400, withSpring(0, { damping: 15, stiffness: 120 }));
     }, 200);
   };
 
   const handleGetStarted = () => {
-    navigation.navigate("RegisterScreen");
+    navigation.navigate("Auth", {
+      screen: "RegisterScreen",
+    });
   };
 
   const handleSkip = () => {
-    navigation.navigate("MainNavigator");
+    navigation.navigate("Auth", {
+      screen: 'LoginScreen',
+    });
   };
 
   // Animated styles
@@ -239,15 +376,34 @@ const StartPage: React.FC = () => {
     transform: [{ translateY: contentTranslateY.value }],
   }));
 
+  const headerStyle = useAnimatedStyle((): any => ({
+    opacity: headerOpacity.value,
+  }));
+
+  const titleStyle = useAnimatedStyle((): any => ({
+    opacity: titleOpacity.value,
+    transform: [{ scale: titleScale.value }],
+  }));
+
+  const buttonStyle = useAnimatedStyle((): any => ({
+    opacity: buttonOpacity.value,
+    transform: [{ translateY: buttonTranslateY.value }],
+  }));
+
   // Effects
   useEffect(() => {
     bgProgress.value = withTiming(currentIndex, { duration: 600, easing: Easing.out(Easing.cubic) });
   }, [currentIndex]);
 
   useEffect(() => {
-    containerOpacity.value = withTiming(1, { duration: 800 });
-    contentOpacity.value = withDelay(200, withTiming(1, { duration: 600 }));
-    contentTranslateY.value = withDelay(200, withTiming(0, { duration: 600, easing: Easing.out(Easing.cubic) }));
+    containerOpacity.value = withTiming(1, { duration: 1000 });
+    headerOpacity.value = withDelay(300, withTiming(1, { duration: 600 }));
+    contentOpacity.value = withDelay(400, withTiming(1, { duration: 700 }));
+    contentTranslateY.value = withDelay(400, withTiming(0, { duration: 700, easing: Easing.out(Easing.cubic) }));
+    titleOpacity.value = withDelay(600, withTiming(1, { duration: 700 }));
+    titleScale.value = withDelay(600, withSpring(1, { damping: 15, stiffness: 120 }));
+    buttonOpacity.value = withDelay(900, withTiming(1, { duration: 600 }));
+    buttonTranslateY.value = withDelay(900, withSpring(0, { damping: 15, stiffness: 120 }));
   }, []);
 
   const currentSlide = onboardingData[currentIndex];
@@ -257,7 +413,7 @@ const StartPage: React.FC = () => {
       <StatusBar barStyle="light-content" backgroundColor={currentSlide.backgroundColor} />
       <Animated.View style={[{ flex: 1 }, backgroundStyle]}>
         
-        {/* Gradient overlay */}
+        {/* Gradient overlay simulé avec opacité */}
         <View 
           className="absolute inset-0"
           style={{
@@ -265,23 +421,36 @@ const StartPage: React.FC = () => {
           }}
         />
         
-        {/* Note: Pour un vrai gradient, il faudrait utiliser LinearGradient d'expo-linear-gradient */}
+        {/* Radial gradient effect simulation */}
+        <View 
+          className="absolute inset-0"
+          style={{
+            backgroundColor: currentSlide.accentColor,
+            opacity: 0.03,
+          }}
+        />
+        
+        {/* Floating particles for depth */}
+        <FloatingParticle accentColor={currentSlide.accentColor} delay={0} size={12} startX={50} startY={150} />
+        <FloatingParticle accentColor={currentSlide.secondaryColor} delay={300} size={8} startX={300} startY={200} />
+        <FloatingParticle accentColor={currentSlide.accentColor} delay={600} size={6} startX={80} startY={400} />
+        <FloatingParticle accentColor={currentSlide.secondaryColor} delay={900} size={10} startX={280} startY={500} />
         
         <SafeAreaView className="flex-1">
           <Animated.View style={[{ flex: 1 }, containerStyle]}>
             
-            {/* Header with better UX */}
-            <View className="flex-row justify-between items-center px-6 py-4">
-              <View className="flex-row space-x-1">
+            {/* Header with glassmorphism */}
+            <Animated.View style={[headerStyle]} className="flex-row justify-between items-center px-6 py-5">
+              <View className="flex-row gap-2">
                 {onboardingData.map((_, index) => (
                   <View
                     key={index}
-                    className="h-1 rounded-full transition-all duration-300"
+                    className="h-1.5 rounded-full transition-all duration-300"
                     style={{
-                      width: index === currentIndex ? 24 : 8,
+                      width: index === currentIndex ? 32 : 8,
                       backgroundColor: index === currentIndex 
                         ? currentSlide.accentColor 
-                        : 'rgba(255,255,255,0.3)'
+                        : 'rgba(255,255,255,0.25)'
                     }}
                   />
                 ))}
@@ -289,17 +458,22 @@ const StartPage: React.FC = () => {
               
               <TouchableOpacity
                 onPress={handleSkip}
-                className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2"
+                className="rounded-full px-5 py-2.5"
+                style={{
+                  backgroundColor: 'rgba(255,255,255,0.12)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(255,255,255,0.15)',
+                }}
               >
-                <Text className="text-white/90 font-semibold text-sm">Passer</Text>
+                <Text className="text-white font-bold text-sm">Passer</Text>
               </TouchableOpacity>
-            </View>
+            </Animated.View>
 
             {/* Content */}
             <Animated.View style={[{ flex: 1 }, contentStyle]} className="px-6">
               
-              {/* Illustration centrée */}
-              <View className="flex-1 items-center justify-center">
+              {/* Illustration with more space */}
+              <View className="flex-1 items-center justify-center pt-8 pb-4">
                 <IconIllustration 
                   icon={currentSlide.icon}
                   accentColor={currentSlide.accentColor}
@@ -307,72 +481,97 @@ const StartPage: React.FC = () => {
                 />
               </View>
 
-              {/* Text content avec meilleure hiérarchie */}
+              {/* Text content with better spacing */}
               <VStack className="mb-8">
-                <Heading className="text-3xl font-black text-white mb-4 leading-tight">
-                  {currentSlide.title}
-                </Heading>
-                
-                <Text className="text-lg text-white/80 mb-6 leading-relaxed">
-                  {currentSlide.description}
-                </Text>
+                <Animated.View style={titleStyle}>
+                  <Heading className="text-4xl font-black text-white mb-4 leading-tight tracking-tight">
+                    {currentSlide.title}
+                  </Heading>
+                  
+                  <Text className="text-lg text-white/70 mb-8 leading-relaxed">
+                    {currentSlide.description}
+                  </Text>
+                </Animated.View>
 
-                {/* Features list */}
-                <VStack className="mb-4">
+                {/* Features list with improved design */}
+                <VStack className="mb-2">
                   {currentSlide.features.map((feature, index) => (
                     <FeatureDot 
                       key={feature}
                       feature={feature}
-                      delay={index * 100}
+                      delay={600 + (index * 150)}
                       accentColor={currentSlide.accentColor}
+                      index={index}
                     />
                   ))}
                 </VStack>
               </VStack>
 
-              {/* Navigation claire et intuitive */}
-              <VStack className="pb-6 space-y-4">
-                {currentIndex === onboardingData.length - 1 ? (
-                  <Button 
-                    className="w-full rounded-2xl h-14 shadow-lg" 
-                    style={{ backgroundColor: currentSlide.accentColor }}
-                    onPress={handleGetStarted}
-                  >
-                    <ButtonText className="text-lg font-bold text-white">
-                      Commencer l'aventure
-                    </ButtonText>
-                  </Button>
-                ) : (
-                  <HStack className="space-x-3 gap-3">
-                    {currentIndex > 0 && (
-                      <Button 
-                        variant="outline"
-                        className="flex-1 rounded-xl h-12 border-white/30 bg-white/10" 
-                        onPress={goToPrevious}
-                      >
-                        <ButtonText className="text-white font-semibold">
-                          Retour
-                        </ButtonText>
-                      </Button>
-                    )}
-                    
-                    <Button 
-                      className="flex-1 rounded-xl h-12 shadow-lg" 
-                      style={{ backgroundColor: currentSlide.accentColor }}
-                      onPress={goToNext}
+              {/* Navigation with modern buttons */}
+              <Animated.View style={buttonStyle}>
+                <VStack className="pb-8 space-y-3">
+                  {currentIndex === onboardingData.length - 1 ? (
+                    <TouchableOpacity
+                      onPress={handleGetStarted}
+                      activeOpacity={0.8}
+                      className="w-full rounded-2xl h-16 shadow-xl items-center justify-center"
+                      style={{ 
+                        backgroundColor: currentSlide.accentColor,
+                      }}
                     >
-                      <ButtonText className="text-white font-bold">
-                        Continuer
-                      </ButtonText>
-                    </Button>
-                  </HStack>
-                )}
-                
-                {/* Pagination visuelle améliorée */}
-                <Text className="text-center text-white/50 text-sm font-medium mt-4">
-                  {currentIndex + 1} sur {onboardingData.length}
-                </Text>
-              </VStack>
+                      <Text className="text-lg font-black text-white tracking-wide">
+                        Commencer l'aventure
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <HStack className="gap-3">
+                      {currentIndex > 0 && (
+                        <TouchableOpacity
+                          onPress={goToPrevious}
+                          activeOpacity={0.8}
+                          className="flex-1 rounded-xl h-14 items-center justify-center"
+                          style={{
+                            backgroundColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1.5,
+                            borderColor: 'rgba(255,255,255,0.2)',
+                          }}
+                        >
+                          <Text className="text-white font-bold text-base">
+                            Retour
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                      
+                      <TouchableOpacity
+                        onPress={goToNext}
+                        activeOpacity={0.8}
+                        className="flex-1 rounded-xl h-14 shadow-lg items-center justify-center"
+                        style={{ 
+                          backgroundColor: currentSlide.accentColor,
+                        }}
+                      >
+                        <Text className="text-white text-base">
+                          Continuer
+                        </Text>
+                      </TouchableOpacity>
+                    </HStack>
+                  )}
+                  
+                  {/* Improved pagination */}
+                  <View className="items-center mt-6">
+                    <View 
+                      className="px-4 py-2 rounded-full"
+                      style={{
+                        backgroundColor: 'rgba(255,255,255,0.08)',
+                      }}
+                    >
+                      <Text className="text-white/50 text-sm font-bold tracking-wider">
+                        {currentIndex + 1} / {onboardingData.length}
+                      </Text>
+                    </View>
+                  </View>
+                </VStack>
+              </Animated.View>
             </Animated.View>
           </Animated.View>
         </SafeAreaView>

@@ -4,9 +4,7 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
-  Dimensions,
   Image,
-  StatusBar,
 } from 'react-native';
 import {
   ChevronLeft,
@@ -24,35 +22,10 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Heading } from '@/components/ui/heading';
 import { Button, ButtonText } from '@/components/ui/button';
+import { productDetails } from '@/mocks/products';
+import { Ingredient, ProductSize } from '@/types/product';
 
 // Types
-interface ProductSize {
-  id: string;
-  size: string;
-  label: string;
-  isSelected: boolean;
-}
-
-interface Ingredient {
-  id: string;
-  name: string;
-  icon: string;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  restaurant: string;
-  rating: number;
-  deliveryInfo: string;
-  deliveryTime: string;
-  description: string;
-  basePrice: number;
-  image: string;
-  sizes: ProductSize[];
-  ingredients: Ingredient[];
-}
-
 type TabsParamList = {
   Home: undefined;
   Cart: { paddingBottom: boolean };
@@ -80,30 +53,6 @@ const FoodDetailsScreen: React.FC = () => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [selectedSizeId, setSelectedSizeId] = useState<string>('14');
 
-  const product: Product = {
-    id: '1',
-    name: 'Burger Bistro',
-    restaurant: 'Rose Garden',
-    rating: 4.7,
-    deliveryInfo: 'Free',
-    deliveryTime: '20 min',
-    description: 'Maecenas sed diam eget risus varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.',
-    basePrice: 32,
-    image: 'https://www.tasteofhome.com/wp-content/uploads/2017/09/exps28800_UG143377D12_18_1b_RMS.jpg',
-    sizes: [
-      { id: '10', size: '10"', label: '10"', isSelected: false },
-      { id: '14', size: '14"', label: '14"', isSelected: true },
-      { id: '16', size: '16"', label: '16"', isSelected: false },
-    ],
-    ingredients: [
-      { id: '1', name: 'Cheese', icon: '🧀' },
-      { id: '2', name: 'Lettuce', icon: '🥬' },
-      { id: '3', name: 'Tomato', icon: '🍅' },
-      { id: '4', name: 'Onion', icon: '🧅' },
-      { id: '5', name: 'Sauce', icon: '🥫' },
-    ],
-  };
-
   const handleQuantityChange = (change: number): void => {
     setQuantity(prev => Math.max(1, prev + change));
   };
@@ -118,10 +67,10 @@ const FoodDetailsScreen: React.FC = () => {
 
   const handleAddToCart = (): void => {
     console.log('Add to cart:', {
-      productId: product.id,
+      productId: productDetails.id,
       quantity,
       selectedSize: selectedSizeId,
-      totalPrice: product.basePrice * quantity,
+      totalPrice: productDetails.basePrice * quantity,
     });
     navigation.navigate("Cart", { paddingBottom: true });
   };
@@ -162,7 +111,7 @@ const FoodDetailsScreen: React.FC = () => {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       {/* Floating Header Controls */}
       <View className="absolute top-24 left-0 right-0 px-6 z-50">
         <HStack className="items-center justify-between">
@@ -207,12 +156,12 @@ const FoodDetailsScreen: React.FC = () => {
         contentContainerStyle={{ paddingBottom: 140 }}
         bounces={true}
       >
-        {/* Hero Image Section - Now Scrollable */}
+        {/* Hero Image Section*/}
         <View className="relative">
-          <View className="h-80 bg-gray-200 overflow-hidden rounded-b-3xl">
+          <View className="h-96 bg-gray-200 overflow-hidden rounded-b-3xl">
             <Image
               source={{
-                uri: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=150&fit=crop'
+                uri: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=200&h=150&fit=crop'
               }}
               className="w-full h-full flex-1"
               resizeMode="cover"
@@ -227,14 +176,14 @@ const FoodDetailsScreen: React.FC = () => {
         <View className="px-6 pt-4 pb-2">
           {/* Product Title */}
           <Heading className="text-gray-900 text-3xl font-bold mb-3 leading-tight tracking-tight">
-            {product.name}
+            {productDetails.name}
           </Heading>
 
           {/* Restaurant Info with Enhanced Visual */}
           <HStack className="items-center mb-7">
             <View className="w-1.5 h-1.5 bg-orange-500 rounded-full mr-3" />
             <Text className="text-orange-600 text-base font-semibold tracking-wide">
-              {product.restaurant}
+              {productDetails.restaurant}
             </Text>
           </HStack>
 
@@ -246,7 +195,7 @@ const FoodDetailsScreen: React.FC = () => {
                 <HStack className="items-center">
                   <Star size={14} color="#f59e0b" fill="#f59e0b" strokeWidth={0} />
                   <Text className="text-amber-700 text-sm font-bold ml-1.5">
-                    {product.rating}
+                    {productDetails.rating}
                   </Text>
                 </HStack>
               </View>
@@ -256,7 +205,7 @@ const FoodDetailsScreen: React.FC = () => {
                 <HStack className="items-center">
                   <Truck size={14} color="#10b981" strokeWidth={2} />
                   <Text className="text-emerald-700 text-sm font-bold ml-1.5">
-                    {product.deliveryInfo}
+                    {productDetails.deliveryInfo}
                   </Text>
                 </HStack>
               </View>
@@ -266,7 +215,7 @@ const FoodDetailsScreen: React.FC = () => {
                 <HStack className="items-center">
                   <Clock size={14} color="#6b7280" strokeWidth={2} />
                   <Text className="text-gray-700 text-sm font-bold ml-1.5">
-                    {product.deliveryTime}
+                    {productDetails.deliveryTime}
                   </Text>
                 </HStack>
               </View>
@@ -275,7 +224,7 @@ const FoodDetailsScreen: React.FC = () => {
 
           {/* Enhanced Description */}
           <Text className="text-gray-600 text-md font-medium leading-relaxed mb-8 tracking-wide">
-            {product.description}
+            {productDetails.description}
           </Text>
 
           {/* Refined Size Selection */}
@@ -284,7 +233,7 @@ const FoodDetailsScreen: React.FC = () => {
               Size:
             </Text>
             <HStack className="gap-3">
-              {product.sizes.map((size) => (
+              {productDetails.sizes.map((size) => (
                 <SizeOption key={size.id} size={size} />
               ))}
             </HStack>
@@ -296,7 +245,7 @@ const FoodDetailsScreen: React.FC = () => {
               Ingredients
             </Text>
             <HStack className="gap-3 flex-wrap">
-              {product.ingredients.map((ingredient) => (
+              {productDetails.ingredients.map((ingredient) => (
                 <IngredientIcon key={ingredient.id} ingredient={ingredient} />
               ))}
             </HStack>
@@ -314,7 +263,7 @@ const FoodDetailsScreen: React.FC = () => {
                 Total Price
               </Text>
               <Heading className="text-gray-900 text-3xl font-black tracking-tighter">
-                ${product.basePrice * quantity}
+                ${productDetails.basePrice * quantity}
               </Heading>
             </VStack>
 
@@ -368,7 +317,7 @@ const FoodDetailsScreen: React.FC = () => {
         {/* Safe Area Bottom Padding */}
         <View className="h-8 bg-white/95" />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

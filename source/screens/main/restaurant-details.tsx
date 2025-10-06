@@ -4,7 +4,6 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
-  Dimensions,
   Image,
 } from 'react-native';
 import {
@@ -13,111 +12,44 @@ import {
   Star,
   Truck,
   Clock,
-  Plus,
+  EditIcon,
+  TrashIcon
 } from 'lucide-react-native';
+import {
+  Actionsheet,
+  ActionsheetContent,
+  ActionsheetItem,
+  ActionsheetItemText,
+  ActionsheetDragIndicator,
+  ActionsheetDragIndicatorWrapper,
+  ActionsheetBackdrop,
+  ActionsheetIcon,
+} from '@/components/ui/actionsheet';
 import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { Heading } from '@/components/ui/heading';
-
-const { width } = Dimensions.get('window');
-
-// Types
-interface Category {
-  id: string;
-  name: string;
-  isSelected: boolean;
-  count?: number;
-}
-
-interface MenuItem {
-  id: string;
-  name: string;
-  restaurant: string;
-  price: number;
-  image: string;
-  category: string;
-}
-
-interface Restaurant {
-  id: string;
-  name: string;
-  description: string;
-  rating: number;
-  deliveryInfo: string;
-  deliveryTime: string;
-  images: string[];
-  categories: Category[];
-  menuItems: MenuItem[];
-}
-
-// Navigation types
-type RootStackParamList = {
-  Home: undefined;
-  CategoriesDetails: undefined;
-  RestaurantDetails: { restaurantId: string };
-  FoodDetails: { productId: string };
-  Cart: undefined;
-};
-
-type RestaurantDetailsScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'RestaurantDetails'
->;
+import ProductCard from '@/components/common/product-card';
+import { products } from '@/mocks/products';
+import { StackNavigation } from '@/types/navigation';
+import { Category } from '@/types/restaurant';
+import { restaurant } from '@/mocks/restaurants';
 
 const RestaurantDetailsScreen: React.FC = () => {
-  const navigation = useNavigation<RestaurantDetailsScreenNavigationProp>();
+  const navigation = useNavigation<StackNavigation>();
   const [selectedCategory, setSelectedCategory] = useState<string>('burger');
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [showActionsheet, setShowActionsheet] = React.useState(false);
 
-  const restaurant: Restaurant = {
-    id: '1',
-    name: 'Spicy Restaurant',
-    description: 'Maecenas sed diam eget risus varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.',
-    rating: 4.7,
-    deliveryInfo: 'Free',
-    deliveryTime: '20 min',
-    images: [
-      'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop',
-      'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop',
-      'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop',
-      'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop',
-      'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop',
-      'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop',
-    ],
-    categories: [
-      { id: 'burger', name: 'Burger', isSelected: true, count: 10 },
-      { id: 'sandwich', name: 'Sandwich', isSelected: false },
-      { id: 'pizza', name: 'Pizza', isSelected: false },
-      { id: 'sanwich', name: 'Sanwich', isSelected: false },
-    ],
-    menuItems: [
-      {
-        id: '1',
-        name: 'Burger Ferguson',
-        restaurant: 'Spicy Restaurant',
-        price: 40,
-        image: 'https://pixabay.com/get/g6ed01997710f58f285d1045ecd4763db06f9237f371f7027d98772a65377c36d04cb2984fe9a0bcaa469d8e9ec3dcc380af1bc0c7a92a7a3b4ca6516cf2ea01bb929e9fbde68a269da13626c8565ed30_640.jpg',
-        category: 'burger',
-      },
-      {
-        id: '2',
-        name: "Rockin' Burgers",
-        restaurant: 'Cafetechino',
-        price: 40,
-        image: 'https://pixabay.com/get/g6ed01997710f58f285d1045ecd4763db06f9237f371f7027d98772a65377c36d04cb2984fe9a0bcaa469d8e9ec3dcc380af1bc0c7a92a7a3b4ca6516cf2ea01bb929e9fbde68a269da13626c8565ed30_640.jpg',
-        category: 'burger',
-      },
-    ],
-  };
+  const handleClose = () => setShowActionsheet(false);
+
 
   const handleCategorySelect = (categoryId: string): void => {
     setSelectedCategory(categoryId);
   };
 
   const handleMenuItemPress = (itemId: string): void => {
-    navigation.navigate('FoodDetails', { productId: itemId });
+    navigation.navigate('Main', { screen: 'FoodDetails'});
   };
 
   const CategoryButton: React.FC<{ category: Category }> = ({ category }) => (
@@ -140,50 +72,6 @@ const RestaurantDetailsScreen: React.FC = () => {
     </TouchableOpacity>
   );
 
-  const MenuItemCard: React.FC<{ item: MenuItem }> = ({ item }) => (
-    <TouchableOpacity
-      className="w-[48%] mb-6 active:scale-[0.98]"
-      onPress={() => handleMenuItemPress(item.id)}
-      activeOpacity={0.9}
-    >
-      <View className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
-        {/* Image Container */}
-        <View className="h-32 bg-gray-200 relative overflow-hidden">
-          <View className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 rounded-t-3xl" >
-            <Image
-              source={{ uri: item.image }}
-              className="w-full h-full"
-              resizeMode="cover"
-            />
-          </View>
-          <View className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent" />
-        </View>
-
-        {/* Content */}
-        <View className="p-4">
-          <Text className="text-gray-900 text-sm font-semibold mb-1 leading-tight">
-            {item.name}
-          </Text>
-          <Text className="text-gray-500 text-xs font-medium mb-3">
-            {item.restaurant}
-          </Text>
-          
-          <HStack className="items-center justify-between">
-            <Text className="text-gray-900 text-base font-bold">
-              ${item.price}
-            </Text>
-            
-            <TouchableOpacity 
-              className="w-8 h-8 bg-orange-500 rounded-full items-center justify-center shadow-lg active:scale-95"
-              activeOpacity={0.8}
-            >
-              <Plus size={16} color="#FFFFFF" strokeWidth={2.5} />
-            </TouchableOpacity>
-          </HStack>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
 
   const PaginationDots: React.FC = () => (
     <HStack className="items-center justify-center gap-2 absolute bottom-4 left-0 right-0">
@@ -209,7 +97,7 @@ const RestaurantDetailsScreen: React.FC = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-gray-50">
       {/* Floating Header Controls */}
       <View className="absolute top-24 left-0 right-0 px-6 z-50">
         <HStack className="items-center justify-between">
@@ -230,6 +118,7 @@ const RestaurantDetailsScreen: React.FC = () => {
           <TouchableOpacity
             className="w-12 h-12 bg-white/95 backdrop-blur-xl rounded-full items-center justify-center shadow-xl border border-white/20 active:scale-95"
             activeOpacity={0.85}
+            onPress={() => setShowActionsheet(true)}
             style={{
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 4 },
@@ -249,7 +138,7 @@ const RestaurantDetailsScreen: React.FC = () => {
       >
         {/* Hero Image Carousel */}
         <View className="relative">
-          <View className="h-80 bg-gray-200 overflow-hidden rounded-b-3xl">
+          <View className="h-96 bg-gray-200 overflow-hidden rounded-b-3xl">
             <Image
               source={{ uri: restaurant.images[currentImageIndex] }}
               className="w-full h-full"
@@ -325,8 +214,8 @@ const RestaurantDetailsScreen: React.FC = () => {
 
           {/* Menu Items Grid */}
           <View className="flex-row flex-wrap justify-between">
-            {selectedCategoryItems.map((item) => (
-              <MenuItemCard key={item.id} item={item} />
+            {products.map((item) => (
+              <ProductCard key={item.id} product={item} />
             ))}
           </View>
         </View>
@@ -334,7 +223,28 @@ const RestaurantDetailsScreen: React.FC = () => {
         {/* Bottom Spacing */}
         <View className="h-20" />
       </ScrollView>
-    </SafeAreaView>
+
+      <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
+        <ActionsheetBackdrop />
+        <ActionsheetContent className="min-h-36">
+          <ActionsheetDragIndicatorWrapper>
+            <ActionsheetDragIndicator />
+          </ActionsheetDragIndicatorWrapper>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Option 1</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Option 2</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Option 3</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Option 4</ActionsheetItemText>
+          </ActionsheetItem>
+        </ActionsheetContent>
+      </Actionsheet>
+    </View>
   );
 };
 
