@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import {
@@ -30,7 +30,7 @@ import "@/global.css";
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
-const App: React.FC = () => {
+const App: FC = () => {
   const [loaded, error] = useFonts({
     Montserrat_100Thin,
     Montserrat_200ExtraLight,
