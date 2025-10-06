@@ -46,7 +46,7 @@ const RegisterForm = () => {
       console.log("Données du formulaire:", data);
       // Simuler un délai d'API
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      navigation.navigate("OTPScreen");
+      navigation.navigate("Auth", { screen: "OTPScreen" });
     } catch (error) {
       console.error("Erreur lors de l'inscription:", error);
       setError("Erreur lors de l'inscription:");
@@ -141,7 +141,7 @@ const RegisterForm = () => {
       {/* Login Link */}
       <View className="flex-row justify-center">
         <Text className="text-base text-gray-500">Vous avez déjà un compte? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")} disabled={isSubmitting}>
+        <TouchableOpacity onPress={() => navigation.navigate("Auth", { screen: "LoginScreen" })} disabled={isSubmitting}>
           <Text className="text-base text-blue-500">Se connecter</Text>
         </TouchableOpacity>
       </View>

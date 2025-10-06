@@ -59,7 +59,7 @@ const LoginForm = () => {
         <Text className="text-base text-gray-500">
           Vous n&lsquo;avez pas de compte ?
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Auth", { screen: "RegisterScreen" })}>
           <Text className="text-base text-blue-500">S&lsquo;inscrire</Text>
         </TouchableOpacity>
       </View>
@@ -68,4 +68,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
