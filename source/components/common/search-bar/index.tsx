@@ -1,7 +1,7 @@
-import React from 'react';
-import { View } from 'react-native';
-import { Input, InputField, InputIcon, InputSlot } from '@/components/ui/input';
-import { SearchIcon } from 'lucide-react-native';
+import React from "react";
+import { View } from "react-native";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
+import { SearchIcon } from "lucide-react-native";
 
 const SearchBar = () => {
     return (
@@ -11,7 +11,7 @@ const SearchBar = () => {
             size="xl"
             className="bg-gray-100/70 rounded-2xl  text-gray-900  font-medium border border-gray-200/50"
             style={{
-              shadowColor: '#000',
+              shadowColor: "#000",
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.03,
               shadowRadius: 3,
@@ -26,6 +26,6 @@ const SearchBar = () => {
         </View>
       </View>
     );
-}
+};
 
 export default SearchBar;

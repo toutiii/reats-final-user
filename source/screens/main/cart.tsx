@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   View,
   TouchableOpacity,
   Image,
-} from 'react-native';
+} from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -13,20 +13,20 @@ import Animated, {
   withSpring,
   Easing,
   withSequence,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 import {
   ChevronLeft,
   Plus,
   Minus,
   X,
   ShoppingCart,
-} from 'lucide-react-native';
-import { HStack } from '@/components/ui/hstack';
-import { VStack } from '@/components/ui/vstack';
-import { Text } from '@/components/ui/text';
-import { Button, ButtonText } from '@/components/ui/button';
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { VStack } from "@/components/ui/vstack";
+import { Text } from "@/components/ui/text";
+import { Button, ButtonText } from "@/components/ui/button";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 // Animated components
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -40,8 +40,8 @@ type RootStackParamList = {
 };
 
 type CartScreenNavigationProp = {
-  navigation: StackNavigationProp<RootStackParamList, 'Cart'>;
-  route: RouteProp<RootStackParamList, 'Cart'>;
+  navigation: StackNavigationProp<RootStackParamList, "Cart">;
+  route: RouteProp<RootStackParamList, "Cart">;
 };
 
 interface CartItem {
@@ -107,13 +107,13 @@ const EmptyCartComponent: React.FC<{ onBackPress: () => void }> = ({ onBackPress
     <View className="flex-1 items-center justify-center px-8">
       <VStack className="items-center space-y-6">
         {/* Animated Icon */}
-        <AnimatedView 
+        <AnimatedView
           style={iconStyle}
           className="w-24 h-24 rounded-full bg-slate-600/20 items-center justify-center mb-4"
         >
           <ShoppingCart size={40} color="#94A3B8" strokeWidth={1.5} />
         </AnimatedView>
-        
+
         {/* Animated Text Content */}
         <AnimatedView style={contentStyle}>
           <VStack className="items-center space-y-3">
@@ -125,10 +125,10 @@ const EmptyCartComponent: React.FC<{ onBackPress: () => void }> = ({ onBackPress
             </Text>
           </VStack>
         </AnimatedView>
-        
+
         {/* Animated Action Button */}
         <AnimatedView style={buttonStyle}>
-          <Button 
+          <Button
             size="lg"
             className="rounded-full mt-8 min-w-48"
             onPress={onBackPress}
@@ -144,13 +144,13 @@ const EmptyCartComponent: React.FC<{ onBackPress: () => void }> = ({ onBackPress
 };
 
 // Animated Cart Item Component
-const CartItemComponent: React.FC<CartItemProps> = ({ 
-  item, 
-  index, 
-  isEditMode, 
-  updateQuantity, 
-  removeItem, 
-  navigation 
+const CartItemComponent: React.FC<CartItemProps> = ({
+  item,
+  index,
+  isEditMode,
+  updateQuantity,
+  removeItem,
+  navigation
 }) => {
   const opacity = useSharedValue(0);
   const translateX = useSharedValue(-50);
@@ -199,9 +199,9 @@ const CartItemComponent: React.FC<CartItemProps> = ({
           </View>
 
           {/* Product Info */}
-          <TouchableOpacity 
-            className='flex-1 space-y-1' 
-            onPress={() => navigation.navigate('FoodDetails')}
+          <TouchableOpacity
+            className='flex-1 space-y-1'
+            onPress={() => navigation.navigate("FoodDetails")}
           >
             <VStack className="flex-1 space-y-1">
               <Text className="text-white text-[16px] font-medium leading-tight">
@@ -242,11 +242,11 @@ const CartItemComponent: React.FC<CartItemProps> = ({
               >
                 <Minus size={14} color="#FFFFFF" strokeWidth={2.5} />
               </TouchableOpacity>
-              
+
               <Text className="text-white text-[16px] font-semibold min-w-6 text-center">
                 {item.quantity}
               </Text>
-              
+
               <TouchableOpacity
                 className="w-8 h-8 rounded-full bg-slate-600/60 border border-slate-500/40 items-center justify-center active:bg-slate-500/60"
                 onPress={() => updateQuantity(item.id, 1)}
@@ -263,27 +263,29 @@ const CartItemComponent: React.FC<CartItemProps> = ({
 };
 
 const CartScreen: React.FC<CartScreenNavigationProp> = ({ route, navigation }) => {
-  const paddingBottom = route.params?.paddingBottom ? false : true;
+  const paddingBottom = route.params?.paddingBottom
+? false
+: true;
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       id: 1,
-      name: 'Pizza Calzone',
-      subtitle: 'European',
-      size: '14"',
+      name: "Pizza Calzone",
+      subtitle: "European",
+      size: "14\"",
       price: 64,
       quantity: 2,
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=150&fit=crop',
+      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=150&fit=crop",
     },
     {
       id: 2,
-      name: 'Pizza Calzone',
-      subtitle: 'European', 
-      size: '14"',
+      name: "Pizza Calzone",
+      subtitle: "European",
+      size: "14\"",
       price: 32,
       quantity: 1,
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=150&fit=crop',
+      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=150&fit=crop",
     },
   ]);
 
@@ -309,9 +311,9 @@ const CartScreen: React.FC<CartScreenNavigationProp> = ({ route, navigation }) =
   const updateQuantity = (id: number, change: number): void => {
     setCartItems(prevItems =>
       prevItems.map(item =>
-        item.id === id
+        (item.id === id
           ? { ...item, quantity: Math.max(1, item.quantity + change) }
-          : item
+          : item)
       )
     );
   };
@@ -340,30 +342,34 @@ const CartScreen: React.FC<CartScreenNavigationProp> = ({ route, navigation }) =
       <AnimatedView style={headerStyle} className="bg-slate-700 border-b border-slate-600/20">
         <View className="px-6 py-4">
           <HStack className="items-center justify-between">
-            <TouchableOpacity 
+            <TouchableOpacity
               className="w-10 h-10 items-center justify-center rounded-xl active:bg-slate-600/30"
               activeOpacity={0.8}
-              onPress={() => navigation.goBack()} 
+              onPress={() => navigation.goBack()}
             >
               <ChevronLeft size={22} color="#FFFFFF" strokeWidth={2.5} />
             </TouchableOpacity>
-            
+
             <Text className="text-white text-[18px] font-medium">
-              {isEditMode ? 'Edit Cart' : 'My Cart'}
+              {isEditMode
+? "Edit Cart"
+: "My Cart"}
             </Text>
-            
+
             {!isCartEmpty && (
-              <TouchableOpacity 
+              <TouchableOpacity
                 className="px-3 py-1.5 rounded-lg active:bg-slate-600/30"
                 onPress={() => setIsEditMode(!isEditMode)}
                 activeOpacity={0.8}
               >
                 <Text className="text-orange-500 text-[12px] font-semibold tracking-[1.2px]">
-                  {isEditMode ? 'DONE' : 'EDIT ITEMS'}
+                  {isEditMode
+? "DONE"
+: "EDIT ITEMS"}
                 </Text>
               </TouchableOpacity>
             )}
-          
+
             {isCartEmpty && <View className="w-10" />}
           </HStack>
         </View>
@@ -375,7 +381,7 @@ const CartScreen: React.FC<CartScreenNavigationProp> = ({ route, navigation }) =
           <EmptyCartComponent onBackPress={() => navigation.goBack()} />
         ) : (
           <>
-            <ScrollView 
+            <ScrollView
               className="flex-1"
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ flexGrow: 1 }}
@@ -383,9 +389,9 @@ const CartScreen: React.FC<CartScreenNavigationProp> = ({ route, navigation }) =
               {/* Cart Items */}
               <View className="px-6">
                 {cartItems.map((item: CartItem, index: number) => (
-                  <CartItemComponent 
-                    key={item.id} 
-                    item={item} 
+                  <CartItemComponent
+                    key={item.id}
+                    item={item}
                     index={index}
                     isEditMode={isEditMode}
                     updateQuantity={updateQuantity}
@@ -400,9 +406,11 @@ const CartScreen: React.FC<CartScreenNavigationProp> = ({ route, navigation }) =
             </ScrollView>
 
             {/* Animated Bottom Section */}
-            <AnimatedView 
+            <AnimatedView
               style={bottomStyle}
-              className={`bg-white shadow-2xl ${paddingBottom ? 'mb-20' : 'mb-0'} rounded-t-3xl overflow-hidden`}
+              className={`bg-white shadow-2xl ${paddingBottom
+? "mb-20"
+: "mb-0"} rounded-t-3xl overflow-hidden`}
             >
               {/* Delivery Address */}
               <View className="bg-gray-50 px-6 py-5 border-b border-gray-100">
@@ -410,7 +418,7 @@ const CartScreen: React.FC<CartScreenNavigationProp> = ({ route, navigation }) =
                   <Text className="text-gray-500 text-[11px] font-bold tracking-[1.5px] uppercase">
                     Delivery Address
                   </Text>
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     className="px-2 py-1 rounded-md active:bg-gray-200"
                     activeOpacity={0.8}
                   >
@@ -434,11 +442,11 @@ const CartScreen: React.FC<CartScreenNavigationProp> = ({ route, navigation }) =
                     ${totalAmount}
                   </Text>
                 </HStack>
-                
-                <Button 
+
+                <Button
                   size="lg"
                   className="rounded-full"
-                  onPress={() => navigation.navigate('Order')}
+                  onPress={() => navigation.navigate("Order")}
                 >
                   <ButtonText>
                     Place Order

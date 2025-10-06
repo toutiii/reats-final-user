@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   View,
@@ -7,20 +7,20 @@ import {
   SafeAreaView,
   StatusBar,
   Animated,
-} from 'react-native';
+} from "react-native";
 import {
   Bell,
   Star,
   TrendingUp,
   Clock,
   Menu,
-} from 'lucide-react-native';
-import { HStack } from '@/components/ui/hstack';
-import { VStack } from '@/components/ui/vstack';
-import { Text } from '@/components/ui/text';
-import { Heading } from '@/components/ui/heading';
-import SearchBar from '@/components/common/search-bar';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { VStack } from "@/components/ui/vstack";
+import { Text } from "@/components/ui/text";
+import { Heading } from "@/components/ui/heading";
+import SearchBar from "@/components/common/search-bar";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 type RootStackParamList = {
   Search: undefined;
@@ -32,12 +32,12 @@ type RootStackParamList = {
 
 type SearchScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'Search'
+  "Search"
 >;
 
 
 const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }) => {
-  const [searchText, setSearchText] = useState('Pizza');
+  const [searchText, setSearchText] = useState("Pizza");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchAnimValue = useState(new Animated.Value(0))[0];
   const fadeAnim = useState(new Animated.Value(0))[0];
@@ -69,45 +69,45 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
   };
 
   const recentKeywords = [
-    { id: 1, text: 'Burger', trending: true },
-    { id: 2, text: 'Sandwich', trending: false },
-    { id: 3, text: 'Pizza', trending: true },
-    { id: 4, text: 'Sushi', trending: false },
-    { id: 5, text: 'Pasta', trending: true },
+    { id: 1, text: "Burger", trending: true },
+    { id: 2, text: "Sandwich", trending: false },
+    { id: 3, text: "Pizza", trending: true },
+    { id: 4, text: "Sushi", trending: false },
+    { id: 5, text: "Pasta", trending: true },
   ];
 
   const suggestedRestaurants = [
     {
       id: 1,
-      name: 'Pansi Restaurant',
-      subtitle: 'Italian • European Cuisine',
+      name: "Pansi Restaurant",
+      subtitle: "Italian • European Cuisine",
       rating: 4.7,
-      reviewCount: '2.1k',
-      deliveryTime: '25-30 min',
-      deliveryFee: 'Free delivery',
-      image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=100&h=100&fit=crop',
+      reviewCount: "2.1k",
+      deliveryTime: "25-30 min",
+      deliveryFee: "Free delivery",
+      image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=100&h=100&fit=crop",
       isPromoted: true,
     },
     {
       id: 2,
-      name: 'American Spicy Burger Shop',
-      subtitle: 'Burgers • Fast Food • American',
+      name: "American Spicy Burger Shop",
+      subtitle: "Burgers • Fast Food • American",
       rating: 4.3,
-      reviewCount: '892',
-      deliveryTime: '20-25 min',
-      deliveryFee: '$2.99',
-      image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=100&h=100&fit=crop',
+      reviewCount: "892",
+      deliveryTime: "20-25 min",
+      deliveryFee: "$2.99",
+      image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=100&h=100&fit=crop",
       isPromoted: false,
     },
     {
       id: 3,
-      name: 'Cafenio Coffee Club',
-      subtitle: 'Coffee • Desserts • Breakfast',
+      name: "Cafenio Coffee Club",
+      subtitle: "Coffee • Desserts • Breakfast",
       rating: 4.0,
-      reviewCount: '456',
-      deliveryTime: '15-20 min',
-      deliveryFee: '$1.99',
-      image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop',
+      reviewCount: "456",
+      deliveryTime: "15-20 min",
+      deliveryFee: "$1.99",
+      image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop",
       isPromoted: false,
     },
   ];
@@ -115,39 +115,39 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
   const popularFastFood = [
     {
       id: 1,
-      name: 'European Pizza',
-      description: 'Uttora Coffee House',
-      price: '$12.99',
-      originalPrice: '$15.99',
-      discount: '20%',
+      name: "European Pizza",
+      description: "Uttora Coffee House",
+      price: "$12.99",
+      originalPrice: "$15.99",
+      discount: "20%",
       rating: 4.8,
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=150&fit=crop',
+      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=150&fit=crop",
     },
     {
       id: 2,
-      name: 'Buffalo Pizza',
-      description: 'Cafenio Coffee Club',
-      price: '$14.50',
+      name: "Buffalo Pizza",
+      description: "Cafenio Coffee Club",
+      price: "$14.50",
       originalPrice: null,
       discount: null,
       rating: 4.6,
-      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=150&fit=crop',
+      image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=150&fit=crop",
     },
   ];
 
   const clearSearch = () => {
-    setSearchText('');
+    setSearchText("");
   };
 
   const borderColor = searchAnimValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#E5E7EB', '#F97316'],
+    outputRange: ["#E5E7EB", "#F97316"],
   });
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      
+
       {/* Header */}
       <View className="bg-white border-b border-gray-100">
         <HStack className="justify-between items-center px-5 py-4">
@@ -171,7 +171,7 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
           <TouchableOpacity
             className="relative active:scale-95"
             activeOpacity={0.8}
-            onPress={() => navigation.navigate('Notifications')}
+            onPress={() => navigation.navigate("Notifications")}
           >
             <View className="bg-gray-900 rounded-full p-2.5 shadow-lg shadow-black/10">
               <Bell size={18} color="white" strokeWidth={1.8} />
@@ -183,13 +183,13 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
         </HStack>
       </View>
 
-      <ScrollView 
-        className="flex-1" 
+      <ScrollView
+        className="flex-1"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
       >
         {/* Revolutionary Search Bar with Dynamic Animations */}
-        <Animated.View 
+        <Animated.View
           className="pt-6 mb-2 px-5"
           style={{ opacity: fadeAnim }}
         >
@@ -197,9 +197,9 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
         </Animated.View>
 
         {/* Enhanced Recent Keywords with Trending Indicators */}
-        <Animated.View 
+        <Animated.View
           className="px-6 mb-10"
-          style={{ 
+          style={{
             opacity: fadeAnim,
             transform: [{
               translateY: fadeAnim.interpolate({
@@ -222,9 +222,9 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
               <Text className="text-orange-600 text-[12px] font-bold">Clear All</Text>
             </TouchableOpacity>
           </HStack>
-          
-          <ScrollView 
-            horizontal 
+
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingRight: 24 }}
           >
@@ -234,11 +234,11 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                 className="mr-3 px-5 py-3 rounded-2xl bg-white border border-gray-100 active:scale-95 active:bg-gray-50"
                 activeOpacity={0.9}
                 onPress={() => {
-                  setSearchText(keyword.text)
-                  navigation.navigate('CategoriesDetails')
+                  setSearchText(keyword.text);
+                  navigation.navigate("CategoriesDetails");
                 }}
                 style={{
-                  shadowColor: '#000',
+                  shadowColor: "#000",
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.04,
                   shadowRadius: 8,
@@ -261,9 +261,9 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
         </Animated.View>
 
 
-        <Animated.View 
+        <Animated.View
           className="px-6 mb-6"
-          style={{ 
+          style={{
             opacity: fadeAnim,
             transform: [{
               translateY: fadeAnim.interpolate({
@@ -281,16 +281,16 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
               Handpicked for you based on your preferences
             </Text>
           </VStack>
-          
+
           <VStack className="space-y-4">
             {suggestedRestaurants.map((restaurant, index) => (
               <TouchableOpacity
                 key={restaurant.id}
                 className="active:scale-[0.98] active:bg-gray-50/50 rounded-3xl p-1 -m-1 mb-3"
                 activeOpacity={0.95}
-                onPress={() => navigation.navigate('RestaurantDetails')}
+                onPress={() => navigation.navigate("RestaurantDetails")}
                 style={{
-                  shadowColor: '#000',
+                  shadowColor: "#000",
                   shadowOffset: { width: 0, height: 4 },
                   shadowOpacity: 0.06,
                   shadowRadius: 16,
@@ -300,10 +300,10 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                 <View className="bg-white rounded-[22px] p-5">
                   <HStack className="items-center">
                     <View className="relative mr-5">
-                      <View 
+                      <View
                         className="w-20 h-20 rounded-3xl bg-gray-100 overflow-hidden"
                         style={{
-                          shadowColor: '#000',
+                          shadowColor: "#000",
                           shadowOffset: { width: 0, height: 2 },
                           shadowOpacity: 0.08,
                           shadowRadius: 8,
@@ -322,7 +322,7 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                         </View>
                       )}
                     </View>
-                    
+
                     <VStack className="flex-1">
                       <Text className="text-gray-900 text-[17px] font-bold mb-1 tracking-tight">
                         {restaurant.name}
@@ -330,7 +330,7 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                       <Text className="text-gray-500 text-[13px] font-medium mb-3 leading-5">
                         {restaurant.subtitle}
                       </Text>
-                      
+
                       <HStack className="items-center justify-between">
                         <HStack className="items-center">
                           <View className="bg-amber-50 rounded-full px-3 py-1.5 mr-3">
@@ -345,7 +345,7 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                             </HStack>
                           </View>
                         </HStack>
-                        
+
                         <VStack className="items-end">
                           <HStack className="items-center mb-1">
                             <Clock size={12} color="#6b7280" strokeWidth={2} />
@@ -353,7 +353,9 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                               {restaurant.deliveryTime}
                             </Text>
                           </HStack>
-                          <Text className={`text-[11px] font-bold ${restaurant.deliveryFee === 'Free delivery' ? 'text-green-600' : 'text-gray-600'}`}>
+                          <Text className={`text-[11px] font-bold ${restaurant.deliveryFee === "Free delivery"
+? "text-green-600"
+: "text-gray-600"}`}>
                             {restaurant.deliveryFee}
                           </Text>
                         </VStack>
@@ -367,9 +369,9 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
         </Animated.View>
 
         {/* Popular Fast Food Cards */}
-        <Animated.View 
+        <Animated.View
           className="px-6"
-          style={{ 
+          style={{
             opacity: fadeAnim,
             transform: [{
               translateY: fadeAnim.interpolate({
@@ -387,16 +389,16 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
               Trending dishes everyone loves
             </Text>
           </VStack>
-          
+
           <HStack className="justify-between gap-4">
             {popularFastFood.map((item, index) => (
               <TouchableOpacity
                 key={item.id}
                 className="flex-1 mr-4 last:mr-0 active:scale-[0.96]"
                 activeOpacity={0.95}
-                onPress={() => navigation.navigate('FoodDetails')}
+                onPress={() => navigation.navigate("FoodDetails")}
                 style={{
-                  shadowColor: '#000',
+                  shadowColor: "#000",
                   shadowOffset: { width: 0, height: 8 },
                   shadowOpacity: 0.12,
                   shadowRadius: 24,
@@ -410,12 +412,12 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                       className="w-full h-full"
                       resizeMode="cover"
                     />
-                    
+
                     {/* Gradient overlay */}
-                    <View 
+                    <View
                       className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"
                     />
-                    
+
                     {/* Rating badge */}
                     <View className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1">
                       <HStack className="items-center">
@@ -425,7 +427,7 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                         </Text>
                       </HStack>
                     </View>
-                    
+
                     {/* Discount badge */}
                     {item.discount && (
                       <View className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 rounded-full px-2 py-1">
@@ -435,7 +437,7 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                       </View>
                     )}
                   </View>
-                  
+
                   <View className="p-5">
                     <Text className="text-gray-900 text-md font-bold mb-1 leading-5 tracking-tight">
                       {item.name}
@@ -443,7 +445,7 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                     <Text className="text-gray-500 text-sm font-medium mb-4 leading-4">
                       {item.description}
                     </Text>
-                    
+
                     <HStack className="items-center justify-between">
                       <VStack>
                         <HStack className="items-center">
@@ -457,8 +459,8 @@ const SearchScreen = ({ navigation }: { navigation: SearchScreenNavigationProp }
                           )}
                         </HStack>
                       </VStack>
-                      
-                      <TouchableOpacity 
+
+                      <TouchableOpacity
                         className="bg-gradient-to-r from-orange-500 to-red-500 rounded-full w-8 h-8 items-center justify-center active:scale-90"
                         activeOpacity={0.8}
                       >

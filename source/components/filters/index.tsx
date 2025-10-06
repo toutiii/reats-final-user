@@ -6,18 +6,18 @@ import {
     DrawerBody,
     DrawerFooter,
     DrawerCloseButton,
-} from '@/components/ui/drawer';
-import { Button, ButtonText } from '@/components/ui/button';
-import { Heading } from '@/components/ui/heading';
-import { Text } from '@/components/ui/text';
-import { Icon, CloseIcon } from '@/components/ui/icon';
-import { FC, Fragment, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { SlidersHorizontal, Star } from 'lucide-react-native';
+} from "@/components/ui/drawer";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
+import { Icon, CloseIcon } from "@/components/ui/icon";
+import { FC, Fragment, useState } from "react";
+import { TouchableOpacity, View } from "react-native";
+import { SlidersHorizontal, Star } from "lucide-react-native";
 
-type OfferType = 'Delivery' | 'Pick Up' | 'Offer' | 'Online payment';
-type DeliveryTimeType = '10-15 min' | '20 min' | '30 min';
-type PricingType = '$' | '$$' | '$$$';
+type OfferType = "Delivery" | "Pick Up" | "Offer" | "Online payment";
+type DeliveryTimeType = "10-15 min" | "20 min" | "30 min";
+type PricingType = "$" | "$$" | "$$$";
 type RatingType = 1 | 2 | 3 | 4 | 5 | null;
 
 interface FilterState {
@@ -29,9 +29,9 @@ interface FilterState {
 
 const Filters: FC = () => {
     const [showDrawer, setShowDrawer] = useState<boolean>(false);
-    const [selectedOffers, setSelectedOffers] = useState<OfferType[]>(['Delivery']);
-    const [selectedDeliveryTime, setSelectedDeliveryTime] = useState<DeliveryTimeType>('10-15 min');
-    const [selectedPricing, setSelectedPricing] = useState<PricingType>('$$');
+    const [selectedOffers, setSelectedOffers] = useState<OfferType[]>(["Delivery"]);
+    const [selectedDeliveryTime, setSelectedDeliveryTime] = useState<DeliveryTimeType>("10-15 min");
+    const [selectedPricing, setSelectedPricing] = useState<PricingType>("$$");
     const [selectedRating, setSelectedRating] = useState<RatingType>(null);
 
     const handleFilterPress = (): void => {
@@ -53,21 +53,21 @@ const Filters: FC = () => {
             pricing: selectedPricing,
             rating: selectedRating
         };
-        
-        console.log('Filters applied:', filters);
+
+        console.log("Filters applied:", filters);
         setShowDrawer(false);
     };
 
     const resetFilters = (): void => {
-        setSelectedOffers(['Delivery']);
-        setSelectedDeliveryTime('10-15 min');
-        setSelectedPricing('$$');
+        setSelectedOffers(["Delivery"]);
+        setSelectedDeliveryTime("10-15 min");
+        setSelectedPricing("$$");
         setSelectedRating(null);
     };
 
-    const offers: OfferType[] = ['Delivery', 'Pick Up', 'Offer'];
-    const deliveryTimes: DeliveryTimeType[] = ['10-15 min', '20 min', '30 min'];
-    const pricingOptions: PricingType[] = ['$', '$$', '$$$'];
+    const offers: OfferType[] = ["Delivery", "Pick Up", "Offer"];
+    const deliveryTimes: DeliveryTimeType[] = ["10-15 min", "20 min", "30 min"];
+    const pricingOptions: PricingType[] = ["$", "$$", "$$$"];
     const ratings: (1 | 2 | 3 | 4 | 5)[] = [1, 2, 3, 4, 5];
 
     return (
@@ -79,7 +79,7 @@ const Filters: FC = () => {
             >
                 <SlidersHorizontal size={18} color="#1f2937" strokeWidth={2} />
             </TouchableOpacity>
-            
+
             <Drawer
                 isOpen={showDrawer}
                 size='lg'
@@ -98,7 +98,7 @@ const Filters: FC = () => {
                             <Icon as={CloseIcon} />
                         </DrawerCloseButton>
                     </DrawerHeader>
-                    
+
                     <DrawerBody className="py-6">
                         {/* Section OFFRES */}
                         <View className="mb-8">
@@ -112,14 +112,14 @@ const Filters: FC = () => {
                                         onPress={() => toggleOffer(offer)}
                                         className={`px-5 py-3 rounded-full border ${
                                             selectedOffers.includes(offer)
-                                                ? 'bg-orange-50 border-orange-500'
-                                                : 'bg-white border-gray-200'
+                                                ? "bg-orange-50 border-orange-500"
+                                                : "bg-white border-gray-200"
                                         }`}
                                     >
                                         <Text className={`text-sm font-medium ${
                                             selectedOffers.includes(offer)
-                                                ? 'text-orange-600'
-                                                : 'text-gray-700'
+                                                ? "text-orange-600"
+                                                : "text-gray-700"
                                         }`}>
                                             {offer}
                                         </Text>
@@ -127,17 +127,17 @@ const Filters: FC = () => {
                                 ))}
                             </View>
                             <TouchableOpacity
-                                onPress={() => toggleOffer('Online payment')}
+                                onPress={() => toggleOffer("Online payment")}
                                 className={`mt-2 px-5 py-3 rounded-full border self-start ${
-                                    selectedOffers.includes('Online payment')
-                                        ? 'bg-orange-50 border-orange-500'
-                                        : 'bg-white border-gray-200'
+                                    selectedOffers.includes("Online payment")
+                                        ? "bg-orange-50 border-orange-500"
+                                        : "bg-white border-gray-200"
                                 }`}
                             >
                                 <Text className={`text-sm font-medium ${
-                                    selectedOffers.includes('Online payment')
-                                        ? 'text-orange-600'
-                                        : 'text-gray-700'
+                                    selectedOffers.includes("Online payment")
+                                        ? "text-orange-600"
+                                        : "text-gray-700"
                                 }`}>
                                     Paiement en ligne disponible
                                 </Text>
@@ -156,14 +156,14 @@ const Filters: FC = () => {
                                         onPress={() => setSelectedDeliveryTime(time)}
                                         className={`px-6 py-3 rounded-full ${
                                             selectedDeliveryTime === time
-                                                ? 'bg-orange-500'
-                                                : 'bg-gray-50'
+                                                ? "bg-orange-500"
+                                                : "bg-gray-50"
                                         }`}
                                     >
                                         <Text className={`text-sm font-medium ${
                                             selectedDeliveryTime === time
-                                                ? 'text-white'
-                                                : 'text-gray-700'
+                                                ? "text-white"
+                                                : "text-gray-700"
                                         }`}>
                                             {time}
                                         </Text>
@@ -184,14 +184,14 @@ const Filters: FC = () => {
                                         onPress={() => setSelectedPricing(price)}
                                         className={`w-14 h-14 rounded-full items-center justify-center ${
                                             selectedPricing === price
-                                                ? 'bg-orange-500'
-                                                : 'bg-gray-50'
+                                                ? "bg-orange-500"
+                                                : "bg-gray-50"
                                         }`}
                                     >
                                         <Text className={`text-base font-semibold ${
                                             selectedPricing === price
-                                                ? 'text-white'
-                                                : 'text-gray-700'
+                                                ? "text-white"
+                                                : "text-gray-700"
                                         }`}>
                                             {price}
                                         </Text>
@@ -212,21 +212,25 @@ const Filters: FC = () => {
                                         onPress={() => setSelectedRating(rating)}
                                         className={`w-14 h-14 rounded-full items-center justify-center ${
                                             selectedRating === rating
-                                                ? 'bg-orange-50 border-2 border-orange-500'
-                                                : 'bg-gray-50'
+                                                ? "bg-orange-50 border-2 border-orange-500"
+                                                : "bg-gray-50"
                                         }`}
                                     >
-                                        <Star 
-                                            size={20} 
-                                            fill={selectedRating === rating ? '#f97316' : '#d1d5db'}
-                                            color={selectedRating === rating ? '#f97316' : '#d1d5db'}
+                                        <Star
+                                            size={20}
+                                            fill={selectedRating === rating
+? "#f97316"
+: "#d1d5db"}
+                                            color={selectedRating === rating
+? "#f97316"
+: "#d1d5db"}
                                         />
                                     </TouchableOpacity>
                                 ))}
                             </View>
                         </View>
                     </DrawerBody>
-                    
+
                     <DrawerFooter className="border-t border-gray-100 px-6 py-4">
                         <View className="flex-row gap-3 w-full">
                             <Button
@@ -248,6 +252,6 @@ const Filters: FC = () => {
             </Drawer>
         </Fragment>
     );
-}   
+};
 
 export default Filters;

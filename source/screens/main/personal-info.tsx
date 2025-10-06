@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   ScrollView,
   View,
@@ -7,7 +7,7 @@ import {
   StatusBar,
   Image,
   Alert,
-} from 'react-native';
+} from "react-native";
 import {
   ChevronLeft,
   Camera,
@@ -18,14 +18,14 @@ import {
   Calendar,
   Edit3,
   Save,
-} from 'lucide-react-native';
-import { HStack } from '@/components/ui/hstack';
-import { Text } from '@/components/ui/text';
-import { Input, InputField } from '@/components/ui/input';
-import { Button, ButtonText, ButtonIcon } from '@/components/ui/button';
-import { Avatar, AvatarFallbackText, AvatarImage } from '@/components/ui/avatar';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
+import { Input, InputField } from "@/components/ui/input";
+import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
+import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 // Types
 interface PersonalInfo {
@@ -44,7 +44,7 @@ interface FormField {
   label: string;
   placeholder: string;
   icon: React.ComponentType<any>;
-  type: 'text' | 'email' | 'phone' | 'date';
+  type: "text" | "email" | "phone" | "date";
   required: boolean;
 }
 
@@ -57,7 +57,7 @@ type RootStackParamList = {
 
 type PersonalInfoScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'PersonalInfo'
+  "PersonalInfo"
 >;
 
 const PersonalInfoScreen: React.FC = () => {
@@ -65,71 +65,71 @@ const PersonalInfoScreen: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
-    firstName: 'Vishal',
-    lastName: 'Khadok',
-    email: 'vishal.khadok@example.com',
-    phone: '+1 (555) 123-4567',
-    address: '2118 Thornridge Cir',
-    city: 'Syracuse, NY 13201',
-    dateOfBirth: '15/08/1992',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+    firstName: "Vishal",
+    lastName: "Khadok",
+    email: "vishal.khadok@example.com",
+    phone: "+1 (555) 123-4567",
+    address: "2118 Thornridge Cir",
+    city: "Syracuse, NY 13201",
+    dateOfBirth: "15/08/1992",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
   });
 
   const formFields: FormField[] = [
     {
-      id: 'firstName',
-      label: 'First Name',
-      placeholder: 'Enter your first name',
+      id: "firstName",
+      label: "First Name",
+      placeholder: "Enter your first name",
       icon: User,
-      type: 'text',
+      type: "text",
       required: true,
     },
     {
-      id: 'lastName',
-      label: 'Last Name',
-      placeholder: 'Enter your last name',
+      id: "lastName",
+      label: "Last Name",
+      placeholder: "Enter your last name",
       icon: User,
-      type: 'text',
+      type: "text",
       required: true,
     },
     {
-      id: 'email',
-      label: 'Email Address',
-      placeholder: 'Enter your email',
+      id: "email",
+      label: "Email Address",
+      placeholder: "Enter your email",
       icon: Mail,
-      type: 'email',
+      type: "email",
       required: true,
     },
     {
-      id: 'phone',
-      label: 'Phone Number',
-      placeholder: 'Enter your phone number',
+      id: "phone",
+      label: "Phone Number",
+      placeholder: "Enter your phone number",
       icon: Phone,
-      type: 'phone',
+      type: "phone",
       required: true,
     },
     {
-      id: 'address',
-      label: 'Address',
-      placeholder: 'Enter your address',
+      id: "address",
+      label: "Address",
+      placeholder: "Enter your address",
       icon: MapPin,
-      type: 'text',
+      type: "text",
       required: false,
     },
     {
-      id: 'city',
-      label: 'City',
-      placeholder: 'Enter your city',
+      id: "city",
+      label: "City",
+      placeholder: "Enter your city",
       icon: MapPin,
-      type: 'text',
+      type: "text",
       required: false,
     },
     {
-      id: 'dateOfBirth',
-      label: 'Date of Birth',
-      placeholder: 'DD/MM/YYYY',
+      id: "dateOfBirth",
+      label: "Date of Birth",
+      placeholder: "DD/MM/YYYY",
       icon: Calendar,
-      type: 'date',
+      type: "date",
       required: false,
     },
   ];
@@ -149,8 +149,8 @@ const PersonalInfoScreen: React.FC = () => {
 
     if (missingFields.length > 0) {
       Alert.alert(
-        'Missing Information',
-        `Please fill in the following required fields: ${missingFields.map(f => f.label).join(', ')}`
+        "Missing Information",
+        `Please fill in the following required fields: ${missingFields.map(f => f.label).join(", ")}`
       );
       setIsSaving(false);
       return;
@@ -160,14 +160,14 @@ const PersonalInfoScreen: React.FC = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
 
       Alert.alert(
-        'Success',
-        'Your personal information has been updated successfully.',
-        [{ text: 'OK', onPress: () => setIsEditing(false) }]
+        "Success",
+        "Your personal information has been updated successfully.",
+        [{ text: "OK", onPress: () => setIsEditing(false) }]
       );
     } catch (error) {
       Alert.alert(
-        'Error',
-        'Failed to update your information. Please try again.'
+        "Error",
+        "Failed to update your information. Please try again."
       );
     } finally {
       setIsSaving(false);
@@ -181,12 +181,12 @@ const PersonalInfoScreen: React.FC = () => {
   const handleAvatarPress = (): void => {
     if (isEditing) {
       Alert.alert(
-        'Change Photo',
-        'Choose an option',
+        "Change Photo",
+        "Choose an option",
         [
-          { text: 'Camera', onPress: () => console.log('Camera selected') },
-          { text: 'Photo Library', onPress: () => console.log('Gallery selected') },
-          { text: 'Cancel', style: 'cancel' },
+          { text: "Camera", onPress: () => console.log("Camera selected") },
+          { text: "Photo Library", onPress: () => console.log("Gallery selected") },
+          { text: "Cancel", style: "cancel" },
         ]
       );
     }
@@ -213,10 +213,15 @@ const PersonalInfoScreen: React.FC = () => {
             value={value}
             onChangeText={(text) => handleFieldChange(field.id, text)}
             keyboardType={
-              field.type === 'email' ? 'email-address' :
-                field.type === 'phone' ? 'phone-pad' : 'default'
+              field.type === "email"
+? "email-address" :
+                field.type === "phone"
+? "phone-pad"
+: "default"
             }
-            autoCapitalize={field.type === 'email' ? 'none' : 'words'}
+            autoCapitalize={field.type === "email"
+? "none"
+: "words"}
             className="text-gray-900 text-base"
           />
         </Input>
@@ -322,7 +327,9 @@ const PersonalInfoScreen: React.FC = () => {
               >
                 <ButtonIcon as={Save} size="sm" className="mr-2" />
                 <ButtonText>
-                  {isSaving ? 'Saving...' : 'Save'}
+                  {isSaving
+? "Saving..."
+: "Save"}
                 </ButtonText>
               </Button>
             </HStack>

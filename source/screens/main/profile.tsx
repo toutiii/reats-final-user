@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   ScrollView,
   View,
@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   StatusBar,
   Alert,
-} from 'react-native';
+} from "react-native";
 import {
   ChevronLeft,
   MoreHorizontal,
@@ -20,14 +20,14 @@ import {
   Settings,
   LogOut,
   ChevronRight,
-} from 'lucide-react-native';
-import { HStack } from '@/components/ui/hstack';
-import { VStack } from '@/components/ui/vstack';
-import { Text } from '@/components/ui/text';
-import { Avatar, AvatarFallbackText, AvatarImage } from '@/components/ui/avatar';
-import { Heading } from '@/components/ui/heading';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { VStack } from "@/components/ui/vstack";
+import { Text } from "@/components/ui/text";
+import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
+import { Heading } from "@/components/ui/heading";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 // Types
 interface MenuItem {
@@ -56,7 +56,7 @@ type RootStackParamList = {
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'Profile'
+  "Profile"
 >;
 
 const ProfileScreen: React.FC = () => {
@@ -64,36 +64,36 @@ const ProfileScreen: React.FC = () => {
 
   const handleLogout = (): void => {
     Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
+      "Logout",
+      "Are you sure you want to logout?",
       [
         {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
         },
         {
-          text: 'Logout',
-          onPress: () => console.log('Logout Pressed'),
+          text: "Logout",
+          onPress: () => console.log("Logout Pressed"),
         },
       ],
     );
   };
 
   const menuItems: MenuItem[] = [
-    { id: 1, title: 'Personal Info', icon: User, color: '#F97316', link: 'PersonalInfo' },
-    { id: 2, title: 'Addresses', icon: MapPin, color: '#3B82F6', link: 'Addresses' },
-    { id: 4, title: 'Favourite', icon: Heart, color: '#A855F7', link: 'Favourites' },
-    { id: 5, title: 'Notifications', icon: Bell, color: '#EAB308', link: 'Notifications' },
-    { id: 6, title: 'Payment Method', icon: CreditCard, color: '#3B82F6', link: 'PaymentMethods' },
-    { id: 7, title: 'FAQs', icon: HelpCircle, color: '#F97316', link: 'FAQs' },
-    { id: 8, title: 'User Reviews', icon: Star, color: '#3B82F6', link: 'UserReviews' },
-    { id: 9, title: 'Settings', icon: Settings, color: '#3B82F6', link: 'Settings' },
-    { id: 10, title: 'Log Out', icon: LogOut, color: '#EF4444', link: 'logout' },
+    { id: 1, title: "Personal Info", icon: User, color: "#F97316", link: "PersonalInfo" },
+    { id: 2, title: "Addresses", icon: MapPin, color: "#3B82F6", link: "Addresses" },
+    { id: 4, title: "Favourite", icon: Heart, color: "#A855F7", link: "Favourites" },
+    { id: 5, title: "Notifications", icon: Bell, color: "#EAB308", link: "Notifications" },
+    { id: 6, title: "Payment Method", icon: CreditCard, color: "#3B82F6", link: "PaymentMethods" },
+    { id: 7, title: "FAQs", icon: HelpCircle, color: "#F97316", link: "FAQs" },
+    { id: 8, title: "User Reviews", icon: Star, color: "#3B82F6", link: "UserReviews" },
+    { id: 9, title: "Settings", icon: Settings, color: "#3B82F6", link: "Settings" },
+    { id: 10, title: "Log Out", icon: LogOut, color: "#EF4444", link: "logout" },
   ];
 
   const handleMenuItemPress = (item: MenuItem): void => {
-    if (item.link === 'logout') {
+    if (item.link === "logout") {
       handleLogout();
     } else if (item.link) {
       navigation.navigate(item.link as keyof RootStackParamList);

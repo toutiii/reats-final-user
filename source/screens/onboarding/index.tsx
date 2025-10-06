@@ -7,13 +7,13 @@ import { StackNavigation } from "@/types/navigation";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, View, TouchableOpacity, StatusBar } from "react-native";
-import Animated, { 
-  Easing, 
-  useAnimatedStyle, 
-  useSharedValue, 
-  withDelay, 
-  withSequence, 
-  withSpring, 
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withSpring,
   withTiming,
   interpolateColor,
   withRepeat,
@@ -100,12 +100,12 @@ const onboardingData: OnboardingSlide[] = [
   }
 ];
 
-const FloatingParticle: React.FC<FloatingParticleProps> = ({ 
-  accentColor, 
-  delay, 
+const FloatingParticle: React.FC<FloatingParticleProps> = ({
+  accentColor,
+  delay,
   size,
   startX,
-  startY 
+  startY
 }) => {
   const translateY: SharedValue<number> = useSharedValue(0);
   const opacity: SharedValue<number> = useSharedValue(0);
@@ -123,7 +123,7 @@ const FloatingParticle: React.FC<FloatingParticleProps> = ({
         true
       )
     );
-    
+
     opacity.value = withDelay(
       delay,
       withRepeat(
@@ -152,7 +152,7 @@ const FloatingParticle: React.FC<FloatingParticleProps> = ({
       style={[
         animatedStyle,
         {
-          position: 'absolute',
+          position: "absolute",
           left: startX,
           top: startY,
           width: size,
@@ -186,13 +186,13 @@ const FeatureDot: React.FC<FeatureDotProps> = ({ feature, delay, accentColor, in
 
   return (
     <Animated.View style={[animatedStyle]} className="flex-row items-center mb-4">
-      <View 
+      <View
         className="w-8 h-8 rounded-xl mr-3 items-center justify-center shadow-lg"
-        style={{ 
+        style={{
           backgroundColor: `${accentColor}20`,
         }}
       >
-        <View 
+        <View
           className="w-2.5 h-2.5 rounded-full"
           style={{ backgroundColor: accentColor }}
         />
@@ -210,7 +210,7 @@ const IconIllustration: React.FC<IconIllustrationProps> = ({ icon, accentColor, 
   useEffect(() => {
     scale.value = withSpring(1, { damping: 15, stiffness: 100 });
     rotate.value = withSpring(0, { damping: 20, stiffness: 80 });
-    
+
     // Pulse animation
     pulseScale.value = withRepeat(
       withSequence(
@@ -236,11 +236,11 @@ const IconIllustration: React.FC<IconIllustrationProps> = ({ icon, accentColor, 
   return (
     <Animated.View style={[containerStyle]} className="items-center justify-center">
       {/* Animated outer glow ring */}
-      <Animated.View 
+      <Animated.View
         style={[pulseStyle]}
         className="absolute w-48 h-48 rounded-full"
       >
-        <View 
+        <View
           className="w-full h-full rounded-full"
           style={{
             backgroundColor: accentColor,
@@ -250,7 +250,7 @@ const IconIllustration: React.FC<IconIllustrationProps> = ({ icon, accentColor, 
       </Animated.View>
 
       {/* Middle ring */}
-      <View 
+      <View
         className="absolute w-40 h-40 rounded-full"
         style={{
           backgroundColor: accentColor,
@@ -259,38 +259,38 @@ const IconIllustration: React.FC<IconIllustrationProps> = ({ icon, accentColor, 
       />
 
       {/* Main icon container with glassmorphism */}
-      <View 
+      <View
         className="w-32 h-32 rounded-3xl items-center justify-center relative"
         style={{
           backgroundColor: `${accentColor}30`,
         }}
       >
         {/* Border glow */}
-        <View 
+        <View
           className="absolute inset-0 rounded-3xl border-2"
           style={{
             borderColor: accentColor,
             opacity: 0.4,
           }}
         />
-        
+
         {/* Icon with shadow */}
         <View className="items-center justify-center">
-          <Text className="text-6xl" style={{ textShadowColor: 'rgba(0,0,0,0.3)', textShadowOffset: {width: 0, height: 4}, textShadowRadius: 8 }}>
+          <Text className="text-6xl" style={{ textShadowColor: "rgba(0,0,0,0.3)", textShadowOffset: {width: 0, height: 4}, textShadowRadius: 8 }}>
             {icon}
           </Text>
         </View>
-        
+
         {/* Decorative corner dots */}
-        <View 
+        <View
           className="absolute -top-3 -right-3 w-6 h-6 rounded-full shadow-lg"
           style={{ backgroundColor: secondaryColor }}
         />
-        <View 
+        <View
           className="absolute -bottom-3 -left-3 w-5 h-5 rounded-full shadow-lg"
           style={{ backgroundColor: accentColor }}
         />
-        <View 
+        <View
           className="absolute -top-2 -left-3 w-3 h-3 rounded-full shadow-lg"
           style={{ backgroundColor: secondaryColor, opacity: 0.6 }}
         />
@@ -302,7 +302,7 @@ const IconIllustration: React.FC<IconIllustrationProps> = ({ icon, accentColor, 
 const StartPage: React.FC = () => {
   const navigation = useNavigation<StackNavigation>();
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+
   // Animation values
   const containerOpacity: SharedValue<number> = useSharedValue(0);
   const bgProgress: SharedValue<number> = useSharedValue(0);
@@ -333,7 +333,7 @@ const StartPage: React.FC = () => {
     titleScale.value = withTiming(0.9, { duration: 200 });
     buttonOpacity.value = withTiming(0, { duration: 200 });
     buttonTranslateY.value = withTiming(40, { duration: 200 });
-    
+
     setTimeout(() => {
       callback();
       contentOpacity.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.cubic) });
@@ -353,7 +353,7 @@ const StartPage: React.FC = () => {
 
   const handleSkip = () => {
     navigation.navigate("Auth", {
-      screen: 'LoginScreen',
+      screen: "LoginScreen",
     });
   };
 
@@ -412,33 +412,33 @@ const StartPage: React.FC = () => {
     <>
       <StatusBar barStyle="light-content" backgroundColor={currentSlide.backgroundColor} />
       <Animated.View style={[{ flex: 1 }, backgroundStyle]}>
-        
+
         {/* Gradient overlay simulé avec opacité */}
-        <View 
+        <View
           className="absolute inset-0"
           style={{
             backgroundColor: currentSlide.backgroundColor,
           }}
         />
-        
+
         {/* Radial gradient effect simulation */}
-        <View 
+        <View
           className="absolute inset-0"
           style={{
             backgroundColor: currentSlide.accentColor,
             opacity: 0.03,
           }}
         />
-        
+
         {/* Floating particles for depth */}
         <FloatingParticle accentColor={currentSlide.accentColor} delay={0} size={12} startX={50} startY={150} />
         <FloatingParticle accentColor={currentSlide.secondaryColor} delay={300} size={8} startX={300} startY={200} />
         <FloatingParticle accentColor={currentSlide.accentColor} delay={600} size={6} startX={80} startY={400} />
         <FloatingParticle accentColor={currentSlide.secondaryColor} delay={900} size={10} startX={280} startY={500} />
-        
+
         <SafeAreaView className="flex-1">
           <Animated.View style={[{ flex: 1 }, containerStyle]}>
-            
+
             {/* Header with glassmorphism */}
             <Animated.View style={[headerStyle]} className="flex-row justify-between items-center px-6 py-5">
               <View className="flex-row gap-2">
@@ -447,22 +447,24 @@ const StartPage: React.FC = () => {
                     key={index}
                     className="h-1.5 rounded-full transition-all duration-300"
                     style={{
-                      width: index === currentIndex ? 32 : 8,
-                      backgroundColor: index === currentIndex 
-                        ? currentSlide.accentColor 
-                        : 'rgba(255,255,255,0.25)'
+                      width: index === currentIndex
+? 32
+: 8,
+                      backgroundColor: index === currentIndex
+                        ? currentSlide.accentColor
+                        : "rgba(255,255,255,0.25)"
                     }}
                   />
                 ))}
               </View>
-              
+
               <TouchableOpacity
                 onPress={handleSkip}
                 className="rounded-full px-5 py-2.5"
                 style={{
-                  backgroundColor: 'rgba(255,255,255,0.12)',
+                  backgroundColor: "rgba(255,255,255,0.12)",
                   borderWidth: 1,
-                  borderColor: 'rgba(255,255,255,0.15)',
+                  borderColor: "rgba(255,255,255,0.15)",
                 }}
               >
                 <Text className="text-white font-bold text-sm">Passer</Text>
@@ -471,10 +473,10 @@ const StartPage: React.FC = () => {
 
             {/* Content */}
             <Animated.View style={[{ flex: 1 }, contentStyle]} className="px-6">
-              
+
               {/* Illustration with more space */}
               <View className="flex-1 items-center justify-center pt-8 pb-4">
-                <IconIllustration 
+                <IconIllustration
                   icon={currentSlide.icon}
                   accentColor={currentSlide.accentColor}
                   secondaryColor={currentSlide.secondaryColor}
@@ -487,7 +489,7 @@ const StartPage: React.FC = () => {
                   <Heading className="text-4xl font-black text-white mb-4 leading-tight tracking-tight">
                     {currentSlide.title}
                   </Heading>
-                  
+
                   <Text className="text-lg text-white/70 mb-8 leading-relaxed">
                     {currentSlide.description}
                   </Text>
@@ -496,7 +498,7 @@ const StartPage: React.FC = () => {
                 {/* Features list with improved design */}
                 <VStack className="mb-2">
                   {currentSlide.features.map((feature, index) => (
-                    <FeatureDot 
+                    <FeatureDot
                       key={feature}
                       feature={feature}
                       delay={600 + (index * 150)}
@@ -510,12 +512,13 @@ const StartPage: React.FC = () => {
               {/* Navigation with modern buttons */}
               <Animated.View style={buttonStyle}>
                 <VStack className="pb-8 space-y-3">
-                  {currentIndex === onboardingData.length - 1 ? (
+                  {currentIndex === onboardingData.length - 1
+? (
                     <TouchableOpacity
                       onPress={handleGetStarted}
                       activeOpacity={0.8}
                       className="w-full rounded-2xl h-16 shadow-xl items-center justify-center"
-                      style={{ 
+                      style={{
                         backgroundColor: currentSlide.accentColor,
                       }}
                     >
@@ -523,7 +526,8 @@ const StartPage: React.FC = () => {
                         Commencer l'aventure
                       </Text>
                     </TouchableOpacity>
-                  ) : (
+                  )
+: (
                     <HStack className="gap-3">
                       {currentIndex > 0 && (
                         <TouchableOpacity
@@ -531,9 +535,9 @@ const StartPage: React.FC = () => {
                           activeOpacity={0.8}
                           className="flex-1 rounded-xl h-14 items-center justify-center"
                           style={{
-                            backgroundColor: 'rgba(255,255,255,0.1)',
+                            backgroundColor: "rgba(255,255,255,0.1)",
                             borderWidth: 1.5,
-                            borderColor: 'rgba(255,255,255,0.2)',
+                            borderColor: "rgba(255,255,255,0.2)",
                           }}
                         >
                           <Text className="text-white font-bold text-base">
@@ -541,12 +545,12 @@ const StartPage: React.FC = () => {
                           </Text>
                         </TouchableOpacity>
                       )}
-                      
+
                       <TouchableOpacity
                         onPress={goToNext}
                         activeOpacity={0.8}
                         className="flex-1 rounded-xl h-14 shadow-lg items-center justify-center"
-                        style={{ 
+                        style={{
                           backgroundColor: currentSlide.accentColor,
                         }}
                       >
@@ -556,13 +560,13 @@ const StartPage: React.FC = () => {
                       </TouchableOpacity>
                     </HStack>
                   )}
-                  
+
                   {/* Improved pagination */}
                   <View className="items-center mt-6">
-                    <View 
+                    <View
                       className="px-4 py-2 rounded-full"
                       style={{
-                        backgroundColor: 'rgba(255,255,255,0.08)',
+                        backgroundColor: "rgba(255,255,255,0.08)",
                       }}
                     >
                       <Text className="text-white/50 text-sm font-bold tracking-wider">

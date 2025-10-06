@@ -23,24 +23,32 @@ export const TabsNavigator = () => {
 
   const getTabIcon = (routeName: string, color: string, focused: boolean) => {
     const iconSize = 22;
-    const strokeWidth = focused ? 2.2 : 1.8;
+    const strokeWidth = focused
+? 2.2
+: 1.8;
 
     switch (routeName) {
       case "Home":
         return (
-          <View className={`items-center justify-center ${focused ? 'scale-110' : ''}`}>
+          <View className={`items-center justify-center ${focused
+? "scale-110"
+: ""}`}>
             <Home
               size={iconSize}
               color={color}
               strokeWidth={strokeWidth}
-              fill={focused ? color : 'transparent'}
+              fill={focused
+? color
+: "transparent"}
             />
           </View>
         );
 
       case "Search":
         return (
-          <View className={`items-center justify-center ${focused ? 'scale-110' : ''}`}>
+          <View className={`items-center justify-center ${focused
+? "scale-110"
+: ""}`}>
             <Search
               size={iconSize}
               color={color}
@@ -51,7 +59,9 @@ export const TabsNavigator = () => {
 
       case "Cart":
         return (
-          <View className={`items-center justify-center ${focused ? 'scale-110' : ''}`}>
+          <View className={`items-center justify-center ${focused
+? "scale-110"
+: ""}`}>
             <ShoppingCart
               size={iconSize}
               color={color}
@@ -62,9 +72,13 @@ export const TabsNavigator = () => {
 
       case "Profile":
         return (
-          <View className={`items-center justify-center ${focused ? 'scale-110' : ''}`}>
+          <View className={`items-center justify-center ${focused
+? "scale-110"
+: ""}`}>
             <View
-              className={`rounded-full ${focused ? 'ring-2 ring-orange-500 ring-offset-2' : ''}`}
+              className={`rounded-full ${focused
+? "ring-2 ring-orange-500 ring-offset-2"
+: ""}`}
             >
               <Avatar size="sm" className="w-8 h-8">
                 <AvatarFallbackText className="text-xs">JD</AvatarFallbackText>
@@ -95,12 +109,16 @@ export const TabsNavigator = () => {
         tabBarInactiveTintColor: inactiveColor,
         tabBarStyle: {
           backgroundColor: bgColor,
-          paddingVertical: Platform.OS === 'ios' ? 12 : 8,
+          paddingVertical: Platform.OS === "ios"
+? 12
+: 8,
           paddingHorizontal: 16,
           borderTopWidth: 1,
           borderTopColor: borderColor,
-          height: Platform.OS === 'ios' ? 85 : 70,
-          shadowColor: '#000',
+          height: Platform.OS === "ios"
+? 85
+: 70,
+          shadowColor: "#000",
           shadowOffset: {
             width: 0,
             height: -2,
@@ -110,7 +128,7 @@ export const TabsNavigator = () => {
           elevation: 8,
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
-          position: 'absolute',
+          position: "absolute",
           left: 0,
           right: 0,
           bottom: 0,
@@ -118,9 +136,11 @@ export const TabsNavigator = () => {
         tabBarLabelStyle: {
           fontSize: 11,
           fontFamily: "Montserrat_600SemiBold",
-          paddingBottom: Platform.OS === 'ios' ? 0 : 4,
+          paddingBottom: Platform.OS === "ios"
+? 0
+: 4,
           marginTop: 4,
-          textTransform: 'capitalize',
+          textTransform: "capitalize",
         },
         tabBarItemStyle: {
           paddingVertical: 6,
@@ -165,7 +185,7 @@ export const TabsNavigator = () => {
           tabBarAccessibilityLabel: "Mon profil"
         }}
       />
-      
+
     </Tab.Navigator>
   );
 };

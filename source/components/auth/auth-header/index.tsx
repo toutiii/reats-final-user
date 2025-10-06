@@ -1,7 +1,7 @@
 import { Center } from "@/components/ui/center";
-import Animated, { 
-  FadeIn, 
-  FadeInUp, 
+import Animated, {
+  FadeIn,
+  FadeInUp,
   FadeInDown
 } from "react-native-reanimated";
 
@@ -13,12 +13,12 @@ interface AuthHeaderProps {
   delayOffset?: number;
 }
 
-const AuthHeader = ({ 
-  category, 
-  title, 
-  description, 
+const AuthHeader = ({
+  category,
+  title,
+  description,
   showSeparator = true,
-  delayOffset = 0 
+  delayOffset = 0
 }: AuthHeaderProps) => {
   return (
     <>
@@ -35,7 +35,7 @@ const AuthHeader = ({
         >
           {category}
         </Animated.Text>
-        
+
         {/* Page Title */}
         <Animated.Text
           entering={FadeInUp.delay(1000 + delayOffset).duration(800)}
@@ -44,7 +44,7 @@ const AuthHeader = ({
         >
           {title}
         </Animated.Text>
-        
+
         {/* Page Description */}
         <Animated.Text
           entering={FadeInUp.delay(1200 + delayOffset).duration(600)}
@@ -54,7 +54,7 @@ const AuthHeader = ({
           {description}
         </Animated.Text>
       </Animated.View>
-      
+
       {/* Brand Section - More compact */}
       {showSeparator && (
         <Center className="justify-center pb-8 relative z-10">

@@ -39,5 +39,3 @@ export interface SingleRestaurant {
   categories: Category[];
   menuItems: MenuItem[];
 }
-
-  

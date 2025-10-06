@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import Svg, { Circle, SvgProps } from 'react-native-svg';
+import { FC } from "react";
+import Svg, { Circle, SvgProps } from "react-native-svg";
 
 const CircleEffect: FC<SvgProps> = (props) => {
     return (

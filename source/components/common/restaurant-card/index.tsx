@@ -1,10 +1,10 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
-import { useNavigation } from '@react-navigation/native';
-import { HStack } from '@/components/ui/hstack';
-import { Star, Clock, Award, TrendingUp, Flame, MapPin } from 'lucide-react-native';
-import { StackNavigation } from '@/types/navigation';
-import { Restaurant } from '@/types/restaurant';
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import React from "react";
+import { useNavigation } from "@react-navigation/native";
+import { HStack } from "@/components/ui/hstack";
+import { Star, Clock, Award, TrendingUp, Flame, MapPin } from "lucide-react-native";
+import { StackNavigation } from "@/types/navigation";
+import { Restaurant } from "@/types/restaurant";
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
@@ -16,12 +16,12 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
       <TouchableOpacity
       className="mb-5 active:scale-[0.98]"
       activeOpacity={0.9}
-      onPress={() => navigation.navigate('Main', {screen: 'RestaurantDetails'})}
+      onPress={() => navigation.navigate("Main", {screen: "RestaurantDetails"})}
     >
       <View
         className="bg-white rounded-3xl overflow-hidden"
         style={{
-          shadowColor: '#000',
+          shadowColor: "#000",
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.06,
           shadowRadius: 12,
@@ -35,7 +35,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
             resizeMode="cover"
           />
           <View className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-          
+
           {(restaurant.isNew || restaurant.isFeatured || restaurant.isTrending) && (
             <View className="absolute top-3 left-3">
               {restaurant.isFeatured && (
@@ -78,11 +78,15 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
               </HStack>
             </View>
 
-            <View 
-              className={`${restaurant.deliveryFee === 'Free' ? 'bg-emerald-50' : 'bg-orange-50'} px-3 py-1.5 rounded-full mr-2 mb-2`}
+            <View
+              className={`${restaurant.deliveryFee === "Free"
+? "bg-emerald-50"
+: "bg-orange-50"} px-3 py-1.5 rounded-full mr-2 mb-2`}
             >
-              <Text 
-                className={`${restaurant.deliveryFee === 'Free' ? 'text-emerald-600' : 'text-orange-600'} text-sm font-bold`}
+              <Text
+                className={`${restaurant.deliveryFee === "Free"
+? "text-emerald-600"
+: "text-orange-600"} text-sm font-bold`}
               >
                 {restaurant.deliveryFee}
               </Text>
@@ -109,7 +113,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
         </View>
       </View>
     </TouchableOpacity>
-    )
-}
+    );
+};
 
   export default RestaurantCard;

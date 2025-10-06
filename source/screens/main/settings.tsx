@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { 
-  SafeAreaView, 
-  ScrollView, 
+import {
+  SafeAreaView,
+  ScrollView,
   TouchableOpacity,
   StatusBar,
   View,
@@ -9,7 +9,7 @@ import {
   Alert,
   Image,
 } from "react-native";
-import { 
+import {
   ChevronLeft,
   ChevronRight,
   User,
@@ -32,8 +32,8 @@ import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
 
 // Types
 interface SettingOption {
@@ -43,7 +43,7 @@ interface SettingOption {
   icon: React.ComponentType<any>;
   iconColor?: string;
   iconBgColor?: string;
-  type: 'navigation' | 'switch' | 'action';
+  type: "navigation" | "switch" | "action";
   value?: boolean;
   onPress?: () => void;
   onToggle?: (value: boolean) => void;
@@ -71,8 +71,8 @@ type RootStackParamList = {
 };
 
 type SettingsScreenNavigationProp = {
-  navigation: StackNavigationProp<RootStackParamList, 'Settings'>;
-  route: RouteProp<RootStackParamList, 'Settings'>;
+  navigation: StackNavigationProp<RootStackParamList, "Settings">;
+  route: RouteProp<RootStackParamList, "Settings">;
 };
 
 const SettingsScreen: React.FC<SettingsScreenNavigationProp> = ({ navigation }) => {
@@ -98,8 +98,8 @@ const SettingsScreen: React.FC<SettingsScreenNavigationProp> = ({ navigation }) 
       "Êtes-vous sûr de vouloir vous déconnecter ?",
       [
         { text: "Annuler", style: "cancel" },
-        { 
-          text: "Déconnexion", 
+        {
+          text: "Déconnexion",
           style: "destructive",
           onPress: () => {
             // Logique de déconnexion
@@ -116,8 +116,8 @@ const SettingsScreen: React.FC<SettingsScreenNavigationProp> = ({ navigation }) 
       "Cette action est irréversible. Toutes vos données seront définitivement supprimées.",
       [
         { text: "Annuler", style: "cancel" },
-        { 
-          text: "Supprimer", 
+        {
+          text: "Supprimer",
           style: "destructive",
           onPress: () => {
             console.log("Suppression du compte");
@@ -130,197 +130,197 @@ const SettingsScreen: React.FC<SettingsScreenNavigationProp> = ({ navigation }) 
   // Configuration des sections
   const settingSections: SettingSection[] = [
     {
-      id: 'account',
-      title: 'Compte',
+      id: "account",
+      title: "Compte",
       options: [
         {
-          id: 'profile',
-          title: 'Profil personnel',
-          subtitle: 'Modifier vos informations',
+          id: "profile",
+          title: "Profil personnel",
+          subtitle: "Modifier vos informations",
           icon: User,
-          iconColor: '#3B82F6',
-          iconBgColor: '#DBEAFE',
-          type: 'navigation',
-          onPress: () => navigation.navigate('Profile')
+          iconColor: "#3B82F6",
+          iconBgColor: "#DBEAFE",
+          type: "navigation",
+          onPress: () => navigation.navigate("Profile")
         },
         {
-          id: 'addresses',
-          title: 'Mes adresses',
-          subtitle: 'Gérer vos adresses de livraison',
+          id: "addresses",
+          title: "Mes adresses",
+          subtitle: "Gérer vos adresses de livraison",
           icon: MapPin,
-          iconColor: '#10B981',
-          iconBgColor: '#D1FAE5',
-          type: 'navigation',
-          onPress: () => navigation.navigate('Addresses')
+          iconColor: "#10B981",
+          iconBgColor: "#D1FAE5",
+          type: "navigation",
+          onPress: () => navigation.navigate("Addresses")
         },
         {
-          id: 'payment',
-          title: 'Moyens de paiement',
-          subtitle: 'Cartes et portefeuilles',
+          id: "payment",
+          title: "Moyens de paiement",
+          subtitle: "Cartes et portefeuilles",
           icon: CreditCard,
-          iconColor: '#8B5CF6',
-          iconBgColor: '#EDE9FE',
-          type: 'navigation',
-          onPress: () => navigation.navigate('PaymentMethods')
+          iconColor: "#8B5CF6",
+          iconBgColor: "#EDE9FE",
+          type: "navigation",
+          onPress: () => navigation.navigate("PaymentMethods")
         }
       ]
     },
     {
-      id: 'notifications',
-      title: 'Notifications',
+      id: "notifications",
+      title: "Notifications",
       options: [
         {
-          id: 'push',
-          title: 'Notifications push',
-          subtitle: 'Commandes et promotions',
+          id: "push",
+          title: "Notifications push",
+          subtitle: "Commandes et promotions",
           icon: Bell,
-          iconColor: '#F59E0B',
-          iconBgColor: '#FEF3C7',
-          type: 'switch',
+          iconColor: "#F59E0B",
+          iconBgColor: "#FEF3C7",
+          type: "switch",
           value: pushNotifications,
           onToggle: setPushNotifications
         },
         {
-          id: 'email',
-          title: 'Notifications email',
-          subtitle: 'Newsletters et offres',
+          id: "email",
+          title: "Notifications email",
+          subtitle: "Newsletters et offres",
           icon: Bell,
-          iconColor: '#EF4444',
-          iconBgColor: '#FEE2E2',
-          type: 'switch',
+          iconColor: "#EF4444",
+          iconBgColor: "#FEE2E2",
+          type: "switch",
           value: emailNotifications,
           onToggle: setEmailNotifications
         },
         {
-          id: 'sms',
-          title: 'Notifications SMS',
-          subtitle: 'Confirmations de commande',
+          id: "sms",
+          title: "Notifications SMS",
+          subtitle: "Confirmations de commande",
           icon: Smartphone,
-          iconColor: '#06B6D4',
-          iconBgColor: '#CFFAFE',
-          type: 'switch',
+          iconColor: "#06B6D4",
+          iconBgColor: "#CFFAFE",
+          type: "switch",
           value: smsNotifications,
           onToggle: setSmsNotifications
         }
       ]
     },
     {
-      id: 'preferences',
-      title: 'Préférences',
+      id: "preferences",
+      title: "Préférences",
       options: [
         {
-          id: 'language',
-          title: 'Langue',
-          subtitle: 'Français',
+          id: "language",
+          title: "Langue",
+          subtitle: "Français",
           icon: Globe,
-          iconColor: '#6366F1',
-          iconBgColor: '#E0E7FF',
-          type: 'navigation',
-          onPress: () => navigation.navigate('Language')
+          iconColor: "#6366F1",
+          iconBgColor: "#E0E7FF",
+          type: "navigation",
+          onPress: () => navigation.navigate("Language")
         },
         {
-          id: 'location',
-          title: 'Services de localisation',
-          subtitle: 'Pour de meilleures recommandations',
+          id: "location",
+          title: "Services de localisation",
+          subtitle: "Pour de meilleures recommandations",
           icon: MapPin,
-          iconColor: '#10B981',
-          iconBgColor: '#D1FAE5',
-          type: 'switch',
+          iconColor: "#10B981",
+          iconBgColor: "#D1FAE5",
+          type: "switch",
           value: locationServices,
           onToggle: setLocationServices
         },
         {
-          id: 'sounds',
-          title: 'Sons et vibrations',
-          subtitle: 'Effets sonores de l\'app',
+          id: "sounds",
+          title: "Sons et vibrations",
+          subtitle: "Effets sonores de l'app",
           icon: Volume2,
-          iconColor: '#F97316',
-          iconBgColor: '#FFEDD5',
-          type: 'switch',
+          iconColor: "#F97316",
+          iconBgColor: "#FFEDD5",
+          type: "switch",
           value: soundEffects,
           onToggle: setSoundEffects
         },
         {
-          id: 'dark',
-          title: 'Mode sombre',
-          subtitle: 'Apparence de l\'application',
+          id: "dark",
+          title: "Mode sombre",
+          subtitle: "Apparence de l'application",
           icon: Moon,
-          iconColor: '#6B7280',
-          iconBgColor: '#F3F4F6',
-          type: 'switch',
+          iconColor: "#6B7280",
+          iconBgColor: "#F3F4F6",
+          type: "switch",
           value: darkMode,
           onToggle: setDarkMode
         }
       ]
     },
     {
-      id: 'support',
-      title: 'Support & Légal',
+      id: "support",
+      title: "Support & Légal",
       options: [
         {
-          id: 'help',
-          title: 'Centre d\'aide',
-          subtitle: 'FAQ et assistance',
+          id: "help",
+          title: "Centre d'aide",
+          subtitle: "FAQ et assistance",
           icon: HelpCircle,
-          iconColor: '#14B8A6',
-          iconBgColor: '#CCFBF1',
-          type: 'navigation',
-          onPress: () => navigation.navigate('Help')
+          iconColor: "#14B8A6",
+          iconBgColor: "#CCFBF1",
+          type: "navigation",
+          onPress: () => navigation.navigate("Help")
         },
         {
-          id: 'contact',
-          title: 'Nous contacter',
-          subtitle: 'Support client 24/7',
+          id: "contact",
+          title: "Nous contacter",
+          subtitle: "Support client 24/7",
           icon: MessageSquare,
-          iconColor: '#8B5CF6',
-          iconBgColor: '#EDE9FE',
-          type: 'navigation',
+          iconColor: "#8B5CF6",
+          iconBgColor: "#EDE9FE",
+          type: "navigation",
           showBadge: true,
-          onPress: () => console.log('Contact')
+          onPress: () => console.log("Contact")
         },
         {
-          id: 'rate',
-          title: 'Noter l\'application',
-          subtitle: 'Donnez votre avis sur l\'App Store',
+          id: "rate",
+          title: "Noter l'application",
+          subtitle: "Donnez votre avis sur l'App Store",
           icon: Star,
-          iconColor: '#FBBF24',
-          iconBgColor: '#FEF3C7',
-          type: 'navigation',
-          onPress: () => console.log('Rate app')
+          iconColor: "#FBBF24",
+          iconBgColor: "#FEF3C7",
+          type: "navigation",
+          onPress: () => console.log("Rate app")
         },
         {
-          id: 'share',
-          title: 'Partager l\'app',
-          subtitle: 'Invitez vos amis',
+          id: "share",
+          title: "Partager l'app",
+          subtitle: "Invitez vos amis",
           icon: Share2,
-          iconColor: '#06B6D4',
-          iconBgColor: '#CFFAFE',
-          type: 'navigation',
-          onPress: () => console.log('Share app')
+          iconColor: "#06B6D4",
+          iconBgColor: "#CFFAFE",
+          type: "navigation",
+          onPress: () => console.log("Share app")
         },
         {
-          id: 'about',
-          title: 'À propos',
-          subtitle: 'Version 2.1.0',
+          id: "about",
+          title: "À propos",
+          subtitle: "Version 2.1.0",
           icon: SettingsIcon,
-          iconColor: '#6B7280',
-          iconBgColor: '#F3F4F6',
-          type: 'navigation',
-          onPress: () => navigation.navigate('About')
+          iconColor: "#6B7280",
+          iconBgColor: "#F3F4F6",
+          type: "navigation",
+          onPress: () => navigation.navigate("About")
         }
       ]
     },
     {
-      id: 'account_actions',
-      title: 'Actions du compte',
+      id: "account_actions",
+      title: "Actions du compte",
       options: [
         {
-          id: 'logout',
-          title: 'Déconnexion',
+          id: "logout",
+          title: "Déconnexion",
           icon: LogOut,
-          iconColor: '#EF4444',
-          iconBgColor: '#FEE2E2',
-          type: 'action',
+          iconColor: "#EF4444",
+          iconBgColor: "#FEE2E2",
+          type: "action",
           destructive: true,
           onPress: handleLogout
         }
@@ -330,31 +330,37 @@ const SettingsScreen: React.FC<SettingsScreenNavigationProp> = ({ navigation }) 
 
   const SettingOptionComponent: React.FC<{ option: SettingOption }> = ({ option }) => {
     const IconComponent = option.icon;
-    
+
     return (
       <TouchableOpacity
-        className={`py-4 px-5 ${option.destructive ? 'active:bg-red-50' : 'active:bg-gray-50'}`}
+        className={`py-4 px-5 ${option.destructive
+? "active:bg-red-50"
+: "active:bg-gray-50"}`}
         onPress={option.onPress}
-        activeOpacity={option.type === 'switch' ? 1 : 0.7}
-        disabled={option.type === 'switch'}
+        activeOpacity={option.type === "switch"
+? 1
+: 0.7}
+        disabled={option.type === "switch"}
       >
         <HStack className="items-center justify-between">
           <HStack className="items-center flex-1">
-            <View 
+            <View
               className="w-10 h-10 rounded-2xl items-center justify-center mr-4"
-              style={{ backgroundColor: option.iconBgColor || '#F3F4F6' }}
+              style={{ backgroundColor: option.iconBgColor || "#F3F4F6" }}
             >
-              <IconComponent 
-                size={18} 
-                color={option.iconColor || "#6B7280"} 
-                strokeWidth={2} 
+              <IconComponent
+                size={18}
+                color={option.iconColor || "#6B7280"}
+                strokeWidth={2}
               />
             </View>
-            
+
             <VStack className="flex-1 mr-3">
               <HStack className="items-center">
                 <Text className={`text-[16px] font-semibold ${
-                  option.destructive ? 'text-red-600' : 'text-gray-900'
+                  option.destructive
+? "text-red-600"
+: "text-gray-900"
                 }`}>
                   {option.title}
                 </Text>
@@ -369,17 +375,23 @@ const SettingsScreen: React.FC<SettingsScreenNavigationProp> = ({ navigation }) 
               )}
             </VStack>
           </HStack>
-          
-          {option.type === 'switch' && option.onToggle ? (
+
+          {option.type === "switch" && option.onToggle
+? (
             <Switch
               value={option.value}
               onValueChange={option.onToggle}
-              trackColor={{ false: '#E5E7EB', true: '#FED7AA' }}
-              thumbColor={option.value ? '#F97316' : '#9CA3AF'}
+              trackColor={{ false: "#E5E7EB", true: "#FED7AA" }}
+              thumbColor={option.value
+? "#F97316"
+: "#9CA3AF"}
             />
-          ) : option.type === 'navigation' ? (
+          )
+: option.type === "navigation"
+? (
             <ChevronRight size={18} color="#9CA3AF" strokeWidth={2} />
-          ) : null}
+          )
+: null}
         </HStack>
       </TouchableOpacity>
     );
@@ -388,10 +400,10 @@ const SettingsScreen: React.FC<SettingsScreenNavigationProp> = ({ navigation }) 
   const UserHeader: React.FC = () => (
     <TouchableOpacity
       className="bg-white rounded-3xl p-6 mb-6 active:scale-[0.99]"
-      onPress={() => navigation.navigate('Profile')}
+      onPress={() => navigation.navigate("Profile")}
       activeOpacity={0.9}
       style={{
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.06,
         shadowRadius: 12,
@@ -426,11 +438,11 @@ const SettingsScreen: React.FC<SettingsScreenNavigationProp> = ({ navigation }) 
       <Text className="text-gray-700 text-[15px] font-semibold mb-4 px-5">
         {section.title}
       </Text>
-      
+
       <View
         className="bg-white rounded-3xl overflow-hidden"
         style={{
-          shadowColor: '#000',
+          shadowColor: "#000",
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.06,
           shadowRadius: 12,
@@ -464,7 +476,7 @@ const SettingsScreen: React.FC<SettingsScreenNavigationProp> = ({ navigation }) 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#f9fafb" />
-      
+
       {/* Header */}
       <View className="bg-white border-b border-gray-100">
         <HStack className="justify-between items-center px-5 py-4">
@@ -479,7 +491,7 @@ const SettingsScreen: React.FC<SettingsScreenNavigationProp> = ({ navigation }) 
           <Heading className="text-gray-900 font-bold flex-1 text-center">
             Paramètres
           </Heading>
-          
+
           <View className="w-10" />
         </HStack>
       </View>

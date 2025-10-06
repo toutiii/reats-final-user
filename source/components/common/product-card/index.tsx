@@ -1,12 +1,12 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Image } from 'react-native';
-import { Text } from '@/components/ui/text';
-import { HStack } from '@/components/ui/hstack';
-import { Plus } from 'lucide-react-native';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigation } from '@/types/navigation';
-import { Product } from '@/types/product';
+import React from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image } from "react-native";
+import { Text } from "@/components/ui/text";
+import { HStack } from "@/components/ui/hstack";
+import { Plus } from "lucide-react-native";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigation } from "@/types/navigation";
+import { Product } from "@/types/product";
 
 
 interface CardProps {
@@ -16,7 +16,7 @@ interface CardProps {
 const ProductCard: React.FC<CardProps> = ({ product }) => {
     const navigation = useNavigation<StackNavigation>();
     return (
-        <TouchableOpacity className="w-[48%] mb-6" onPress={() => navigation.navigate('Main', { screen: 'FoodDetails' })}>
+        <TouchableOpacity className="w-[48%] mb-6" onPress={() => navigation.navigate("Main", { screen: "FoodDetails" })}>
             <View className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
                 {/* Image Container */}
                 <View className="h-32 bg-gray-200 relative overflow-hidden">
@@ -53,7 +53,7 @@ const ProductCard: React.FC<CardProps> = ({ product }) => {
                 </View>
             </View>
         </TouchableOpacity>
-    )
-}
+    );
+};
 
 export default ProductCard;

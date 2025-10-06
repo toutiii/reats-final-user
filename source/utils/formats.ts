@@ -3,14 +3,14 @@ import {
     CountryCode,
     parsePhoneNumberFromString,
   } from "libphonenumber-js";
-  
+
   type PhoneNumberFormatResult = {
     isValid: boolean;
     formattedNumber: string | null;
     countryCallingCode: string | null;
     completeInternationalNumber: string | null;
   };
-  
+
   export const formatPhoneNumber = (
     phoneNumber: string,
     countryCode: CountryCode,
@@ -18,7 +18,7 @@ import {
     try {
       const parsedNumber = parsePhoneNumberFromString(phoneNumber, countryCode);
       const isTyping = new AsYouType(countryCode).input(phoneNumber);
-  
+
       if (parsedNumber) {
         return {
           isValid: parsedNumber.isValid(),

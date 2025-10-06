@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
   Image,
   Platform,
-} from 'react-native';
+} from "react-native";
 import {
   ChevronLeft,
   MapPin,
@@ -13,14 +13,14 @@ import {
   Check,
   Truck,
   Package,
-} from 'lucide-react-native';
-import { HStack } from '@/components/ui/hstack';
-import { VStack } from '@/components/ui/vstack';
-import { Text } from '@/components/ui/text';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { VStack } from "@/components/ui/vstack";
+import { Text } from "@/components/ui/text";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import MapView, { Circle, MapPressEvent, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
-import { Heading } from '@/components/ui/heading';
+import { Heading } from "@/components/ui/heading";
 
 
 // Types
@@ -33,7 +33,7 @@ interface TrackingStep {
   id: string;
   title: string;
   description: string;
-  status: 'completed' | 'current' | 'pending';
+  status: "completed" | "current" | "pending";
   icon: React.ComponentType<any>;
 }
 
@@ -64,54 +64,54 @@ type RootStackParamList = {
 
 type OrderTrackingScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'OrderTracking'
+  "OrderTracking"
 >;
 
 const OrderTrackingScreen: React.FC = () => {
   const navigation = useNavigation<OrderTrackingScreenNavigationProp>();
   const [trackingData] = useState<OrderTracking>({
-    id: '1',
-    restaurant: 'Uttora Coffee House',
-    orderDate: '06 Sept',
-    orderTime: '10:00pm',
+    id: "1",
+    restaurant: "Uttora Coffee House",
+    orderDate: "06 Sept",
+    orderTime: "10:00pm",
     items: [
-      { quantity: 2, name: 'Burger' },
-      { quantity: 4, name: 'Sanwich' },
+      { quantity: 2, name: "Burger" },
+      { quantity: 4, name: "Sanwich" },
     ],
     estimatedTime: 20,
     currentStep: 1,
     courier: {
-      name: 'Robert F.',
-      photo: 'https://avatar.iran.liara.run/public/27',
+      name: "Robert F.",
+      photo: "https://avatar.iran.liara.run/public/27",
       rating: 4.8,
     },
     steps: [
       {
-        id: '1',
-        title: 'Your order has been received',
-        description: 'We have received your order',
-        status: 'completed',
+        id: "1",
+        title: "Your order has been received",
+        description: "We have received your order",
+        status: "completed",
         icon: Check,
       },
       {
-        id: '2',
-        title: 'The restaurant is preparing your food',
-        description: 'Your food is being prepared',
-        status: 'current',
+        id: "2",
+        title: "The restaurant is preparing your food",
+        description: "Your food is being prepared",
+        status: "current",
         icon: Package,
       },
       {
-        id: '3',
-        title: 'Your order has been picked up for delivery',
-        description: 'Driver is on the way',
-        status: 'pending',
+        id: "3",
+        title: "Your order has been picked up for delivery",
+        description: "Driver is on the way",
+        status: "pending",
         icon: Truck,
       },
       {
-        id: '4',
-        title: 'Order arriving soon!',
-        description: 'Almost there',
-        status: 'pending',
+        id: "4",
+        title: "Order arriving soon!",
+        description: "Almost there",
+        status: "pending",
         icon: MapPin,
       },
     ],
@@ -119,24 +119,26 @@ const OrderTrackingScreen: React.FC = () => {
 
 
   const handleCallCourier = (): void => {
-    console.log('Calling courier');
+    console.log("Calling courier");
   };
 
   const handleMessageCourier = (): void => {
-    console.log('Messaging courier');
+    console.log("Messaging courier");
   };
 
   const TrackingStep: React.FC<{ step: TrackingStep; isLast: boolean }> = ({ step, isLast }) => {
     const IconComponent = step.icon;
-    const isCompleted = step.status === 'completed';
-    const isCurrent = step.status === 'current';
+    const isCompleted = step.status === "completed";
+    const isCurrent = step.status === "current";
 
     return (
       <View className="flex-row items-start">
         {/* Timeline Icon */}
         <View className="items-center mr-4">
           <View
-            className={`w-6 h-6 rounded-full items-center justify-center ${isCompleted || isCurrent ? 'bg-orange-500' : 'bg-gray-300'
+            className={`w-6 h-6 rounded-full items-center justify-center ${isCompleted || isCurrent
+? "bg-orange-500"
+: "bg-gray-300"
               }`}
           >
             <IconComponent
@@ -147,7 +149,9 @@ const OrderTrackingScreen: React.FC = () => {
           </View>
           {!isLast && (
             <View
-              className={`w-0.5 h-8 mt-2 ${isCompleted ? 'bg-orange-500' : 'bg-gray-200'
+              className={`w-0.5 h-8 mt-2 ${isCompleted
+? "bg-orange-500"
+: "bg-gray-200"
                 }`}
             />
           )}
@@ -156,7 +160,9 @@ const OrderTrackingScreen: React.FC = () => {
         {/* Step Content */}
         <View className="flex-1 pb-6">
           <Text
-            className={`text-sm font-medium mb-1 ${isCompleted || isCurrent ? 'text-orange-500' : 'text-gray-400'
+            className={`text-sm font-medium mb-1 ${isCompleted || isCurrent
+? "text-orange-500"
+: "text-gray-400"
               }`}
           >
             {step.title}
@@ -177,8 +183,8 @@ const OrderTrackingScreen: React.FC = () => {
         <View className="flex-1 bg-slate-300">
           <MapView provider={Platform.OS === "android"
             ? PROVIDER_GOOGLE
-            : PROVIDER_DEFAULT} 
-            style={{ width: '100%', height: '100%' }} />
+            : PROVIDER_DEFAULT}
+            style={{ width: "100%", height: "100%" }} />
         </View>
 
         {/* Floating Header */}

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   ScrollView,
   View,
   TouchableOpacity,
   SafeAreaView,
   Image,
-} from 'react-native';
+} from "react-native";
 import {
   ChevronLeft,
   MoreHorizontal,
@@ -14,7 +14,7 @@ import {
   Clock,
   EditIcon,
   TrashIcon
-} from 'lucide-react-native';
+} from "lucide-react-native";
 import {
   Actionsheet,
   ActionsheetContent,
@@ -24,20 +24,20 @@ import {
   ActionsheetDragIndicatorWrapper,
   ActionsheetBackdrop,
   ActionsheetIcon,
-} from '@/components/ui/actionsheet';
-import { HStack } from '@/components/ui/hstack';
-import { Text } from '@/components/ui/text';
-import { useNavigation } from '@react-navigation/native';
-import { Heading } from '@/components/ui/heading';
-import ProductCard from '@/components/common/product-card';
-import { products } from '@/mocks/products';
-import { StackNavigation } from '@/types/navigation';
-import { Category } from '@/types/restaurant';
-import { restaurant } from '@/mocks/restaurants';
+} from "@/components/ui/actionsheet";
+import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
+import { useNavigation } from "@react-navigation/native";
+import { Heading } from "@/components/ui/heading";
+import ProductCard from "@/components/common/product-card";
+import { products } from "@/mocks/products";
+import { StackNavigation } from "@/types/navigation";
+import { Category } from "@/types/restaurant";
+import { restaurant } from "@/mocks/restaurants";
 
 const RestaurantDetailsScreen: React.FC = () => {
   const navigation = useNavigation<StackNavigation>();
-  const [selectedCategory, setSelectedCategory] = useState<string>('burger');
+  const [selectedCategory, setSelectedCategory] = useState<string>("burger");
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [showActionsheet, setShowActionsheet] = React.useState(false);
 
@@ -49,22 +49,24 @@ const RestaurantDetailsScreen: React.FC = () => {
   };
 
   const handleMenuItemPress = (itemId: string): void => {
-    navigation.navigate('Main', { screen: 'FoodDetails'});
+    navigation.navigate("Main", { screen: "FoodDetails"});
   };
 
   const CategoryButton: React.FC<{ category: Category }> = ({ category }) => (
     <TouchableOpacity
       className={`px-6 py-3 rounded-full border ${
         selectedCategory === category.id
-          ? 'bg-orange-500 border-orange-500'
-          : 'bg-white border-gray-200'
+          ? "bg-orange-500 border-orange-500"
+          : "bg-white border-gray-200"
       }`}
       onPress={() => handleCategorySelect(category.id)}
       activeOpacity={0.8}
     >
       <Text
         className={`text-sm font-semibold ${
-          selectedCategory === category.id ? 'text-white' : 'text-gray-700'
+          selectedCategory === category.id
+? "text-white"
+: "text-gray-700"
         }`}
       >
         {category.name}
@@ -79,7 +81,9 @@ const RestaurantDetailsScreen: React.FC = () => {
         <TouchableOpacity
           key={index}
           className={`w-2 h-2 rounded-full ${
-            index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+            index === currentImageIndex
+? "bg-white"
+: "bg-white/50"
           }`}
           onPress={() => setCurrentImageIndex(index)}
           activeOpacity={0.8}
@@ -106,7 +110,7 @@ const RestaurantDetailsScreen: React.FC = () => {
             onPress={() => navigation.goBack()}
             activeOpacity={0.85}
             style={{
-              shadowColor: '#000',
+              shadowColor: "#000",
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.15,
               shadowRadius: 12,
@@ -120,7 +124,7 @@ const RestaurantDetailsScreen: React.FC = () => {
             activeOpacity={0.85}
             onPress={() => setShowActionsheet(true)}
             style={{
-              shadowColor: '#000',
+              shadowColor: "#000",
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.15,
               shadowRadius: 12,
@@ -131,7 +135,7 @@ const RestaurantDetailsScreen: React.FC = () => {
         </HStack>
       </View>
 
-      <ScrollView 
+      <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
         bounces={true}
@@ -145,11 +149,11 @@ const RestaurantDetailsScreen: React.FC = () => {
               resizeMode="cover"
             />
             <View className="w-full h-full bg-gradient-to-br from-gray-400 to-gray-500" />
-            
+
             {/* Subtle Overlay */}
             <View className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
           </View>
-          
+
           {/* Pagination Dots */}
           <PaginationDots />
         </View>

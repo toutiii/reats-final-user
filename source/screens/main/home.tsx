@@ -1,4 +1,4 @@
-import React, { useEffect, memo } from 'react';
+import React, { useEffect, memo } from "react";
 import {
   ScrollView,
   View,
@@ -7,7 +7,7 @@ import {
   StatusBar,
   Pressable,
   TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -15,7 +15,7 @@ import Animated, {
   withDelay,
   withSpring,
   Easing,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 import {
   Menu,
   ChevronDown,
@@ -23,14 +23,14 @@ import {
   Star,
   Clock,
   ChevronRight,
-} from 'lucide-react-native';
-import { HStack } from '@/components/ui/hstack';
-import { VStack } from '@/components/ui/vstack';
-import { Text } from '@/components/ui/text';
-import { Heading } from '@/components/ui/heading';
-import SearchBar from '@/components/common/search-bar';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigation } from '@/types/navigation';
+} from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { VStack } from "@/components/ui/vstack";
+import { Text } from "@/components/ui/text";
+import { Heading } from "@/components/ui/heading";
+import SearchBar from "@/components/common/search-bar";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigation } from "@/types/navigation";
 
 // Animated components
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -68,15 +68,15 @@ const RestaurantCard = memo(({ restaurant, index }: { restaurant: any; index: nu
       ]}
       className="mb-5"
       onPress={() =>
-        navigation.navigate('Main', {
-          screen: 'RestaurantDetails',
+        navigation.navigate("Main", {
+          screen: "RestaurantDetails",
         })
       }
     >
       <View
         className="bg-white rounded-3xl overflow-hidden"
         style={{
-          shadowColor: '#000',
+          shadowColor: "#000",
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.06,
           shadowRadius: 12,
@@ -131,7 +131,7 @@ const RestaurantCard = memo(({ restaurant, index }: { restaurant: any; index: nu
   );
 });
 
-RestaurantCard.displayName = 'RestaurantCard';
+RestaurantCard.displayName = "RestaurantCard";
 
 // Category button component
 const CategoryButton = memo(({ category, index }: { category: any; index: number }) => {
@@ -160,18 +160,20 @@ const CategoryButton = memo(({ category, index }: { category: any; index: number
       ]}
       className={`mr-3 px-5 py-2.5 rounded-2xl ${
         category.active
-          ? 'bg-orange-500 shadow-lg shadow-orange-500/25'
-          : 'bg-gray-200/60'
+          ? "bg-orange-500 shadow-lg shadow-orange-500/25"
+          : "bg-gray-200/60"
       }`}
       onPress={() =>
-        navigation.navigate('Main', {
-          screen: 'CategoriesDetails',
+        navigation.navigate("Main", {
+          screen: "CategoriesDetails",
         })
       }
     >
       <Text
         className={`font-semibold text-sm ${
-          category.active ? 'text-white' : 'text-gray-700'
+          category.active
+? "text-white"
+: "text-gray-700"
         }`}
       >
         {category.name}
@@ -180,51 +182,51 @@ const CategoryButton = memo(({ category, index }: { category: any; index: number
   );
 });
 
-CategoryButton.displayName = 'CategoryButton';
+CategoryButton.displayName = "CategoryButton";
 
 const HomeScreen = () => {
   const navigation = useNavigation<StackNavigation>();
 
   const headerOpacity = useSharedValue(0);
   const headerTranslateY = useSharedValue(-20);
-  
+
   const greetingOpacity = useSharedValue(0);
   const greetingTranslateY = useSharedValue(30);
-  
+
   const searchBarOpacity = useSharedValue(0);
   const searchBarScale = useSharedValue(0.95);
-  
+
   const categoriesOpacity = useSharedValue(0);
   const categoriesTranslateX = useSharedValue(-30);
-  
+
   const restaurantsHeaderOpacity = useSharedValue(0);
   const restaurantsHeaderTranslateY = useSharedValue(20);
 
   const categories = [
-    { id: 1, name: 'All', active: true },
-    { id: 2, name: 'Hot Dog', active: false },
-    { id: 3, name: 'Burger', active: false },
-    { id: 4, name: 'Pizza', active: false },
+    { id: 1, name: "All", active: true },
+    { id: 2, name: "Hot Dog", active: false },
+    { id: 3, name: "Burger", active: false },
+    { id: 4, name: "Pizza", active: false },
   ];
 
   const restaurants = [
     {
       id: 1,
-      name: 'Rose Garden Restaurant',
-      cuisine: 'Burger • Chicken • Riche • Wings',
+      name: "Rose Garden Restaurant",
+      cuisine: "Burger • Chicken • Riche • Wings",
       rating: 4.7,
-      deliveryInfo: 'Free',
-      time: '20 min',
-      image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=200&fit=crop',
+      deliveryInfo: "Free",
+      time: "20 min",
+      image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=200&fit=crop",
     },
     {
       id: 2,
-      name: 'Golden Palace',
-      cuisine: 'Chinese • Asian • Noodles',
+      name: "Golden Palace",
+      cuisine: "Chinese • Asian • Noodles",
       rating: 4.5,
-      deliveryInfo: '$2.99',
-      time: '25 min',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=200&fit=crop',
+      deliveryInfo: "$2.99",
+      time: "25 min",
+      image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=200&fit=crop",
     },
   ];
 
@@ -273,7 +275,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      
+
       {/* Animated Header */}
       <AnimatedView style={headerStyle} className="bg-white border-b border-gray-100">
         <HStack className="justify-between items-center px-5 py-4">
@@ -301,8 +303,8 @@ const HomeScreen = () => {
           <TouchableOpacity
             className="relative active:scale-95"
             activeOpacity={0.8}
-            onPress={() => navigation.navigate('Main', {
-              screen: 'Notifications',
+            onPress={() => navigation.navigate("Main", {
+              screen: "Notifications",
             })}
           >
             <View className="bg-gray-900 rounded-full p-2.5 shadow-lg shadow-black/10">
@@ -342,8 +344,8 @@ const HomeScreen = () => {
               <TouchableOpacity
                 className="flex-row items-center active:opacity-60"
                 activeOpacity={0.7}
-                onPress={() => navigation.navigate('Main', {
-                  screen: 'AllCategories',
+                onPress={() => navigation.navigate("Main", {
+                  screen: "AllCategories",
                 })}
               >
                 <Text className="text-gray-500 text-sm font-medium mr-1">See All</Text>
@@ -375,8 +377,8 @@ const HomeScreen = () => {
                 className="flex-row items-center active:opacity-60"
                 activeOpacity={0.7}
                 onPress={() => {
-                  navigation.navigate('Main', {
-                    screen: 'AllRestaurants',
+                  navigation.navigate("Main", {
+                    screen: "AllRestaurants",
                   });
                 }}
               >

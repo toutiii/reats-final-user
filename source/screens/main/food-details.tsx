@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   ScrollView,
   View,
   TouchableOpacity,
   SafeAreaView,
   Image,
-} from 'react-native';
+} from "react-native";
 import {
   ChevronLeft,
   Heart,
@@ -14,16 +14,16 @@ import {
   Clock,
   Minus,
   Plus,
-} from 'lucide-react-native';
-import { HStack } from '@/components/ui/hstack';
-import { VStack } from '@/components/ui/vstack';
-import { Text } from '@/components/ui/text';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { Heading } from '@/components/ui/heading';
-import { Button, ButtonText } from '@/components/ui/button';
-import { productDetails } from '@/mocks/products';
-import { Ingredient, ProductSize } from '@/types/product';
+} from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { VStack } from "@/components/ui/vstack";
+import { Text } from "@/components/ui/text";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { Heading } from "@/components/ui/heading";
+import { Button, ButtonText } from "@/components/ui/button";
+import { productDetails } from "@/mocks/products";
+import { Ingredient, ProductSize } from "@/types/product";
 
 // Types
 type TabsParamList = {
@@ -44,14 +44,14 @@ type RootStackParamList = {
 
 type FoodDetailsScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'FoodDetails'
+  "FoodDetails"
 >;
 
 const FoodDetailsScreen: React.FC = () => {
   const navigation = useNavigation<FoodDetailsScreenNavigationProp>();
   const [quantity, setQuantity] = useState<number>(2);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [selectedSizeId, setSelectedSizeId] = useState<string>('14');
+  const [selectedSizeId, setSelectedSizeId] = useState<string>("14");
 
   const handleQuantityChange = (change: number): void => {
     setQuantity(prev => Math.max(1, prev + change));
@@ -66,7 +66,7 @@ const FoodDetailsScreen: React.FC = () => {
   };
 
   const handleAddToCart = (): void => {
-    console.log('Add to cart:', {
+    console.log("Add to cart:", {
       productId: productDetails.id,
       quantity,
       selectedSize: selectedSizeId,
@@ -78,21 +78,25 @@ const FoodDetailsScreen: React.FC = () => {
   const SizeOption: React.FC<{ size: ProductSize }> = ({ size }) => (
     <TouchableOpacity
       className={`px-5 py-2.5 rounded-2xl border-2 transition-all duration-200 ${selectedSizeId === size.id
-          ? 'bg-orange-500 border-orange-500 shadow-sm shadow-orange-500/25'
-          : 'bg-white border-gray-200 shadow-xs'
+          ? "bg-orange-500 border-orange-500 shadow-sm shadow-orange-500/25"
+          : "bg-white border-gray-200 shadow-xs"
         }`}
       onPress={() => handleSizeSelect(size.id)}
       activeOpacity={0.85}
-      style={selectedSizeId === size.id ? {
+      style={selectedSizeId === size.id
+? {
         elevation: 4,
-        shadowColor: '#f97316',
+        shadowColor: "#f97316",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 8,
-      } : {}}
+      }
+: {}}
     >
       <Text
-        className={`text-base font-semibold ${selectedSizeId === size.id ? 'text-white' : 'text-gray-700'
+        className={`text-base font-semibold ${selectedSizeId === size.id
+? "text-white"
+: "text-gray-700"
           }`}
       >
         {size.label}
@@ -120,7 +124,7 @@ const FoodDetailsScreen: React.FC = () => {
             onPress={() => navigation.goBack()}
             activeOpacity={0.85}
             style={{
-              shadowColor: '#000',
+              shadowColor: "#000",
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.15,
               shadowRadius: 12,
@@ -134,16 +138,24 @@ const FoodDetailsScreen: React.FC = () => {
             onPress={handleFavoriteToggle}
             activeOpacity={0.85}
             style={{
-              shadowColor: isFavorite ? '#ef4444' : '#000',
+              shadowColor: isFavorite
+? "#ef4444"
+: "#000",
               shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: isFavorite ? 0.25 : 0.15,
+              shadowOpacity: isFavorite
+? 0.25
+: 0.15,
               shadowRadius: 12,
             }}
           >
             <Heart
               size={20}
-              color={isFavorite ? "#ef4444" : "#6b7280"}
-              fill={isFavorite ? "#ef4444" : "transparent"}
+              color={isFavorite
+? "#ef4444"
+: "#6b7280"}
+              fill={isFavorite
+? "#ef4444"
+: "transparent"}
               strokeWidth={2.5}
             />
           </TouchableOpacity>
@@ -161,7 +173,7 @@ const FoodDetailsScreen: React.FC = () => {
           <View className="h-96 bg-gray-200 overflow-hidden rounded-b-3xl">
             <Image
               source={{
-                uri: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=200&h=150&fit=crop'
+                uri: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=200&h=150&fit=crop"
               }}
               className="w-full h-full flex-1"
               resizeMode="cover"
@@ -301,7 +313,7 @@ const FoodDetailsScreen: React.FC = () => {
             onPress={handleAddToCart}
             size="xl"
             style={{
-              shadowColor: '#f97316',
+              shadowColor: "#f97316",
               shadowOffset: { width: 0, height: 6 },
               shadowOpacity: 0.3,
               shadowRadius: 16,

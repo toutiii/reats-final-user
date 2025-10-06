@@ -68,7 +68,7 @@ const MainNavigator = () => {
         name="Notifications"
         component={NotificationsScreen}
       />
-      
+
       <Stack.Screen
         name='PersonalInfo'
         component={PersonalInfoScreen}
@@ -78,12 +78,12 @@ const MainNavigator = () => {
         name='Addresses'
         component={AddressesScreen}
       />
-     
+
       <Stack.Screen
         name='Favourites'
         component={FavouritesScreen}
       />
-     
+
      <Stack.Screen
         name='PaymentMethods'
         component={PaymentMethodsScreen}

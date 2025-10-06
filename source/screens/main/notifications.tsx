@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   ScrollView,
   View,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-} from 'react-native';
+} from "react-native";
 import {
   ChevronLeft,
   Bell,
@@ -16,17 +16,17 @@ import {
   CreditCard,
   AlertCircle,
   Check,
-} from 'lucide-react-native';
-import { HStack } from '@/components/ui/hstack';
-import { VStack } from '@/components/ui/vstack';
-import { Text } from '@/components/ui/text';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { VStack } from "@/components/ui/vstack";
+import { Text } from "@/components/ui/text";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 // Types
 interface Notification {
   id: string;
-  type: 'order' | 'promotion' | 'review' | 'delivery' | 'payment' | 'system';
+  type: "order" | "promotion" | "review" | "delivery" | "payment" | "system";
   title: string;
   message: string;
   time: string;
@@ -34,7 +34,7 @@ interface Notification {
   actionRequired?: boolean;
 }
 
-type NotificationType = 'all' | 'unread';
+type NotificationType = "all" | "unread";
 
 // Navigation types
 type RootStackParamList = {
@@ -46,70 +46,70 @@ type RootStackParamList = {
 
 type NotificationsScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'Notifications'
+  "Notifications"
 >;
 
 const NotificationsScreen: React.FC = () => {
   const navigation = useNavigation<NotificationsScreenNavigationProp>();
-  const [filter, setFilter] = useState<NotificationType>('all');
+  const [filter, setFilter] = useState<NotificationType>("all");
   const [notifications, setNotifications] = useState<Notification[]>([
     {
-      id: '1',
-      type: 'order',
-      title: 'Order Confirmed',
-      message: 'Your order #162432 from Pizza Hut has been confirmed and is being prepared.',
-      time: '2 min ago',
+      id: "1",
+      type: "order",
+      title: "Order Confirmed",
+      message: "Your order #162432 from Pizza Hut has been confirmed and is being prepared.",
+      time: "2 min ago",
       isRead: false,
       actionRequired: false,
     },
     {
-      id: '2',
-      type: 'delivery',
-      title: 'Order On The Way',
-      message: 'Your order is on the way! Track your delivery in real-time.',
-      time: '15 min ago',
+      id: "2",
+      type: "delivery",
+      title: "Order On The Way",
+      message: "Your order is on the way! Track your delivery in real-time.",
+      time: "15 min ago",
       isRead: false,
       actionRequired: true,
     },
     {
-      id: '3',
-      type: 'promotion',
-      title: 'Special Offer!',
-      message: 'Get 30% off on your next order. Limited time offer expires in 2 hours.',
-      time: '1 hour ago',
+      id: "3",
+      type: "promotion",
+      title: "Special Offer!",
+      message: "Get 30% off on your next order. Limited time offer expires in 2 hours.",
+      time: "1 hour ago",
       isRead: true,
     },
     {
-      id: '4',
-      type: 'review',
-      title: 'Rate Your Order',
-      message: 'How was your order from McDonald? Your feedback helps us improve.',
-      time: '3 hours ago',
+      id: "4",
+      type: "review",
+      title: "Rate Your Order",
+      message: "How was your order from McDonald? Your feedback helps us improve.",
+      time: "3 hours ago",
       isRead: false,
       actionRequired: true,
     },
     {
-      id: '5',
-      type: 'payment',
-      title: 'Payment Successful',
-      message: 'Payment of $35.25 for order #162432 was processed successfully.',
-      time: '5 hours ago',
+      id: "5",
+      type: "payment",
+      title: "Payment Successful",
+      message: "Payment of $35.25 for order #162432 was processed successfully.",
+      time: "5 hours ago",
       isRead: true,
     },
     {
-      id: '6',
-      type: 'system',
-      title: 'App Update Available',
-      message: 'A new version of the app is available with exciting new features.',
-      time: '1 day ago',
+      id: "6",
+      type: "system",
+      title: "App Update Available",
+      message: "A new version of the app is available with exciting new features.",
+      time: "1 day ago",
       isRead: true,
     },
     {
-      id: '7',
-      type: 'promotion',
-      title: 'Welcome Bonus',
-      message: 'Welcome to our app! Enjoy free delivery on your first 3 orders.',
-      time: '2 days ago',
+      id: "7",
+      type: "promotion",
+      title: "Welcome Bonus",
+      message: "Welcome to our app! Enjoy free delivery on your first 3 orders.",
+      time: "2 days ago",
       isRead: true,
     },
   ]);
@@ -118,20 +118,22 @@ const NotificationsScreen: React.FC = () => {
     // Mark as read
     setNotifications(prev =>
       prev.map(n =>
-        n.id === notification.id ? { ...n, isRead: true } : n
+        (n.id === notification.id
+? { ...n, isRead: true }
+: n)
       )
     );
 
     // Handle navigation based on notification type
     switch (notification.type) {
-      case 'order':
-      case 'delivery':
-        navigation.navigate('OrderTracking', { orderId: notification.id });
+      case "order":
+      case "delivery":
+        navigation.navigate("OrderTracking", { orderId: notification.id });
         break;
-      case 'review':
+      case "review":
         // Navigate to review screen
         break;
-      case 'promotion':
+      case "promotion":
         // Navigate to offers screen
         break;
       default:
@@ -145,65 +147,67 @@ const NotificationsScreen: React.FC = () => {
     );
   };
 
-  const getNotificationIcon = (type: Notification['type']) => {
+  const getNotificationIcon = (type: Notification["type"]) => {
     switch (type) {
-      case 'order':
+      case "order":
         return Package;
-      case 'delivery':
+      case "delivery":
         return Truck;
-      case 'promotion':
+      case "promotion":
         return Gift;
-      case 'review':
+      case "review":
         return Star;
-      case 'payment':
+      case "payment":
         return CreditCard;
-      case 'system':
+      case "system":
         return AlertCircle;
       default:
         return Bell;
     }
   };
 
-  const getIconColor = (type: Notification['type']): string => {
+  const getIconColor = (type: Notification["type"]): string => {
     switch (type) {
-      case 'order':
-        return '#3B82F6';
-      case 'delivery':
-        return '#10B981';
-      case 'promotion':
-        return '#F59E0B';
-      case 'review':
-        return '#8B5CF6';
-      case 'payment':
-        return '#06B6D4';
-      case 'system':
-        return '#6B7280';
+      case "order":
+        return "#3B82F6";
+      case "delivery":
+        return "#10B981";
+      case "promotion":
+        return "#F59E0B";
+      case "review":
+        return "#8B5CF6";
+      case "payment":
+        return "#06B6D4";
+      case "system":
+        return "#6B7280";
       default:
-        return '#F97316';
+        return "#F97316";
     }
   };
 
-  const getIconBgColor = (type: Notification['type']): string => {
+  const getIconBgColor = (type: Notification["type"]): string => {
     switch (type) {
-      case 'order':
-        return 'bg-blue-50';
-      case 'delivery':
-        return 'bg-emerald-50';
-      case 'promotion':
-        return 'bg-amber-50';
-      case 'review':
-        return 'bg-purple-50';
-      case 'payment':
-        return 'bg-cyan-50';
-      case 'system':
-        return 'bg-gray-50';
+      case "order":
+        return "bg-blue-50";
+      case "delivery":
+        return "bg-emerald-50";
+      case "promotion":
+        return "bg-amber-50";
+      case "review":
+        return "bg-purple-50";
+      case "payment":
+        return "bg-cyan-50";
+      case "system":
+        return "bg-gray-50";
       default:
-        return 'bg-orange-50';
+        return "bg-orange-50";
     }
   };
 
   const filteredNotifications = notifications.filter(notification =>
-    filter === 'all' ? true : !notification.isRead
+    (filter === "all"
+? true
+: !notification.isRead)
   );
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
@@ -216,7 +220,9 @@ const NotificationsScreen: React.FC = () => {
     return (
       <TouchableOpacity
         className={`p-4 border-b border-gray-100 active:bg-gray-50 ${
-          !notification.isRead ? 'bg-blue-50/30' : 'bg-white'
+          !notification.isRead
+? "bg-blue-50/30"
+: "bg-white"
         }`}
         onPress={() => handleNotificationPress(notification)}
         activeOpacity={0.7}
@@ -231,7 +237,9 @@ const NotificationsScreen: React.FC = () => {
           <VStack className="flex-1">
             <HStack className="items-start justify-between mb-1">
               <Text className={`text-base font-semibold flex-1 ${
-                !notification.isRead ? 'text-gray-900' : 'text-gray-700'
+                !notification.isRead
+? "text-gray-900"
+: "text-gray-700"
               }`}>
                 {notification.title}
               </Text>
@@ -239,9 +247,11 @@ const NotificationsScreen: React.FC = () => {
                 {notification.time}
               </Text>
             </HStack>
-            
+
             <Text className={`text-sm leading-relaxed mb-2 ${
-              !notification.isRead ? 'text-gray-700' : 'text-gray-500'
+              !notification.isRead
+? "text-gray-700"
+: "text-gray-500"
             }`}>
               {notification.message}
             </Text>
@@ -264,16 +274,16 @@ const NotificationsScreen: React.FC = () => {
     );
   };
 
-  const FilterButton: React.FC<{ filterType: NotificationType; title: string; count?: number }> = ({ 
-    filterType, 
-    title, 
-    count 
+  const FilterButton: React.FC<{ filterType: NotificationType; title: string; count?: number }> = ({
+    filterType,
+    title,
+    count
   }) => (
     <TouchableOpacity
       className={`px-4 py-2 rounded-full border ${
         filter === filterType
-          ? 'bg-orange-500 border-orange-500'
-          : 'bg-white border-gray-200'
+          ? "bg-orange-500 border-orange-500"
+          : "bg-white border-gray-200"
       }`}
       onPress={() => setFilter(filterType)}
       activeOpacity={0.8}
@@ -281,19 +291,27 @@ const NotificationsScreen: React.FC = () => {
       <HStack className="items-center gap-2">
         <Text
           className={`text-sm font-medium ${
-            filter === filterType ? 'text-white' : 'text-gray-700'
+            filter === filterType
+? "text-white"
+: "text-gray-700"
           }`}
         >
           {title}
         </Text>
         {count !== undefined && count > 0 && (
           <View className={`w-5 h-5 rounded-full items-center justify-center ${
-            filter === filterType ? 'bg-white/20' : 'bg-orange-500'
+            filter === filterType
+? "bg-white/20"
+: "bg-orange-500"
           }`}>
             <Text className={`text-xs font-bold ${
-              filter === filterType ? 'text-white' : 'text-white'
+              filter === filterType
+? "text-white"
+: "text-white"
             }`}>
-              {count > 9 ? '9+' : count}
+              {count > 9
+? "9+"
+: count}
             </Text>
           </View>
         )}
@@ -304,7 +322,7 @@ const NotificationsScreen: React.FC = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      
+
       {/* Header */}
       <View className="bg-white border-b border-gray-100">
         <HStack className="items-center justify-between px-6 py-4">
@@ -351,25 +369,29 @@ const NotificationsScreen: React.FC = () => {
         className="flex-1"
         showsVerticalScrollIndicator={false}
       >
-        {filteredNotifications.length > 0 ? (
+        {filteredNotifications.length > 0
+? (
           filteredNotifications.map((notification) => (
             <NotificationItem
               key={notification.id}
               notification={notification}
             />
           ))
-        ) : (
+        )
+: (
           <View className="flex-1 items-center justify-center py-20">
             <View className="w-20 h-20 bg-gray-100 rounded-full items-center justify-center mb-4">
               <Bell size={32} color="#9CA3AF" strokeWidth={1.5} />
             </View>
             <Text className="text-gray-500 text-base font-medium text-center">
-              {filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}
+              {filter === "unread"
+? "No unread notifications"
+: "No notifications yet"}
             </Text>
             <Text className="text-gray-400 text-sm text-center mt-2">
-              {filter === 'unread' 
-                ? 'All caught up! Check back later for updates.' 
-                : 'We\'ll notify you when something important happens.'}
+              {filter === "unread"
+                ? "All caught up! Check back later for updates."
+                : "We'll notify you when something important happens."}
             </Text>
           </View>
         )}

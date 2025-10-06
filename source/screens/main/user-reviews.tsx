@@ -19,8 +19,8 @@ import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
 
 // Types
 interface UserReview {
@@ -53,13 +53,13 @@ type RootStackParamList = {
 };
 
 type MyReviewsScreenNavigationProp = {
-    navigation: StackNavigationProp<RootStackParamList, 'UserReviews'>;
-    route: RouteProp<RootStackParamList, 'UserReviews'>;
+    navigation: StackNavigationProp<RootStackParamList, "UserReviews">;
+    route: RouteProp<RootStackParamList, "UserReviews">;
 };
 
 const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }) => {
-    const [selectedFilter, setSelectedFilter] = useState<'all' | number>('all');
-    const [sortBy, setSortBy] = useState<'recent' | 'rating' | 'restaurant'>('recent');
+    const [selectedFilter, setSelectedFilter] = useState<"all" | number>("all");
+    const [sortBy, setSortBy] = useState<"recent" | "rating" | "restaurant">("recent");
 
     // Données des avis de l'utilisateur
     const reviewStats: ReviewStats = {
@@ -76,87 +76,87 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
 
     const myReviews: UserReview[] = [
         {
-            id: '1',
-            restaurantId: 'rest1',
-            restaurantName: 'Chez Pierre',
-            restaurantImage: 'https://avatar.iran.liara.run/public/4',
+            id: "1",
+            restaurantId: "rest1",
+            restaurantName: "Chez Pierre",
+            restaurantImage: "https://avatar.iran.liara.run/public/4",
             rating: 5,
-            date: '2024-01-15',
-            comment: 'Excellent restaurant ! La qualité des plats est exceptionnelle et le service très rapide. Je recommande vivement le boeuf bourguignon, un délice absolu.',
+            date: "2024-01-15",
+            comment: "Excellent restaurant ! La qualité des plats est exceptionnelle et le service très rapide. Je recommande vivement le boeuf bourguignon, un délice absolu.",
             photos: [
-                'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&h=200&fit=crop',
-                'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop'
+                "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&h=200&fit=crop",
+                "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop"
             ],
-            orderItems: ['Boeuf Bourguignon', 'Tarte Tatin'],
+            orderItems: ["Boeuf Bourguignon", "Tarte Tatin"],
             restaurantReply: {
-                date: '2024-01-16',
-                message: 'Merci beaucoup pour ce superbe avis ! Nous sommes ravis que vous ayez apprécié votre expérience chez nous.'
+                date: "2024-01-16",
+                message: "Merci beaucoup pour ce superbe avis ! Nous sommes ravis que vous ayez apprécié votre expérience chez nous."
             },
             isEditable: true
         },
         {
-            id: '2',
-            restaurantId: 'rest2',
-            restaurantName: 'Sushi Tokyo',
-            restaurantImage: 'https://avatar.iran.liara.run/public/4',
+            id: "2",
+            restaurantId: "rest2",
+            restaurantName: "Sushi Tokyo",
+            restaurantImage: "https://avatar.iran.liara.run/public/4",
             rating: 4,
-            date: '2024-01-10',
-            comment: 'Très bon restaurant japonais. Les sushis sont frais et délicieux. Service un peu lent mais la qualité est au rendez-vous.',
-            orderItems: ['Plateau Sushi', 'Miso'],
+            date: "2024-01-10",
+            comment: "Très bon restaurant japonais. Les sushis sont frais et délicieux. Service un peu lent mais la qualité est au rendez-vous.",
+            orderItems: ["Plateau Sushi", "Miso"],
             isEditable: true
         },
         {
-            id: '3',
-            restaurantId: 'rest3',
-            restaurantName: 'Pizza Corner',
-            restaurantImage: 'https://avatar.iran.liara.run/public/4',
+            id: "3",
+            restaurantId: "rest3",
+            restaurantName: "Pizza Corner",
+            restaurantImage: "https://avatar.iran.liara.run/public/4",
             rating: 5,
-            date: '2024-01-08',
-            comment: 'Les meilleures pizzas de la ville ! Pâte fine et croustillante, ingrédients de qualité. Livraison rapide.',
+            date: "2024-01-08",
+            comment: "Les meilleures pizzas de la ville ! Pâte fine et croustillante, ingrédients de qualité. Livraison rapide.",
             photos: [
-                'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop'
+                "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop"
             ],
-            orderItems: ['Pizza Margherita', 'Pizza 4 Fromages'],
+            orderItems: ["Pizza Margherita", "Pizza 4 Fromages"],
             isEditable: true
         },
         {
-            id: '4',
-            restaurantId: 'rest4',
-            restaurantName: 'Green Bowl',
-            restaurantImage: 'https://avatar.iran.liara.run/public/4',
+            id: "4",
+            restaurantId: "rest4",
+            restaurantName: "Green Bowl",
+            restaurantImage: "https://avatar.iran.liara.run/public/4",
             rating: 4,
-            date: '2024-01-05',
-            comment: 'Super concept de bowls santé ! Ingrédients frais et savoureux. Parfait pour un déjeuner équilibré.',
-            orderItems: ['Buddha Bowl', 'Smoothie Detox'],
+            date: "2024-01-05",
+            comment: "Super concept de bowls santé ! Ingrédients frais et savoureux. Parfait pour un déjeuner équilibré.",
+            orderItems: ["Buddha Bowl", "Smoothie Detox"],
             isEditable: true
         },
         {
-            id: '5',
-            restaurantId: 'rest5',
-            restaurantName: 'Le Bistrot',
-            restaurantImage: 'https://avatar.iran.liara.run/public/4',
+            id: "5",
+            restaurantId: "rest5",
+            restaurantName: "Le Bistrot",
+            restaurantImage: "https://avatar.iran.liara.run/public/4",
             rating: 3,
-            date: '2024-01-02',
-            comment: 'Correct mais sans plus. L\'ambiance est sympa mais les plats manquent un peu de saveur pour le prix.',
-            orderItems: ['Entrecôte', 'Gratin Dauphinois'],
+            date: "2024-01-02",
+            comment: "Correct mais sans plus. L'ambiance est sympa mais les plats manquent un peu de saveur pour le prix.",
+            orderItems: ["Entrecôte", "Gratin Dauphinois"],
             isEditable: true
         }
     ];
 
     // Filtrer les avis selon le filtre sélectionné
     const filteredReviews = myReviews.filter(review => {
-        if (selectedFilter === 'all') return true;
+        if (selectedFilter === "all") return true;
         return review.rating === selectedFilter;
     });
 
     // Trier les avis
     const sortedReviews = [...filteredReviews].sort((a, b) => {
         switch (sortBy) {
-            case 'rating':
+            case "rating":
                 return b.rating - a.rating;
-            case 'restaurant':
+            case "restaurant":
                 return a.restaurantName.localeCompare(b.restaurantName);
-            case 'recent':
+            case "recent":
             default:
                 return new Date(b.date).getTime() - new Date(a.date).getTime();
         }
@@ -164,10 +164,10 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
-        return date.toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
+        return date.toLocaleDateString("fr-FR", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
         });
     };
 
@@ -177,7 +177,7 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
     };
 
     const handleEditReview = (reviewId: string) => {
-        navigation.navigate('EditReview', { reviewId });
+        navigation.navigate("EditReview", { reviewId });
     };
 
     const RatingStars: React.FC<{ rating: number; size?: number }> = ({ rating, size = 14 }) => (
@@ -187,7 +187,9 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
                     key={star}
                     size={size}
                     color="#F59E0B"
-                    fill={star <= rating ? "#F59E0B" : "transparent"}
+                    fill={star <= rating
+? "#F59E0B"
+: "transparent"}
                     strokeWidth={1.5}
                 />
             ))}
@@ -195,27 +197,33 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
     );
 
     const FilterButton: React.FC<{
-        filter: 'all' | number;
+        filter: "all" | number;
         label: string;
         count: number;
         isActive: boolean;
     }> = ({ filter, label, count, isActive }) => (
         <TouchableOpacity
             className={`px-4 py-2 rounded-2xl border-[1.5px] mr-3 ${isActive
-                    ? 'bg-orange-500 border-orange-500'
-                    : 'bg-white border-gray-200'
+                    ? "bg-orange-500 border-orange-500"
+                    : "bg-white border-gray-200"
                 }`}
             onPress={() => setSelectedFilter(filter)}
             activeOpacity={0.8}
         >
             <HStack className="items-center gap-1.5">
-                <Text className={`text-[14px] font-semibold ${isActive ? 'text-white' : 'text-gray-700'
+                <Text className={`text-[14px] font-semibold ${isActive
+? "text-white"
+: "text-gray-700"
                     }`}>
                 {label}
                 </Text>
-                <View className={`px-1.5 py-0.5 rounded-md ${isActive ? 'bg-white/20' : 'bg-gray-100'
+                <View className={`px-1.5 py-0.5 rounded-md ${isActive
+? "bg-white/20"
+: "bg-gray-100"
                     }`}>
-                    <Text className={`text-[11px] font-bold ${isActive ? 'text-white' : 'text-gray-600'
+                    <Text className={`text-[11px] font-bold ${isActive
+? "text-white"
+: "text-gray-600"
                         }`}>
                         {count}
                     </Text>
@@ -228,7 +236,7 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
         <View
             className="bg-white rounded-3xl p-5 mb-4"
             style={{
-                shadowColor: '#000',
+                shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.06,
                 shadowRadius: 12,
@@ -276,7 +284,7 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
                     <RatingStars rating={review.rating} size={16} />
 
                     <Text className="text-gray-500 text-[13px]">
-                        Commande: {review.orderItems.join(', ')}
+                        Commande: {review.orderItems.join(", ")}
                     </Text>
                 </VStack>
 
@@ -338,7 +346,7 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
         <View
             className="bg-white rounded-3xl p-6 mb-6"
             style={{
-                shadowColor: '#000',
+                shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.06,
                 shadowRadius: 12,
@@ -362,7 +370,7 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
 
                     <TouchableOpacity
                         className="bg-orange-500 rounded-2xl px-4 py-3 active:bg-orange-600"
-                        onPress={() => navigation.navigate('WriteReview', { restaurantId: 'new' })}
+                        onPress={() => navigation.navigate("WriteReview", { restaurantId: "new" })}
                         activeOpacity={0.8}
                     >
                         <HStack className="items-center">
@@ -378,7 +386,9 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
                 <VStack className="gap-2">
                     {[5, 4, 3, 2, 1].map((rating) => {
                         const count = reviewStats.ratingDistribution[rating] || 0;
-                        const percentage = reviewStats.totalReviews > 0 ? (count / reviewStats.totalReviews) * 100 : 0;
+                        const percentage = reviewStats.totalReviews > 0
+? (count / reviewStats.totalReviews) * 100
+: 0;
 
                         return (
                             <HStack key={rating} className="items-center gap-3">
@@ -416,7 +426,7 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
             </Text>
             <TouchableOpacity
                 className="bg-orange-500 rounded-2xl px-6 py-3 active:bg-orange-600"
-                onPress={() => navigation.navigate('WriteReview', { restaurantId: 'new' })}
+                onPress={() => navigation.navigate("WriteReview", { restaurantId: "new" })}
                 activeOpacity={0.8}
             >
                 <HStack className="items-center">
@@ -478,7 +488,7 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
                                 filter="all"
                                 label="Tous"
                                 count={reviewStats.totalReviews}
-                                isActive={selectedFilter === 'all'}
+                                isActive={selectedFilter === "all"}
                             />
                             {[5, 4, 3, 2, 1].map((rating) => (
                                 <FilterButton
@@ -497,18 +507,25 @@ const MyReviewsScreen: React.FC<MyReviewsScreenNavigationProp> = ({ navigation }
                                 {sortedReviews.length} avis trouvés
                             </Text>
                             <HStack className="gap-2">
-                                {(['recent', 'rating', 'restaurant'] as const).map((sort) => (
+                                {(["recent", "rating", "restaurant"] as const).map((sort) => (
                                     <TouchableOpacity
                                         key={sort}
-                                        className={`px-3 py-2 rounded-xl ${sortBy === sort ? 'bg-orange-100' : 'bg-gray-100'
+                                        className={`px-3 py-2 rounded-xl ${sortBy === sort
+? "bg-orange-100"
+: "bg-gray-100"
                                             }`}
                                         onPress={() => setSortBy(sort)}
                                         activeOpacity={0.8}
                                     >
-                                        <Text className={`text-[12px] font-medium ${sortBy === sort ? 'text-orange-600' : 'text-gray-600'
+                                        <Text className={`text-[12px] font-medium ${sortBy === sort
+? "text-orange-600"
+: "text-gray-600"
                                             }`}>
-                                            {sort === 'recent' ? 'Récents' :
-                                                sort === 'rating' ? 'Notes' : 'Restaurant'}
+                                            {sort === "recent"
+? "Récents" :
+                                                sort === "rating"
+? "Notes"
+: "Restaurant"}
                                         </Text>
                                     </TouchableOpacity>
                                 ))}

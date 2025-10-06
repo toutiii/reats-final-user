@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: process.env.DARK_MODE ? process.env.DARK_MODE : "class",
+  darkMode: process.env.DARK_MODE
+? process.env.DARK_MODE
+: "class",
   content: [
     "./App.{tsx,jsx,ts,js}",
     "./components/**/*.{tsx,jsx,ts,js}",

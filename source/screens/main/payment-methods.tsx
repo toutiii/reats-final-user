@@ -1,14 +1,14 @@
 import React from "react";
-import { 
-  Alert, 
-  SafeAreaView, 
-  ScrollView, 
+import {
+  Alert,
+  SafeAreaView,
+  ScrollView,
   TouchableOpacity,
   StatusBar,
   View,
-  Switch 
+  Switch
 } from "react-native";
-import { 
+import {
   ChevronLeft,
   CreditCard,
   DollarSign,
@@ -21,8 +21,8 @@ import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
 
 // Types
 type PaymentMethod = {
@@ -43,8 +43,8 @@ type RootStackParamList = {
 };
 
 type PaymentMethodsScreenNavigationProp = {
-  navigation: StackNavigationProp<RootStackParamList, 'PaymentMethods'>;
-  route: RouteProp<RootStackParamList, 'PaymentMethods'>;
+  navigation: StackNavigationProp<RootStackParamList, "PaymentMethods">;
+  route: RouteProp<RootStackParamList, "PaymentMethods">;
 };
 
 const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ navigation }) => {
@@ -92,8 +92,8 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
 
   const deletePaymentMethod = (id: string) => {
     Alert.alert(
-      "Supprimer la méthode de paiement", 
-      "Êtes-vous sûr de vouloir supprimer cette méthode de paiement ?", 
+      "Supprimer la méthode de paiement",
+      "Êtes-vous sûr de vouloir supprimer cette méthode de paiement ?",
       [
         {
           text: "Annuler",
@@ -134,13 +134,13 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
 
   const PaymentMethodCard: React.FC<{ method: PaymentMethod; index: number }> = ({ method, index }) => {
     const IconComponent = method.icon;
-    
+
     return (
       <View className="mb-4">
         <View
           className="bg-white rounded-3xl overflow-hidden"
           style={{
-            shadowColor: '#000',
+            shadowColor: "#000",
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.06,
             shadowRadius: 12,
@@ -151,7 +151,7 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
             {/* Header */}
             <HStack className="justify-between items-start mb-4">
               <HStack className="items-center flex-1">
-                <View 
+                <View
                   className="w-12 h-12 rounded-2xl items-center justify-center mr-4"
                   style={{ backgroundColor: method.backgroundColor }}
                 >
@@ -170,7 +170,7 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
                   )}
                 </VStack>
               </HStack>
-              
+
               <TouchableOpacity
                 className="w-10 h-10 items-center justify-center rounded-full bg-red-50 active:bg-red-100"
                 onPress={() => deletePaymentMethod(method.id)}
@@ -181,8 +181,9 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
             </HStack>
 
             {/* Payment Details */}
-            {method.type === "card" ? (
-              <View 
+            {method.type === "card"
+? (
+              <View
                 className="rounded-2xl p-4 mb-4"
                 style={{ backgroundColor: method.backgroundColor }}
               >
@@ -200,7 +201,8 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
                   </HStack>
                 </VStack>
               </View>
-            ) : (
+            )
+: (
               <View className="bg-gray-50 rounded-2xl p-4 mb-4">
                 <Text className="text-gray-700 text-[15px] font-medium">
                   Email: {method.email}
@@ -229,7 +231,7 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#f9fafb" />
-      
+
       {/* Header */}
       <View className="bg-white border-b border-gray-100">
         <HStack className="justify-between items-center px-5 py-4">
@@ -244,7 +246,7 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
           <Heading className="text-gray-900 font-bold flex-1 text-center">
             Méthodes de paiement
           </Heading>
-          
+
           <View className="w-10" />
         </HStack>
       </View>
@@ -271,7 +273,7 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
             onPress={addNewCard}
             activeOpacity={0.8}
             style={{
-              shadowColor: '#000',
+              shadowColor: "#000",
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.03,
               shadowRadius: 8,
@@ -292,7 +294,7 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
           <View
             className="bg-white rounded-3xl p-5 mb-6"
             style={{
-              shadowColor: '#000',
+              shadowColor: "#000",
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.06,
               shadowRadius: 12,
@@ -315,8 +317,10 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenNavigationProp> = ({ na
               <Switch
                 value={autoSaveCards}
                 onValueChange={setAutoSaveCards}
-                trackColor={{ false: '#E5E7EB', true: '#FED7AA' }}
-                thumbColor={autoSaveCards ? '#F97316' : '#9CA3AF'}
+                trackColor={{ false: "#E5E7EB", true: "#FED7AA" }}
+                thumbColor={autoSaveCards
+? "#F97316"
+: "#9CA3AF"}
               />
             </HStack>
           </View>

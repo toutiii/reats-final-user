@@ -1,52 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   ScrollView,
   View,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-} from 'react-native';
+} from "react-native";
 import {
   ChevronLeft,
   ChevronDown,
   Search,
-} from 'lucide-react-native';
-import { HStack } from '@/components/ui/hstack';
-import { Text } from '@/components/ui/text';
-import { useNavigation } from '@react-navigation/native';
-import { Heading } from '@/components/ui/heading';
-import Filters from '@/components/filters';
-import ProductCard from '@/components/common/product-card';
-import RestaurantCard from '@/components/common/restaurant-card';
-import { StackNavigation } from '@/types/navigation';
-import { restaurants } from '@/mocks/restaurants';
-import { Restaurant } from '@/types/restaurant';
-import { products } from '@/mocks/products';
-import { Product } from '@/types/product';
+} from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
+import { useNavigation } from "@react-navigation/native";
+import { Heading } from "@/components/ui/heading";
+import Filters from "@/components/filters";
+import ProductCard from "@/components/common/product-card";
+import RestaurantCard from "@/components/common/restaurant-card";
+import { StackNavigation } from "@/types/navigation";
+import { restaurants } from "@/mocks/restaurants";
+import { Restaurant } from "@/types/restaurant";
+import { products } from "@/mocks/products";
+import { Product } from "@/types/product";
 
 
 const CategoriesDetailsScreen: React.FC = () => {
   const navigation = useNavigation<StackNavigation>();
-  const [selectedCategory, setSelectedCategory] = useState<string>('Burger');
+  const [selectedCategory, setSelectedCategory] = useState<string>("Burger");
   const handleCategoryPress = (): void => {
-    console.log('Category selector pressed');
+    console.log("Category selector pressed");
   };
 
   const handleSearchPress = (): void => {
-    console.log('Search pressed');
-    navigation.navigate('Main', {screen: 'Search'});
+    console.log("Search pressed");
+    navigation.navigate("Main", {screen: "Search"});
   };
 
   const handleFilterPress = (): void => {
-    console.log('Filter pressed');
+    console.log("Filter pressed");
   };
 
   const handleAddToCart = (burgerId: number): void => {
-    console.log('Add to cart:', burgerId);
+    console.log("Add to cart:", burgerId);
   };
 
   const handleRestaurantPress = (restaurantId: number): void => {
-    console.log('Restaurant pressed:', restaurantId);
+    console.log("Restaurant pressed:", restaurantId);
   };
 
   return (
